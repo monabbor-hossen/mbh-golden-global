@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBH Golden Global | Premium Travel Experiences</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#000000',
+                            deep: '#02111A',   // Very dark slate/navy base
+                            dark: '#003355',   // Logo "M" & "H" Navy Blue
+                            cyan: '#0082CA',   // Logo "B" & Swoosh Bright Cyan
+                            sand: '#F8F9FA',   // Crisp off-white for light sections
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(0, 130, 202, 0.4)',
+                        'glow-lg': '0 0 30px rgba(0, 130, 202, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-brand-sand min-h-screen overflow-x-hidden antialiased text-brand-dark;
+            }
+            ::selection {
+                @apply bg-brand-cyan text-white;
+            }
+        }
+
+        @layer utilities {
+            /* Smooth reveal animations */
+            .fade-up {
+                @apply opacity-0 translate-y-10 transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)];
+            }
+            .fade-up.visible {
+                @apply opacity-100 translate-y-0;
+            }
+            .delay-100 { transition-delay: 100ms; }
+            .delay-200 { transition-delay: 200ms; }
+            .delay-300 { transition-delay: 300ms; }
+
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        }
+
+        @layer components {
+            /* SPA Routing UI */
+            .page-view {
+                @apply hidden opacity-0 transition-opacity duration-700 ease-in-out;
+            }
+            .page-view.active {
+                @apply block opacity-100;
+            }
+
+            /* Elegant Navigation */
+            .nav-link { 
+                @apply relative text-sm font-semibold tracking-widest uppercase transition-colors duration-300;
+            }
+            .nav-link.active-link { 
+                @apply text-brand-cyan; 
+            }
+            .nav-link::after {
+                content: '';
+                @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-brand-cyan transition-all duration-300 rounded-full shadow-glow;
+            }
+            .nav-link:hover::after, .nav-link.active-link::after {
+                @apply w-[120%];
+            }
+
+            /* Premium Tactical Buttons */
+            .btn-3d-elegant {
+                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-brand-cyan text-white text-sm font-semibold tracking-widest uppercase transition-all duration-300 relative border border-transparent;
+                box-shadow: 0 4px 15px rgba(0, 130, 202, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+                transform: translateY(0);
+                will-change: transform, box-shadow;
+            }
+            .btn-3d-elegant:hover {
+                @apply shadow-glow-lg border-brand-cyan bg-[#0094e6];
+                transform: translateY(-2px);
+            }
+            .btn-3d-elegant:active {
+                box-shadow: 0 2px 5px rgba(0, 130, 202, 0.4);
+                transform: translateY(2px);
+            }
+            
+            .btn-outline {
+                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-gray-300 text-brand-dark text-sm font-semibold tracking-widest uppercase hover:border-brand-cyan hover:text-brand-cyan hover:bg-brand-cyan/5 transition-all duration-300;
+            }
+            .btn-outline-white {
+                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-white/50 text-white text-sm font-semibold tracking-widest uppercase hover:bg-white hover:text-brand-black hover:border-white hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)] transition-all duration-300;
+            }
+
+            /* Subtle 3D Card Tilt Effects */
+            .card-3d-subtle {
+                transform-style: preserve-3d;
+                transform: perspective(1200px);
+                transition: transform 0.1s ease-out, box-shadow 0.3s ease-out;
+                will-change: transform;
+            }
+            .card-3d-subtle.resetting {
+                transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease-out;
+            }
+            
+            .inner-3d {
+                transform: translateZ(30px);
+                transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+                will-change: transform;
+            }
+            .card-3d-subtle:hover .inner-3d {
+                transform: translateZ(50px);
+            }
+        }
+    </style>
+</head>
+<body class="text-brand-dark">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6 text-white border-b border-transparent">
+        <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 flex justify-between items-center">
+            <!-- Logo (Using user's provided logo) -->
+            <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
+                <!-- Image tag for the actual logo -->
+                <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-20 md:h-24 object-contain transition-transform duration-300 hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                
+                <!-- Fallback if image doesn't load locally -->
+                <div class="hidden font-serif font-bold text-2xl md:text-3xl tracking-wide logo-text transition-colors duration-300">
+                    <span class="text-brand-cyan">MBH</span> GLOBAL
+                </div>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex space-x-10 items-center">
+                <button onclick="navigateTo('home')" class="nav-link nav-text active-link">Home</button>
+                <button onclick="navigateTo('about')" class="nav-link nav-text">About</button>
+                <button onclick="navigateTo('packages')" class="nav-link nav-text">Destinations</button>
+                <button onclick="navigateTo('blog')" class="nav-link nav-text">Stories</button>
+                <button onclick="navigateTo('contact')" class="nav-link nav-text">Contact</button>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
+                    <button class="nav-text hover:text-brand-cyan transition-colors"><i data-lucide="search" class="w-5 h-5"></i></button>
+                    <button onclick="navigateTo('packages')" class="btn-3d-elegant !py-2.5 !px-6 !text-xs hidden xl:flex">Book Now</button>
+                </div>
+                <button onclick="toggleMobileMenu()" class="lg:hidden nav-text p-2 -mr-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-deep/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="flex justify-between items-center p-6 border-b border-white/10">
+            <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-10 object-contain" onerror="this.style.display='none';">
+            <button onclick="toggleMobileMenu()" class="p-2 text-white hover:text-brand-cyan transition">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+        <div class="flex flex-col gap-6 px-8 py-12 overflow-y-auto">
+            <button onclick="navigateTo('home')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Home</button>
+            <button onclick="navigateTo('about')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">About Us</button>
+            <button onclick="navigateTo('packages')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Destinations</button>
+            <button onclick="navigateTo('blog')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Stories</button>
+            <button onclick="navigateTo('contact')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Contact</button>
+            
+            <div class="mt-10 pt-10 border-t border-white/10 flex flex-col gap-4">
+                <span class="text-xs uppercase tracking-widest font-semibold text-brand-cyan">Get in touch</span>
+                <p class="text-white text-lg">+966 536 785 506</p>
+                <p class="text-white/70 text-sm">mbhgoldenglobalcompany@gmail.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main id="app-root">
+
+        <!-- ========================================== -->
+        <!-- 1. HOME PAGE VIEW                          -->
+        <!-- ========================================== -->
+        <div id="home" class="page-view active">
+            <!-- Full Bleed Hero Video -->
+            <header class="relative h-screen w-full overflow-hidden bg-brand-black"> 
+                <div class="absolute inset-0 bg-brand-deep/40 z-10"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-brand-black/80 via-transparent to-brand-black/90 z-10"></div>
+                <video class="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-80" autoplay loop muted playsinline>
+                    <source src="./mp_.mp4" type="video/mp4">
+                </video>
+                
+                <!-- Elegant Hero Content -->
+                <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 max-w-5xl mx-auto fade-up">
+                    <span class="text-brand-cyan text-sm md:text-base tracking-[0.3em] uppercase mb-6 font-semibold shadow-glow drop-shadow-lg">Welcome to MBH Global</span>
+                    <h1 class="text-5xl sm:text-6xl md:text-[6rem] font-serif font-medium text-white mb-8 leading-[1.1]" style="text-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+                        Explore the <br><i class="font-light text-white">Extraordinary</i>
+                    </h1>
+                    <p class="text-white/80 text-lg md:text-xl font-light mb-12 max-w-2xl">
+                        Simple, comfortable, and affordable journeys to the world's most captivating destinations.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <button onclick="navigateTo('packages')" class="btn-3d-elegant">Discover Destinations</button>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-bounce">
+                    <span class="text-white/70 text-[10px] uppercase tracking-widest font-semibold">Scroll</span>
+                    <div class="w-[2px] h-10 bg-gradient-to-b from-brand-cyan to-transparent rounded-full"></div>
+                </div>
+            </header>
+
+            <!-- Curated Categories (Dark Mode Section matching Logo) -->
+            <section class="py-24 bg-brand-deep relative z-10">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 fade-up">
+                        <div class="max-w-2xl">
+                            <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Experiences</span>
+                            <h2 class="text-4xl md:text-5xl font-serif text-white leading-tight">Find what makes <br>your heart beat</h2>
+                        </div>
+                    </div>
+
+                    <div class="flex overflow-x-auto gap-8 pb-8 no-scrollbar fade-up delay-100">
+                        <!-- Category Items -->
+                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
+                                <img src="https://images.unsplash.com/photo-1629815456220-4355ce3438ea?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
+                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Nature</span>
+                        </div>
+                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
+                                <img src="https://images.unsplash.com/photo-1647464098939-787d55b85a3c?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
+                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Culture</span>
+                        </div>
+                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
+                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Spiritual</span>
+                        </div>
+                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
+                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
+                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                            </div>
+                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Luxury</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Packages (Bright Contrast Section) -->
+            <section class="py-24 bg-brand-sand">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    <div class="flex justify-between items-end mb-16 fade-up">
+                        <h2 class="text-4xl md:text-5xl font-serif text-brand-dark">Curated <br><i class="font-light text-brand-cyan">Destinations</i></h2>
+                        <button onclick="navigateTo('packages')" class="hidden md:flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-brand-dark hover:text-brand-cyan transition">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 perspective-[2000px]">
+                        
+                        <!-- Destination Card -->
+                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
+                            <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-8 left-8 right-8 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Switzerland</span>
+                                    <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Swiss Alps</h3>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">Experience the breathtaking nature with our premium guided tour.</p>
+                                <span class="font-bold text-lg text-brand-dark">SAR 5,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Destination Card -->
+                        <div class="group cursor-pointer fade-up delay-100 mt-0 lg:mt-12 card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
+                            <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-8 left-8 right-8 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Saudi Arabia</span>
+                                    <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Premium Umrah</h3>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">5-star hotels near Haram, VIP transport, and guided Ziyarat.</p>
+                                <span class="font-bold text-lg text-brand-dark">SAR 2,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Destination Card -->
+                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
+                            <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-8 left-8 right-8 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">France</span>
+                                    <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Parisian Escape</h3>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">A mesmerizing journey exploring famous cuisines and historic monuments.</p>
+                                <span class="font-bold text-lg text-brand-dark">SAR 4,200</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mt-12 text-center md:hidden fade-up">
+                        <button onclick="navigateTo('packages')" class="btn-outline w-full">View All Destinations</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Split Section (About Snippet) -->
+            <section class="py-24 bg-brand-deep text-white border-t border-white/5">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="fade-up">
+                            <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-6 block">Our Promise</span>
+                            <h2 class="text-4xl md:text-5xl font-serif mb-8 leading-tight text-white">Travel with <br><i class="font-light text-brand-cyan">Confidence</i> and Ease</h2>
+                            <p class="text-white/70 text-lg font-light leading-relaxed mb-10 max-w-lg">
+                                We are a trusted travel and tourism service provider dedicated to making your journeys simple, comfortable, and affordable. We specialize in air ticket bookings offering the best routes.
+                            </p>
+                            <button onclick="navigateTo('about')" class="btn-outline-white">Discover Our Story</button>
+                        </div>
+                        <div class="relative h-[40rem] rounded-[2rem] overflow-hidden fade-up delay-100 shadow-2xl border border-white/10">
+                            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. ABOUT US PAGE VIEW                      -->
+        <!-- ========================================== -->
+        <div id="about" class="page-view">
+            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
+                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">About Us</span>
+                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Our <i class="font-light text-brand-cyan">Story</i></h1>
+                    <p class="text-xl text-gray-500 font-light max-w-2xl">Dedicated to making your journeys simple, comfortable, and affordable.</p>
+                </div>
+            </header>
+
+            <section class="py-20 bg-white min-h-screen">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                        
+                        <div class="lg:col-span-5 fade-up">
+                            <div class="sticky top-32">
+                                <h2 class="text-3xl font-serif text-brand-dark mb-8 leading-snug">We aim to be your trusted partner for all your travel needs.</h2>
+                                <div class="w-full h-[450px] rounded-[2rem] overflow-hidden shadow-xl border border-gray-100">
+                                    <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-7 fade-up delay-100">
+                            <div class="prose prose-lg prose-gray max-w-none">
+                                <p class="text-gray-600 leading-relaxed font-light mb-8 text-xl">
+                                    We are a trusted travel and tourism service provider dedicated to making your journeys simple, comfortable, and affordable. We specialize in air ticket bookings for both domestic and international travel, offering the best routes and competitive prices to suit your needs. Whether you are traveling for business, vacation, or family visits, we ensure a smooth and hassle-free experience.
+                                </p>
+                                <div class="w-full h-[350px] rounded-[2rem] overflow-hidden mb-8 my-12 shadow-xl border border-gray-100">
+                                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
+                                </div>
+                                <p class="text-gray-600 leading-relaxed font-light mb-8 text-xl">
+                                    In addition to flight bookings, we provide a variety of tour packages designed for individuals, families, and groups. Our packages are carefully planned to give you a memorable and enjoyable travel experience. We focus on customer satisfaction by offering quick service, reliable support, and easy booking options.
+                                </p>
+                                <p class="text-gray-600 leading-relaxed font-light text-xl">
+                                    Our goal is to make travel accessible and stress-free for everyone. With our professional approach and dedication, we aim to be your trusted partner for all your travel needs. Travel with confidence and ease with us.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. PACKAGES PAGE VIEW                      -->
+        <!-- ========================================== -->
+        <div id="packages" class="page-view">
+            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
+                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Tour Packages</span>
+                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Explore <i class="font-light text-brand-cyan">Destinations</i></h1>
+                    <p class="text-xl text-gray-500 font-light max-w-2xl">Carefully planned packages designed for individuals, families, and groups.</p>
+                </div>
+            </header>
+
+            <section class="py-20 bg-white min-h-screen">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                        
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Switzerland</span>
+                                    <h3 class="text-2xl font-serif text-white">Swiss Alps Adventure</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Experience the breathtaking nature with our premium guided tour.</p>
+                                <span class="font-bold text-brand-dark">SAR 5,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up delay-100 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1600521605615-568bfd097ccf?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Turkey</span>
+                                    <h3 class="text-2xl font-serif text-white">Magical Cappadocia</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Hot air balloon rides, historic caves, and rich Turkish culture await.</p>
+                                <span class="font-bold text-brand-dark">SAR 3,200</span>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Saudi Arabia</span>
+                                    <h3 class="text-2xl font-serif text-white">Premium Umrah</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Complete package including 5-star hotels near Haram.</p>
+                                <span class="font-bold text-brand-dark">SAR 2,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Maldives</span>
+                                    <h3 class="text-2xl font-serif text-white">Island Retreat</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Nature and relaxation in luxury overwater villas.</p>
+                                <span class="font-bold text-brand-dark">SAR 6,200</span>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up delay-100 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Morocco</span>
+                                    <h3 class="text-2xl font-serif text-white">Morocco Explorer</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Discover vibrant markets and historic sites.</p>
+                                <span class="font-bold text-brand-dark">SAR 3,800</span>
+                            </div>
+                        </div>
+
+                        <!-- Card -->
+                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
+                                <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Egypt</span>
+                                    <h3 class="text-2xl font-serif text-white">Wonders of Egypt</h3>
+                                </div>
+                            </div>
+                            <div class="px-2 flex justify-between items-start inner-3d">
+                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">A cultural journey through the ancient pyramids.</p>
+                                <span class="font-bold text-brand-dark">SAR 2,900</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. BLOG PAGE VIEW                          -->
+        <!-- ========================================== -->
+        <div id="blog" class="page-view">
+            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
+                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Journal</span>
+                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Travel <i class="font-light text-brand-cyan">Stories</i></h1>
+                    <p class="text-xl text-gray-500 font-light max-w-2xl">Insights, tips, and inspiration from our global travels.</p>
+                </div>
+            </header>
+
+            <section class="py-20 bg-white min-h-screen">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up">
+                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
+                                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            </div>
+                            <div class="px-2">
+                                <div class="flex gap-4 items-center mb-4">
+                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Tips</span>
+                                    <span class="text-gray-400 text-xs font-medium">Oct 24, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">How to Find the Best Flight Deals</h3>
+                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">Discover insider secrets on booking domestic and international flights at competitive prices.</p>
+                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                            </div>
+                        </article>
+
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up delay-100">
+                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            </div>
+                            <div class="px-2">
+                                <div class="flex gap-4 items-center mb-4">
+                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Guide</span>
+                                    <span class="text-gray-400 text-xs font-medium">Sep 12, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">Umrah Packing Guide 2024</h3>
+                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">Everything you need to know and pack for a comfortable and spiritually fulfilling journey.</p>
+                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                            </div>
+                        </article>
+
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up delay-200">
+                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
+                                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            </div>
+                            <div class="px-2">
+                                <div class="flex gap-4 items-center mb-4">
+                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Destinations</span>
+                                    <span class="text-gray-400 text-xs font-medium">Aug 05, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">Top 5 European Escapes</h3>
+                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">From Paris to the Swiss Alps, explore the most highly recommended spots for your next vacation.</p>
+                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 5. CONTACT PAGE VIEW                       -->
+        <!-- ========================================== -->
+        <div id="contact" class="page-view">
+            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
+                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Connect</span>
+                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Get in <i class="font-light text-brand-cyan">Touch</i></h1>
+                    <p class="text-xl text-gray-500 font-light max-w-2xl">We are here to make your travel dreams a reality.</p>
+                </div>
+            </header>
+
+            <section class="py-20 bg-white min-h-screen">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                        
+                        <!-- Contact Info -->
+                        <div class="lg:col-span-5 fade-up">
+                            <div class="bg-brand-sand rounded-[2.5rem] p-12 h-full border border-gray-100">
+                                <h3 class="font-serif text-3xl mb-12 text-brand-dark">Contact Details</h3>
+                                
+                                <div class="flex flex-col gap-10">
+                                    <div>
+                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Address</span>
+                                        <p class="text-gray-600 font-medium leading-relaxed pl-6">Khobib Market/ Bangali Market,<br>King Abdul Aziz Road, Buraydah,<br>Al-Qassim, Saudi Arabia.</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> Mobile</span>
+                                        <p class="text-gray-600 font-medium leading-relaxed pl-6">+966 536 785 506<br>+966 576 473 201</p>
+                                    </div>
+
+                                    <div>
+                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> Email</span>
+                                        <p class="text-gray-600 font-medium break-all leading-relaxed pl-6">mbhgoldenglobalcompany@gmail.com<br>mbhgoldenglobal@gmail.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sleek Form -->
+                        <div class="lg:col-span-7 fade-up delay-100">
+                            <div class="bg-white p-2 md:p-8">
+                                <h3 class="text-3xl font-serif text-brand-dark mb-12">Send an Inquiry</h3>
+                                <form class="space-y-10" onsubmit="event.preventDefault(); alert('Form submitted successfully!');">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <div>
+                                            <input type="text" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Full Name" required>
+                                        </div>
+                                        <div>
+                                            <input type="email" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Email Address" required>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <input type="text" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Subject" required>
+                                    </div>
+                                    <div>
+                                        <textarea rows="4" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors resize-none" placeholder="Message" required></textarea>
+                                    </div>
+                                    <div class="pt-6">
+                                        <button type="submit" class="btn-3d-elegant w-full md:w-auto !px-12 !py-4 text-base">Send Message</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Footer (Using Dark theme to match logo) -->
+    <footer class="bg-brand-deep pt-24 pb-12 text-white/80 border-t-4 border-brand-cyan">
+        <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+                
+                <!-- Brand Info -->
+                <div class="lg:col-span-5 pr-8">
+                    <div class="mb-4">
+                        <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-24 md:h-40 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="hidden font-serif font-bold text-3xl tracking-wide text-white">
+                            <span class="text-brand-cyan">MBH</span> GLOBAL
+                        </div>
+                    </div>
+                    <p class="text-white/60 mb-10 max-w-sm font-medium leading-relaxed">
+                        Our goal is to make travel accessible and stress-free for everyone. Travel with confidence and ease with us.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="lg:col-span-3 lg:col-start-7">
+                    <h4 class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-8">Discover</h4>
+                    <ul class="space-y-5 font-medium text-sm">
+                        <li><button onclick="navigateTo('home')" class="hover:text-brand-cyan transition-colors">Home</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-brand-cyan transition-colors">About Us</button></li>
+                        <li><button onclick="navigateTo('packages')" class="hover:text-brand-cyan transition-colors">Destinations</button></li>
+                        <li><button onclick="navigateTo('blog')" class="hover:text-brand-cyan transition-colors">Travel Stories</button></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="lg:col-span-3">
+                    <h4 class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-8">Contact</h4>
+                    <ul class="space-y-5 font-medium text-sm">
+                        <li class="flex items-center gap-3"><i data-lucide="phone" class="w-4 h-4 text-white/50"></i> +966 536 785 506</li>
+                        <li class="flex items-center gap-3"><i data-lucide="mail" class="w-4 h-4 text-white/50"></i> mbhgoldenglobal@gmail.com</li>
+                        <li class="pt-4 text-white/50 flex items-start gap-3"><i data-lucide="map-pin" class="w-4 h-4 mt-1"></i> Buraydah, Al-Qassim,<br>Saudi Arabia</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-semibold tracking-wider uppercase text-white/40">
+                <p>&copy; 2024 MBH Golden Global. All rights reserved.</p>
+                <div class="flex space-x-8">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Render Lucide Icons
+        lucide.createIcons();
+
+        // Subtle 3D Mouse Tracking Logic for Cards
+        const tiltCards = document.querySelectorAll('.card-3d-subtle');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                if (window.innerWidth < 768) return; 
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;  
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Very subtle rotation threshold (Max 4 degrees for elegance)
+                const rotateX = ((y - centerY) / centerY) * -4; 
+                const rotateY = ((x - centerX) / centerX) * 4;
+                
+                card.classList.remove('resetting');
+                card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                
+                // Dynamic floating shadow colored with brand cyan
+                card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2}px 30px rgba(0, 130, 202, 0.15)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (window.innerWidth < 768) return;
+                card.classList.add('resetting');
+                card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.boxShadow = ``; 
+            });
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const navTexts = document.querySelectorAll('.nav-text');
+        const navDivider = document.querySelector('.nav-divider');
+
+        window.addEventListener('scroll', () => {
+            const homePage = document.getElementById('home');
+            
+            if (window.scrollY > 50) {
+                // Scrolled State (Match logo background - deep navy)
+                navbar.classList.add('bg-brand-deep/95', 'backdrop-blur-md', 'shadow-lg', 'border-white/5');
+                navbar.classList.remove('py-6', 'border-transparent');
+                navbar.classList.add('py-4');
+                
+                // Keep text white for dark background
+                navTexts.forEach(el => el.classList.add('text-white'));
+            } else {
+                // Top State
+                navbar.classList.remove('bg-brand-deep/95', 'backdrop-blur-md', 'shadow-lg', 'border-white/5');
+                navbar.classList.add('py-6', 'border-transparent');
+                navbar.classList.remove('py-4');
+                
+                if(homePage.classList.contains('active')) {
+                    navTexts.forEach(el => el.classList.add('text-white'));
+                } else {
+                    // On light pages at top, nav text should be dark
+                    navTexts.forEach(el => el.classList.remove('text-white'));
+                    navTexts.forEach(el => el.classList.add('text-brand-dark'));
+                }
+            }
+        });
+
+        function updateNavbarStyle(pageId) {
+            if (pageId === 'home' || window.scrollY > 50) {
+                navTexts.forEach(el => el.classList.add('text-white'));
+                navTexts.forEach(el => el.classList.remove('text-brand-dark'));
+                if(navDivider) navDivider.classList.replace('border-gray-200', 'border-white/20');
+            } else {
+                // Light pages at scroll 0
+                navTexts.forEach(el => el.classList.remove('text-white'));
+                navTexts.forEach(el => el.classList.add('text-brand-dark'));
+                if(navDivider) navDivider.classList.replace('border-white/20', 'border-gray-200');
+            }
+        }
+
+        // Scroll Animation Logic
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, observerOptions);
+
+        function attachAnimations() {
+            const elements = document.querySelectorAll('.fade-up');
+            elements.forEach(el => observer.observe(el));
+        }
+        attachAnimations();
+
+        // Mobile Menu Logic
+        const mobileMenu = document.getElementById('mobile-menu');
+        let isMobileMenuOpen = false;
+
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100');
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.remove('opacity-100');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Smooth SPA Navigation Logic
+        function navigateTo(pageId) {
+            if (isMobileMenuOpen) toggleMobileMenu();
+
+            const pages = document.querySelectorAll('.page-view');
+            pages.forEach(page => page.classList.remove('active'));
+
+            setTimeout(() => {
+                const target = document.getElementById(pageId);
+                if(target) {
+                    target.classList.add('active');
+                    updateNavbarStyle(pageId);
+                    
+                    const animatedElements = target.querySelectorAll('.fade-up');
+                    animatedElements.forEach(el => {
+                        el.classList.remove('visible');
+                        setTimeout(() => { el.classList.add('visible'); }, 50);
+                    });
+                }
+            }, 300);
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active-link');
+                if(link.getAttribute('onclick') && link.getAttribute('onclick').includes(pageId)) {
+                    link.classList.add('active-link');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        updateNavbarStyle('home');
+    </script>
+</body>
+</html>
