@@ -9,7 +9,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -24,16 +24,33 @@
                     },
                     colors: {
                         brand: {
-                            black: '#000000',
-                            deep: '#02111A',   // Very dark slate/navy base
-                            dark: '#003355',   // Logo "M" & "H" Navy Blue
-                            cyan: '#0082CA',   // Logo "B" & Swoosh Bright Cyan
-                            sand: '#F8F9FA',   // Crisp off-white for light sections
+                            navy: '#003355',       // Exact Logo Navy
+                            cyan: '#0082CA',       // Exact Logo Cyan
+                            cyanDark: '#005a8d',   // Darker Cyan for 3D shadows
+                            sand: '#F4F7F9',       // Premium off-white/light gray
+                            white: '#FFFFFF',
                         }
                     },
                     boxShadow: {
-                        'glow': '0 0 20px rgba(0, 130, 202, 0.4)',
-                        'glow-lg': '0 0 30px rgba(0, 130, 202, 0.6)',
+                        'glow': '0 0 15px rgba(0, 130, 202, 0.2)',
+                        'glow-lg': '0 0 30px rgba(0, 130, 202, 0.3)',
+                        'glass-3d': '0 10px 30px -5px rgba(0, 51, 85, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.02)',
+                        '3d-puck': '0 4px 0 rgba(0, 51, 85, 0.05), 0 8px 15px rgba(0, 51, 85, 0.08), inset 0 2px 2px rgba(255, 255, 255, 0.8)',
+                        '3d-puck-hover': '0 2px 0 rgba(0, 130, 202, 0.3), 0 5px 10px rgba(0, 130, 202, 0.15), inset 0 2px 2px rgba(255, 255, 255, 0.8)',
+                        '3d-input': 'inset 0 2px 4px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(255, 255, 255, 0.8)',
+                    },
+                    transitionTimingFunction: {
+                        'apple': 'cubic-bezier(0.16, 1, 0.3, 1)', // Ultra-smooth easing
+                    },
+                    animation: {
+                        'float': 'floatOrb 12s infinite ease-in-out alternate',
+                        'float-delayed': 'floatOrb 15s infinite ease-in-out alternate-reverse',
+                    },
+                    keyframes: {
+                        floatOrb: {
+                            '0%': { transform: 'translateY(0) rotateX(0) rotateY(0) scale(1)' },
+                            '100%': { transform: 'translateY(-20px) rotateX(5deg) rotateY(-5deg) scale(1.01)' },
+                        }
                     }
                 }
             }
@@ -43,7 +60,7 @@
     <style type="text/tailwindcss">
         @layer base {
             body {
-                @apply bg-brand-sand min-h-screen overflow-x-hidden antialiased text-brand-dark;
+                @apply bg-brand-sand min-h-screen overflow-x-hidden antialiased text-brand-navy;
             }
             ::selection {
                 @apply bg-brand-cyan text-white;
@@ -51,9 +68,9 @@
         }
 
         @layer utilities {
-            /* Smooth reveal animations */
+            /* High-end reveal animations */
             .fade-up {
-                @apply opacity-0 translate-y-10 transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)];
+                @apply opacity-0 translate-y-12 transition-all duration-[1000ms] ease-apple;
             }
             .fade-up.visible {
                 @apply opacity-100 translate-y-0;
@@ -64,134 +81,166 @@
 
             .no-scrollbar::-webkit-scrollbar { display: none; }
             .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+            /* Subtle 3D Extruded Text */
+            .text-3d-light {
+                text-shadow: 1px 1px 0 #fff, 2px 2px 5px rgba(0,0,0,0.05);
+            }
+            .text-3d-dark {
+                text-shadow: 1px 1px 0 #001f33, 2px 2px 10px rgba(0,0,0,0.3);
+            }
+            .text-3d-cyan {
+                text-shadow: 1px 1px 0 #006096, 2px 2px 10px rgba(0,130,202,0.2);
+            }
         }
 
         @layer components {
             /* SPA Routing UI */
             .page-view {
-                @apply hidden opacity-0 transition-opacity duration-700 ease-in-out;
+                @apply hidden opacity-0 transition-all duration-500 ease-in-out scale-[0.98];
             }
             .page-view.active {
-                @apply block opacity-100;
+                @apply block opacity-100 scale-100;
             }
 
-            /* Elegant Navigation */
+            /* Elegant Navigation Links */
             .nav-link { 
-                @apply relative text-sm font-semibold tracking-widest uppercase transition-colors duration-300;
+                @apply relative text-sm font-bold tracking-[0.15em] uppercase transition-all duration-300 transform text-brand-navy;
             }
             .nav-link.active-link { 
-                @apply text-brand-cyan; 
+                @apply text-brand-cyan drop-shadow-sm; 
             }
             .nav-link::after {
                 content: '';
-                @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-brand-cyan transition-all duration-300 rounded-full shadow-glow;
+                @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-brand-cyan transition-all duration-300 rounded-full;
             }
             .nav-link:hover::after, .nav-link.active-link::after {
-                @apply w-[120%];
+                @apply w-full;
             }
 
-            /* Premium Tactical Buttons */
-            .btn-3d-elegant {
-                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-brand-cyan text-white text-sm font-semibold tracking-widest uppercase transition-all duration-300 relative border border-transparent;
-                box-shadow: 0 4px 15px rgba(0, 130, 202, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            /* Low-Profile Acrylic Buttons */
+            .btn-primary {
+                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-gradient-to-b from-[#00a2ff] to-[#0082CA] text-white text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 relative border border-[#00aaff];
+                box-shadow: 0 3px 0 #005a8d, 0 8px 15px rgba(0, 130, 202, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
                 transform: translateY(0);
                 will-change: transform, box-shadow;
             }
-            .btn-3d-elegant:hover {
-                @apply shadow-glow-lg border-brand-cyan bg-[#0094e6];
-                transform: translateY(-2px);
-            }
-            .btn-3d-elegant:active {
-                box-shadow: 0 2px 5px rgba(0, 130, 202, 0.4);
-                transform: translateY(2px);
+            .btn-primary:active {
+                box-shadow: 0 0px 0 #005a8d, 0 2px 5px rgba(0, 130, 202, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+                transform: translateY(3px);
+                @apply border-[#0082CA] from-[#0082CA] to-[#006096];
             }
             
             .btn-outline {
-                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-gray-300 text-brand-dark text-sm font-semibold tracking-widest uppercase hover:border-brand-cyan hover:text-brand-cyan hover:bg-brand-cyan/5 transition-all duration-300;
+                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-gray-200 bg-gradient-to-b from-white to-gray-50 text-brand-navy text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 relative;
+                box-shadow: 0 3px 0 #cbd5e1, 0 8px 15px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1);
+                transform: translateY(0);
+                will-change: transform, box-shadow;
             }
-            .btn-outline-white {
-                @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-white/50 text-white text-sm font-semibold tracking-widest uppercase hover:bg-white hover:text-brand-black hover:border-white hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)] transition-all duration-300;
+            .btn-outline:active {
+                box-shadow: 0 0px 0 #cbd5e1, 0 2px 5px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1);
+                transform: translateY(3px);
+                @apply from-gray-50 to-gray-100;
             }
 
-            /* Subtle 3D Card Tilt Effects */
-            .card-3d-subtle {
+            /* Low-Profile Glass Cards */
+            .card-premium {
                 transform-style: preserve-3d;
-                transform: perspective(1200px);
-                transition: transform 0.1s ease-out, box-shadow 0.3s ease-out;
+                transform: perspective(1000px);
+                transition: transform 0.15s ease-out, box-shadow 0.3s ease-out;
                 will-change: transform;
+                @apply bg-white/90 backdrop-blur-lg border border-white shadow-glass-3d;
             }
-            .card-3d-subtle.resetting {
-                transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease-out;
+            .card-premium.resetting {
+                transition: transform 0.6s ease-apple, box-shadow 0.6s ease-apple;
             }
             
+            /* Reduced Z-Axis Depth */
             .inner-3d {
-                transform: translateZ(30px);
-                transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+                transform: translateZ(15px);
+                transition: transform 0.4s ease-apple;
                 will-change: transform;
             }
-            .card-3d-subtle:hover .inner-3d {
-                transform: translateZ(50px);
+            .card-premium:hover .inner-3d {
+                transform: translateZ(30px); /* Lowered from 80px to 30px */
+            }
+
+            /* Ambient Orbs */
+            .orb-3d {
+                @apply absolute rounded-full -z-10 opacity-40;
+                background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(0, 130, 202, 0.1), rgba(0, 51, 85, 0.02));
+            }
+
+            /* Minimalist Form Inputs */
+            .input-minimal {
+                @apply w-full bg-brand-sand/50 backdrop-blur-sm border border-transparent shadow-3d-input py-4 px-5 text-brand-navy font-bold placeholder-gray-400 focus:outline-none focus:bg-white focus:shadow-[inset_0_2px_4px_rgba(0,130,202,0.05),0_0_0_1px_rgba(0,130,202,0.3)] transition-all rounded-xl;
             }
         }
     </style>
 </head>
-<body class="text-brand-dark">
+<body class="text-brand-navy relative">
 
-    <!-- Navbar -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6 text-white border-b border-transparent">
-        <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 flex justify-between items-center">
-            <!-- Logo (Using user's provided logo) -->
-            <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
-                <!-- Image tag for the actual logo -->
-                <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-20 md:h-24 object-contain transition-transform duration-300 hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <!-- Ambient Background Spheres -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+        <div class="orb-3d w-80 h-80 top-[10%] -left-10 animate-float"></div>
+        <div class="orb-3d w-[35rem] h-[35rem] top-[60%] -right-20 animate-float-delayed" style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,1), rgba(0,130,202,0.03), rgba(0,51,85,0.01));"></div>
+    </div>
+
+    <!-- Floating Navbar Pill -->
+    <nav id="navbar" class="fixed w-full left-1/2 -translate-x-1/2 top-0 z-50 transition-all duration-500 border-b border-transparent bg-transparent py-6 px-6 sm:px-8">
+        <div class="max-w-[90rem] mx-auto w-full flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center cursor-pointer group" onclick="navigateTo('home')">
+                <img id="nav-logo" src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" alt="MBH Golden Global" class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 
-                <!-- Fallback if image doesn't load locally -->
-                <div class="hidden font-serif font-bold text-2xl md:text-3xl tracking-wide logo-text transition-colors duration-300">
+                <div class="hidden font-serif font-bold text-2xl tracking-wide logo-text text-white text-3d-light">
                     <span class="text-brand-cyan">MBH</span> GLOBAL
                 </div>
             </div>
             
             <!-- Desktop Menu -->
             <div class="hidden lg:flex space-x-10 items-center">
-                <button onclick="navigateTo('home')" class="nav-link nav-text active-link">Home</button>
-                <button onclick="navigateTo('about')" class="nav-link nav-text">About</button>
-                <button onclick="navigateTo('packages')" class="nav-link nav-text">Destinations</button>
-                <button onclick="navigateTo('blog')" class="nav-link nav-text">Stories</button>
-                <button onclick="navigateTo('contact')" class="nav-link nav-text">Contact</button>
+                <button onclick="navigateTo('home')" class="nav-link nav-text text-white active-link">Home</button>
+                <button onclick="navigateTo('about')" class="nav-link nav-text text-white">About Us</button>
+                <button onclick="navigateTo('packages')" class="nav-link nav-text text-white">Destinations</button>
+                <button onclick="navigateTo('blog')" class="nav-link nav-text text-white">Stories</button>
+                <button onclick="navigateTo('contact')" class="nav-link nav-text text-white">Contact</button>
             </div>
 
             <!-- Header Actions -->
             <div class="flex items-center gap-6">
                 <div class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
-                    <button class="nav-text hover:text-brand-cyan transition-colors"><i data-lucide="search" class="w-5 h-5"></i></button>
-                    <button onclick="navigateTo('packages')" class="btn-3d-elegant !py-2.5 !px-6 !text-xs hidden xl:flex">Book Now</button>
+                    <button class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i data-lucide="search" class="w-6 h-6"></i></button>
+                    <button onclick="navigateTo('packages')" class="btn-primary !py-3 !px-8 hidden xl:flex text-xs !shadow-none !translate-y-0 border-none">Book Now</button>
                 </div>
-                <button onclick="toggleMobileMenu()" class="lg:hidden nav-text p-2 -mr-2">
-                    <i data-lucide="menu" class="w-7 h-7"></i>
+                <button onclick="toggleMobileMenu()" class="lg:hidden nav-text p-2 -mr-2 text-white hover:text-brand-cyan transition-transform active:scale-90 bg-white/10 rounded-full border border-white/20 shadow-inner">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-brand-deep/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="flex justify-between items-center p-6 border-b border-white/10">
-            <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-10 object-contain" onerror="this.style.display='none';">
-            <button onclick="toggleMobileMenu()" class="p-2 text-white hover:text-brand-cyan transition">
-                <i data-lucide="x" class="w-8 h-8"></i>
+    <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
+        <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]" alt="">
+
+        <div class="flex justify-between items-center p-6 border-b border-gray-100">
+            <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" alt="MBH Golden Global" class="h-20 object-contain" onerror="this.style.display='none';">
+            <button onclick="toggleMobileMenu()" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
-        <div class="flex flex-col gap-6 px-8 py-12 overflow-y-auto">
-            <button onclick="navigateTo('home')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Home</button>
-            <button onclick="navigateTo('about')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">About Us</button>
-            <button onclick="navigateTo('packages')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Destinations</button>
-            <button onclick="navigateTo('blog')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Stories</button>
-            <button onclick="navigateTo('contact')" class="text-4xl font-serif text-white text-left hover:text-brand-cyan transition">Contact</button>
+        <div class="flex flex-col gap-6 px-8 py-12 overflow-y-auto h-full justify-center">
+            <button onclick="navigateTo('home')" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Home.</button>
+            <button onclick="navigateTo('about')" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">About Us.</button>
+            <button onclick="navigateTo('packages')" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Destinations.</button>
+            <button onclick="navigateTo('blog')" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Stories.</button>
+            <button onclick="navigateTo('contact')" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Contact.</button>
             
-            <div class="mt-10 pt-10 border-t border-white/10 flex flex-col gap-4">
-                <span class="text-xs uppercase tracking-widest font-semibold text-brand-cyan">Get in touch</span>
-                <p class="text-white text-lg">+966 536 785 506</p>
-                <p class="text-white/70 text-sm">mbhgoldenglobalcompany@gmail.com</p>
+            <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col gap-2">
+                <span class="text-[10px] uppercase tracking-[0.2em] font-semibold text-brand-cyan">Direct Line</span>
+                <p class="text-brand-navy text-lg tracking-wide font-bold">+966 536 785 506</p>
+                <p class="text-gray-500 text-xs tracking-wide">mbhgoldenglobalcompany@gmail.com</p>
             </div>
         </div>
     </div>
@@ -204,104 +253,118 @@
         <!-- ========================================== -->
         <div id="home" class="page-view active">
             <!-- Full Bleed Hero Video -->
-            <header class="relative h-screen w-full overflow-hidden bg-brand-black"> 
-                <div class="absolute inset-0 bg-brand-deep/40 z-10"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-brand-black/80 via-transparent to-brand-black/90 z-10"></div>
-                <video class="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-80" autoplay loop muted playsinline>
-                    <source src="./mp_.mp4" type="video/mp4">
+            <header class="relative h-screen w-full overflow-hidden bg-brand-navy perspective-[1000px]"> 
+                <!-- Dark gradient overlays to ensure header visibility -->
+                <div class="absolute inset-0 bg-brand-navy/40 z-10 pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-brand-navy/90 via-brand-navy/20 to-brand-sand z-10 pointer-events-none"></div>
+                
+                <video class="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-90 transform scale-105" autoplay loop muted playsinline>
+                    <source src="https://monabbor-hossen.github.io/mhb-golden-global/mp_.mp4" type="video/mp4">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-airplane-flying-over-the-clouds-in-the-sky-27886-large.mp4" type="video/mp4">
                 </video>
                 
-                <!-- Elegant Hero Content -->
-                <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 max-w-5xl mx-auto fade-up">
-                    <span class="text-brand-cyan text-sm md:text-base tracking-[0.3em] uppercase mb-6 font-semibold shadow-glow drop-shadow-lg">Welcome to MBH Global</span>
-                    <h1 class="text-5xl sm:text-6xl md:text-[6rem] font-serif font-medium text-white mb-8 leading-[1.1]" style="text-shadow: 0 10px 40px rgba(0,0,0,0.8);">
-                        Explore the <br><i class="font-light text-white">Extraordinary</i>
+                <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-6 max-w-5xl mx-auto fade-up" style="transform: translateZ(30px);">
+                    <div class="bg-white/90 backdrop-blur-md border border-white/50 px-6 py-2 rounded-full mb-8 shadow-sm flex items-center gap-3">
+                        <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="h-4 object-contain">
+                        <span class="text-brand-navy text-[10px] md:text-xs tracking-[0.2em] uppercase font-bold">
+                            Welcome to MBH Global
+                        </span>
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl md:text-[7.5rem] font-serif font-bold text-white mb-6 leading-[1.0] text-3d-dark tracking-tight">
+                        Explore the <br><i class="font-medium text-brand-cyan">Extraordinary</i>
                     </h1>
-                    <p class="text-white/80 text-lg md:text-xl font-light mb-12 max-w-2xl">
+                    <p class="text-white/90 text-base md:text-xl font-medium mb-10 max-w-2xl leading-relaxed drop-shadow-md">
                         Simple, comfortable, and affordable journeys to the world's most captivating destinations.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-6">
-                        <button onclick="navigateTo('packages')" class="btn-3d-elegant">Discover Destinations</button>
+                    <div class="flex flex-col sm:flex-row gap-4 perspective-[500px]">
+                        <button onclick="navigateTo('packages')" class="btn-primary !px-10 !py-4" style="transform: translateZ(10px);">Discover Destinations</button>
                     </div>
                 </div>
 
-                <!-- Scroll Indicator -->
-                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-bounce">
-                    <span class="text-white/70 text-[10px] uppercase tracking-widest font-semibold">Scroll</span>
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-bounce">
+                    <span class="text-brand-navy text-[9px] uppercase tracking-[0.3em] font-bold">Scroll</span>
                     <div class="w-[2px] h-10 bg-gradient-to-b from-brand-cyan to-transparent rounded-full"></div>
                 </div>
             </header>
 
-            <!-- Curated Categories (Dark Mode Section matching Logo) -->
-            <section class="py-24 bg-brand-deep relative z-10">
+            <!-- Curated Categories -->
+            <section class="py-20 bg-brand-sand relative z-10 border-b border-white">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                     <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 fade-up">
                         <div class="max-w-2xl">
-                            <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Experiences</span>
-                            <h2 class="text-4xl md:text-5xl font-serif text-white leading-tight">Find what makes <br>your heart beat</h2>
+                            <span class="text-brand-cyan text-xs font-bold tracking-[0.2em] uppercase mb-4 block text-3d-light">Experiences</span>
+                            <h2 class="text-4xl md:text-6xl font-serif text-brand-navy leading-tight text-3d-light">Find what makes <br><i class="font-light text-brand-cyan">your heart beat</i></h2>
                         </div>
                     </div>
 
-                    <div class="flex overflow-x-auto gap-8 p-5 no-scrollbar fade-up delay-100">
-                        <!-- Category Items -->
-                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
-                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
-                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
-                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                    <div class="flex overflow-x-auto gap-6 pb-12 no-scrollbar fade-up delay-100 px-4 -mx-4 perspective-[1000px]">
+                        <!-- Subtle Pucks -->
+                        <div class="min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden relative border-[4px] border-white bg-white shadow-3d-puck group-hover:shadow-3d-puck-hover group-hover:-translate-y-1 transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1629815456220-4355ce3438ea?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105">
                             </div>
-                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Nature</span>
+                            <span class="text-xs font-bold tracking-[0.2em] uppercase text-brand-navy group-hover:text-brand-cyan transition-colors">Nature</span>
                         </div>
-                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
-                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
-                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
-                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                        <div class="min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden relative border-[4px] border-white bg-white shadow-3d-puck group-hover:shadow-3d-puck-hover group-hover:-translate-y-1 transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1647464098939-787d55b85a3c?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105">
                             </div>
-                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Culture</span>
+                            <span class="text-xs font-bold tracking-[0.2em] uppercase text-brand-navy group-hover:text-brand-cyan transition-colors">Culture</span>
                         </div>
-                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
-                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
-                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
-                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                        <div class="min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden relative border-[4px] border-white bg-white shadow-3d-puck group-hover:shadow-3d-puck-hover group-hover:-translate-y-1 transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105">
                             </div>
-                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Spiritual</span>
+                            <span class="text-xs font-bold tracking-[0.2em] uppercase text-brand-navy group-hover:text-brand-cyan transition-colors">Spiritual</span>
                         </div>
-                        <div class="min-w-[140px] md:min-w-[160px] flex flex-col items-center gap-6 group cursor-pointer">
-                            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden relative border-2 border-white/10 group-hover:border-brand-cyan transition-colors duration-500 shadow-lg group-hover:shadow-glow-lg">
-                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100">
-                                <div class="absolute inset-0 bg-brand-dark/30 group-hover:bg-transparent transition-colors duration-500"></div>
+                        <div class="min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer">
+                            <div class="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden relative border-[4px] border-white bg-white shadow-3d-puck group-hover:shadow-3d-puck-hover group-hover:-translate-y-1 transition-all duration-300">
+                                <img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105">
                             </div>
-                            <span class="text-sm font-semibold tracking-widest uppercase text-white/70 group-hover:text-brand-cyan transition-colors">Luxury</span>
+                            <span class="text-xs font-bold tracking-[0.2em] uppercase text-brand-navy group-hover:text-brand-cyan transition-colors">Luxury</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Featured Packages (Bright Contrast Section) -->
-            <section class="py-24 bg-brand-sand">
+            <!-- Featured Packages (Low-Profile 3D Cards) -->
+            <section class="py-24 bg-white relative z-20">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                     <div class="flex justify-between items-end mb-16 fade-up">
-                        <h2 class="text-4xl md:text-5xl font-serif text-brand-dark">Curated <br><i class="font-light text-brand-cyan">Destinations</i></h2>
-                        <button onclick="navigateTo('packages')" class="hidden md:flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-brand-dark hover:text-brand-cyan transition">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                        <h2 class="text-4xl md:text-6xl font-serif text-brand-navy leading-tight text-3d-light">Curated <br><i class="font-light text-brand-cyan">Destinations</i></h2>
+                        <button onclick="navigateTo('packages')" class="btn-outline !py-3 !px-6">View All <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 perspective-[2000px]">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[1000px]">
                         
-                        <!-- Destination Card -->
-                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
-                            <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
-                                <div class="absolute bottom-8 left-8 right-8 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Switzerland</span>
-                                    <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Swiss Alps</h3>
+                        <div class="group cursor-pointer fade-up card-premium rounded-[2rem] p-4 bg-brand-sand border border-gray-100">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">Switzerland</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Swiss Alps</h3>
                                 </div>
                             </div>
-                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">Experience the breathtaking nature with our premium guided tour.</p>
-                                <span class="font-bold text-lg text-brand-dark">SAR 5,500</span>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">Experience breathtaking nature with our guided tour.</p>
+                                <div class="bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 5,500</span>
+                                </div>
                             </div>
                         </div>
 
+<<<<<<< HEAD
+                        <div class="group cursor-pointer fade-up delay-100 mt-0 lg:mt-12 card-premium rounded-[2rem] p-4 bg-brand-sand border border-gray-100">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">Saudi Arabia</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Premium Umrah</h3>
+=======
                         <!-- Destination Card -->
                         <div class="group cursor-pointer fade-up delay-100 mt-0 lg:mt-12 card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
                             <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
@@ -310,51 +373,124 @@
                                 <div class="absolute bottom-8 left-8 right-8 inner-3d">
                                     <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Saudi Arabia</span>
                                     <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Premium Umrah</h3>
+>>>>>>> a82fea7fee198f07509a600e12e92b5e7a15ac2d
                                 </div>
                             </div>
-                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">5-star hotels near Haram, VIP transport, and guided Ziyarat.</p>
-                                <span class="font-bold text-lg text-brand-dark">SAR 2,500</span>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">5-star hotels near Haram, VIP transport, and Ziyarat.</p>
+                                <div class="bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 2,500</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Destination Card -->
-                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-gray-100">
-                            <div class="relative h-[30rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
-                                <div class="absolute bottom-8 left-8 right-8 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">France</span>
-                                    <h3 class="text-3xl font-serif text-white mb-2" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Parisian Escape</h3>
+                        <div class="group cursor-pointer fade-up delay-200 card-premium rounded-[2rem] p-4 bg-brand-sand border border-gray-100">
+                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
+                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">France</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Parisian Escape</h3>
                                 </div>
                             </div>
-                            <div class="px-4 pb-4 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%]">A mesmerizing journey exploring famous cuisines and historic monuments.</p>
-                                <span class="font-bold text-lg text-brand-dark">SAR 4,200</span>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">A mesmerizing journey exploring cuisines and monuments.</p>
+                                <div class="bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 4,200</span>
+                                </div>
                             </div>
                         </div>
 
-                    </div>
-                    <div class="mt-12 text-center md:hidden fade-up">
-                        <button onclick="navigateTo('packages')" class="btn-outline w-full">View All Destinations</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Split Section (About Snippet) -->
-            <section class="py-24 bg-brand-deep text-white border-t border-white/5">
+            <!-- Latest Stories (Home Page) -->
+            <section class="py-24 bg-brand-sand relative z-20 border-t border-white/50">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <div class="fade-up">
-                            <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-6 block">Our Promise</span>
-                            <h2 class="text-4xl md:text-5xl font-serif mb-8 leading-tight text-white">Travel with <br><i class="font-light text-brand-cyan">Confidence</i> and Ease</h2>
-                            <p class="text-white/70 text-lg font-light leading-relaxed mb-10 max-w-lg">
-                                We are a trusted travel and tourism service provider dedicated to making your journeys simple, comfortable, and affordable. We specialize in air ticket bookings offering the best routes.
-                            </p>
-                            <button onclick="navigateTo('about')" class="btn-outline-white">Discover Our Story</button>
+                    <div class="flex justify-between items-end mb-16 fade-up">
+                        <h2 class="text-4xl md:text-6xl font-serif text-brand-navy leading-tight text-3d-light">Latest <br><i class="font-light text-brand-cyan">Stories</i></h2>
+                        <button onclick="navigateTo('blog')" class="btn-outline !py-3 !px-6 hidden md:inline-flex">View All <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[1000px]">
+                        
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">Tips</div>
+                            </div>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Oct 24, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">How to Find the Best Flight Deals</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">Discover insider secrets on booking domestic and international flights at competitive prices.</p>
+                                <button onclick="navigateTo('blog')" class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
+                            </div>
+                        </article>
+
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up delay-100 card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">Guide</div>
+                            </div>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Sep 12, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">Umrah Packing Guide 2024</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">Everything you need to know and pack for a comfortable and spiritually fulfilling journey.</p>
+                                <button onclick="navigateTo('blog')" class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
+                            </div>
+                        </article>
+
+                        <!-- Blog Article -->
+                        <article class="group cursor-pointer fade-up delay-200 card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">News</div>
+                            </div>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Aug 05, 2024</span>
+                                </div>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">Top 5 European Escapes</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">From Paris to the Swiss Alps, explore the most highly recommended spots for your next vacation.</p>
+                                <button onclick="navigateTo('blog')" class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
+                            </div>
+                        </article>
+
+                    </div>
+                    
+                    <div class="mt-12 text-center md:hidden fade-up">
+                        <button onclick="navigateTo('blog')" class="btn-outline w-full !py-3 !px-6">View All Stories <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Split Section (Soft Depth) -->
+            <section class="py-24 bg-brand-sand text-brand-navy border-y border-white relative z-30 overflow-hidden">
+                <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="absolute -right-20 top-1/2 -translate-y-1/2 w-[600px] opacity-[0.03] pointer-events-none z-0" alt="">
+                
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center perspective-[1000px]">
+                        <div class="fade-up card-premium !bg-transparent !border-none !shadow-none">
+                            <div class="inner-3d">
+                                <span class="bg-white border border-gray-200 text-brand-cyan text-[10px] font-bold tracking-[0.3em] uppercase mb-6 inline-block px-4 py-2 rounded-full">Our Promise</span>
+                                <h2 class="text-4xl md:text-6xl font-serif mb-8 leading-[1.1] text-brand-navy text-3d-light">Travel with <br><i class="font-bold text-brand-cyan">Confidence</i> <br>and Ease.</h2>
+                                <p class="text-gray-600 text-lg font-medium leading-relaxed mb-10 max-w-md">
+                                    We are a trusted travel and tourism service provider dedicated to making your journeys simple, comfortable, and affordable. We specialize in air ticket bookings offering the best routes.
+                                </p>
+                                <button onclick="navigateTo('about')" class="btn-outline">Discover Our Story</button>
+                            </div>
                         </div>
-                        <div class="relative h-[40rem] rounded-[2rem] overflow-hidden fade-up delay-100 shadow-2xl border border-white/10">
-                            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
+                        <div class="relative h-[35rem] rounded-[2.5rem] overflow-hidden fade-up delay-100 shadow-md border-[4px] border-white group card-premium bg-white">
+                            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover transition-transform duration-[3s] ease-apple group-hover:scale-105 inner-3d">
                         </div>
                     </div>
                 </div>
@@ -365,39 +501,43 @@
         <!-- 2. ABOUT US PAGE VIEW                      -->
         <!-- ========================================== -->
         <div id="about" class="page-view">
-            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
-                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
-                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">About Us</span>
-                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Our <i class="font-light text-brand-cyan">Story</i></h1>
-                    <p class="text-xl text-gray-500 font-light max-w-2xl">Dedicated to making your journeys simple, comfortable, and affordable.</p>
+            <header class="pt-48 pb-20 bg-white border-b border-gray-100 relative overflow-hidden">
+                <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="absolute -left-20 top-20 w-[500px] opacity-[0.02] pointer-events-none z-0" alt="">
+                
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up perspective-[1000px] relative z-10">
+                    <div class="inner-3d">
+                        <span class="text-brand-cyan text-xs font-bold tracking-[0.3em] uppercase mb-6 block text-3d-light">About Us</span>
+                        <h1 class="text-5xl md:text-8xl font-serif text-brand-navy mb-8 leading-tight text-3d-light">Our <i class="font-bold text-brand-cyan">Story</i></h1>
+                        <p class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl leading-relaxed">Dedicated to making your journeys simple, comfortable, and affordable.</p>
+                    </div>
                 </div>
             </header>
 
-            <section class="py-20 bg-white min-h-screen">
+            <section class="py-24 bg-brand-sand min-h-screen relative z-10">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                         
-                        <div class="lg:col-span-5 fade-up">
-                            <div class="sticky top-32">
-                                <h2 class="text-3xl font-serif text-brand-dark mb-8 leading-snug">We aim to be your trusted partner for all your travel needs.</h2>
-                                <div class="w-full h-[450px] rounded-[2rem] overflow-hidden shadow-xl border border-gray-100">
-                                    <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
+                        <div class="lg:col-span-5 fade-up perspective-[1000px]">
+                            <div class="sticky top-32 card-premium !bg-transparent !border-none !shadow-none">
+                                <h2 class="text-3xl md:text-4xl font-serif text-brand-navy mb-10 leading-snug text-3d-light inner-3d">We aim to be your trusted partner for all your travel needs.</h2>
+                                <div class="w-full h-[450px] rounded-[2.5rem] overflow-hidden shadow-sm border-[4px] border-white inner-3d group">
+                                    <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-apple">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="lg:col-span-7 fade-up delay-100">
-                            <div class="prose prose-lg prose-gray max-w-none">
-                                <p class="text-gray-600 leading-relaxed font-light mb-8 text-xl">
+                        <div class="lg:col-span-7 fade-up delay-100 card-premium bg-white">
+                            <div class="prose prose-lg prose-gray max-w-none p-8 md:p-10 inner-3d">
+                                <p class="text-brand-navy leading-relaxed font-semibold mb-8 text-xl">
                                     We are a trusted travel and tourism service provider dedicated to making your journeys simple, comfortable, and affordable. We specialize in air ticket bookings for both domestic and international travel, offering the best routes and competitive prices to suit your needs. Whether you are traveling for business, vacation, or family visits, we ensure a smooth and hassle-free experience.
                                 </p>
-                                <div class="w-full h-[350px] rounded-[2rem] overflow-hidden mb-8 my-12 shadow-xl border border-gray-100">
-                                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
+                                <div class="w-full h-[350px] rounded-[2rem] overflow-hidden mb-8 my-12 shadow-sm border-[4px] border-brand-sand group relative">
+                                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s] ease-apple">
                                 </div>
-                                <p class="text-gray-600 leading-relaxed font-light mb-8 text-xl">
+                                <p class="text-gray-600 leading-relaxed font-medium mb-8 text-lg">
                                     In addition to flight bookings, we provide a variety of tour packages designed for individuals, families, and groups. Our packages are carefully planned to give you a memorable and enjoyable travel experience. We focus on customer satisfaction by offering quick service, reliable support, and easy booking options.
                                 </p>
-                                <p class="text-gray-600 leading-relaxed font-light text-xl">
+                                <p class="text-gray-600 leading-relaxed font-medium text-lg">
                                     Our goal is to make travel accessible and stress-free for everyone. With our professional approach and dedication, we aim to be your trusted partner for all your travel needs. Travel with confidence and ease with us.
                                 </p>
                             </div>
@@ -412,112 +552,75 @@
         <!-- 3. PACKAGES PAGE VIEW                      -->
         <!-- ========================================== -->
         <div id="packages" class="page-view">
-            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
-                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
-                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Tour Packages</span>
-                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Explore <i class="font-light text-brand-cyan">Destinations</i></h1>
-                    <p class="text-xl text-gray-500 font-light max-w-2xl">Carefully planned packages designed for individuals, families, and groups.</p>
+            <header class="pt-48 pb-20 bg-white border-b border-gray-100">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up perspective-[1000px]">
+                    <div class="inner-3d">
+                        <span class="text-brand-cyan text-xs font-bold tracking-[0.3em] uppercase mb-6 block text-3d-light">Tour Packages</span>
+                        <h1 class="text-5xl md:text-8xl font-serif text-brand-navy mb-8 leading-tight text-3d-light">Explore <i class="font-bold text-brand-cyan">Destinations</i></h1>
+                        <p class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl leading-relaxed">Carefully planned packages designed for individuals, families, and groups.</p>
+                    </div>
                 </div>
             </header>
 
-            <section class="py-20 bg-white min-h-screen">
+            <section class="py-24 bg-brand-sand min-h-screen relative z-10">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[2000px]">
                         
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                        <!-- 3D Card (Reduced Elevation) -->
+                        <div class="group cursor-pointer fade-up card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100">
+                            <div class="relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
                                 <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Switzerland</span>
-                                    <h3 class="text-2xl font-serif text-white">Swiss Alps Adventure</h3>
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">Switzerland</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Swiss Alps</h3>
                                 </div>
                             </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Experience the breathtaking nature with our premium guided tour.</p>
-                                <span class="font-bold text-brand-dark">SAR 5,500</span>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">Experience breathtaking nature with our guided tour.</p>
+                                <div class="bg-brand-sand px-5 py-3 rounded-2xl border border-white">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 5,500</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up delay-100 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1600521605615-568bfd097ccf?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                        <!-- 3D Card -->
+                        <div class="group cursor-pointer fade-up delay-100 card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100">
+                            <div class="relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1565552643983-65922312b918?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
                                 <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Turkey</span>
-                                    <h3 class="text-2xl font-serif text-white">Magical Cappadocia</h3>
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">Saudi Arabia</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Premium Umrah</h3>
                                 </div>
                             </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Hot air balloon rides, historic caves, and rich Turkish culture await.</p>
-                                <span class="font-bold text-brand-dark">SAR 3,200</span>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">5-star hotels near Haram, VIP transport, and Ziyarat.</p>
+                                <div class="bg-brand-sand px-5 py-3 rounded-2xl border border-white">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 2,500</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
+                        <!-- 3D Card -->
+                        <div class="group cursor-pointer fade-up delay-200 card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100">
+                            <div class="relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90"></div>
                                 <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Saudi Arabia</span>
-                                    <h3 class="text-2xl font-serif text-white">Premium Umrah</h3>
+                                    <span class="bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full">France</span>
+                                    <h3 class="text-3xl font-serif text-white mb-1">Parisian Escape</h3>
                                 </div>
                             </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Complete package including 5-star hotels near Haram.</p>
-                                <span class="font-bold text-brand-dark">SAR 2,500</span>
-                            </div>
-                        </div>
-
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
-                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Maldives</span>
-                                    <h3 class="text-2xl font-serif text-white">Island Retreat</h3>
+                            <div class="px-3 pb-2 flex justify-between items-center inner-3d">
+                                <p class="text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium">A mesmerizing journey exploring famous cuisines.</p>
+                                <div class="bg-brand-sand px-5 py-3 rounded-2xl border border-white">
+                                    <span class="block text-[9px] uppercase text-gray-400 font-bold mb-1">From</span>
+                                    <span class="font-black text-lg text-brand-navy">SAR 4,200</span>
                                 </div>
-                            </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Nature and relaxation in luxury overwater villas.</p>
-                                <span class="font-bold text-brand-dark">SAR 6,200</span>
-                            </div>
-                        </div>
-
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up delay-100 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
-                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Morocco</span>
-                                    <h3 class="text-2xl font-serif text-white">Morocco Explorer</h3>
-                                </div>
-                            </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">Discover vibrant markets and historic sites.</p>
-                                <span class="font-bold text-brand-dark">SAR 3,800</span>
-                            </div>
-                        </div>
-
-                        <!-- Card -->
-                        <div class="group cursor-pointer fade-up delay-200 card-3d-subtle rounded-[2rem] bg-brand-sand p-4 border border-gray-100 hover:border-brand-cyan/30 transition-colors">
-                            <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6">
-                                <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/80 via-transparent to-transparent opacity-90"></div>
-                                <div class="absolute bottom-6 left-6 right-6 inner-3d">
-                                    <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-2 block">Egypt</span>
-                                    <h3 class="text-2xl font-serif text-white">Wonders of Egypt</h3>
-                                </div>
-                            </div>
-                            <div class="px-2 flex justify-between items-start inner-3d">
-                                <p class="text-gray-500 text-sm leading-relaxed max-w-[70%] line-clamp-2">A cultural journey through the ancient pyramids.</p>
-                                <span class="font-bold text-brand-dark">SAR 2,900</span>
                             </div>
                         </div>
 
@@ -530,62 +633,62 @@
         <!-- 4. BLOG PAGE VIEW                          -->
         <!-- ========================================== -->
         <div id="blog" class="page-view">
-            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
-                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
-                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Journal</span>
-                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Travel <i class="font-light text-brand-cyan">Stories</i></h1>
-                    <p class="text-xl text-gray-500 font-light max-w-2xl">Insights, tips, and inspiration from our global travels.</p>
+            <header class="pt-48 pb-20 bg-white border-b border-gray-100">
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up perspective-[1000px]">
+                    <div class="inner-3d">
+                        <span class="text-brand-cyan text-xs font-bold tracking-[0.3em] uppercase mb-6 block text-3d-light">Journal</span>
+                        <h1 class="text-5xl md:text-8xl font-serif text-brand-navy mb-8 leading-tight text-3d-light">Travel <i class="font-bold text-brand-cyan">Stories</i></h1>
+                        <p class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl leading-relaxed">Insights, tips, and inspiration from our global travels.</p>
+                    </div>
                 </div>
             </header>
 
-            <section class="py-20 bg-white min-h-screen">
+            <section class="py-24 bg-brand-sand min-h-screen relative z-10">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                        <!-- Blog Article -->
-                        <article class="group cursor-pointer fade-up">
-                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
-                                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 perspective-[2000px]">
+                        <!-- Blog Article (Lower Profile 3D) -->
+                        <article class="group cursor-pointer fade-up card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">Tips</div>
                             </div>
-                            <div class="px-2">
-                                <div class="flex gap-4 items-center mb-4">
-                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Tips</span>
-                                    <span class="text-gray-400 text-xs font-medium">Oct 24, 2024</span>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Oct 24, 2024</span>
                                 </div>
-                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">How to Find the Best Flight Deals</h3>
-                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">Discover insider secrets on booking domestic and international flights at competitive prices.</p>
-                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">How to Find the Best Flight Deals</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">Discover insider secrets on booking domestic and international flights at competitive prices.</p>
+                                <button class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
                             </div>
                         </article>
 
-                        <!-- Blog Article -->
-                        <article class="group cursor-pointer fade-up delay-100">
-                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
-                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <article class="group cursor-pointer fade-up delay-100 card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1542051812871-75750081408d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">Guide</div>
                             </div>
-                            <div class="px-2">
-                                <div class="flex gap-4 items-center mb-4">
-                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Guide</span>
-                                    <span class="text-gray-400 text-xs font-medium">Sep 12, 2024</span>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Sep 12, 2024</span>
                                 </div>
-                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">Umrah Packing Guide 2024</h3>
-                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">Everything you need to know and pack for a comfortable and spiritually fulfilling journey.</p>
-                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">Umrah Packing Guide 2024</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">Everything you need to know and pack for a comfortable and spiritually fulfilling journey.</p>
+                                <button class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
                             </div>
                         </article>
 
-                        <!-- Blog Article -->
-                        <article class="group cursor-pointer fade-up delay-200">
-                            <div class="relative h-80 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-gray-100">
-                                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <article class="group cursor-pointer fade-up delay-200 card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
+                            <div class="relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d">
+                                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
+                                <div class="absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase">News</div>
                             </div>
-                            <div class="px-2">
-                                <div class="flex gap-4 items-center mb-4">
-                                    <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest">Destinations</span>
-                                    <span class="text-gray-400 text-xs font-medium">Aug 05, 2024</span>
+                            <div class="px-4 inner-3d">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white">Aug 05, 2024</span>
                                 </div>
-                                <h3 class="text-2xl font-serif text-brand-dark mb-3 group-hover:text-brand-cyan transition-colors">Top 5 European Escapes</h3>
-                                <p class="text-gray-500 font-light leading-relaxed mb-6 line-clamp-2">From Paris to the Swiss Alps, explore the most highly recommended spots for your next vacation.</p>
-                                <span class="text-sm font-semibold tracking-widest uppercase border-b border-brand-dark pb-1 group-hover:border-brand-cyan transition-colors">Read Story</span>
+                                <h3 class="text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug">Top 5 European Escapes</h3>
+                                <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">From Paris to the Swiss Alps, explore the most highly recommended spots for your next vacation.</p>
+                                <button class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</button>
                             </div>
                         </article>
                     </div>
@@ -597,64 +700,68 @@
         <!-- 5. CONTACT PAGE VIEW                       -->
         <!-- ========================================== -->
         <div id="contact" class="page-view">
-            <header class="pt-40 pb-20 bg-brand-sand border-b border-gray-200/50">
-                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up">
-                    <span class="text-brand-cyan text-xs font-semibold tracking-[0.2em] uppercase mb-4 block">Connect</span>
-                    <h1 class="text-5xl md:text-7xl font-serif text-brand-dark mb-6">Get in <i class="font-light text-brand-cyan">Touch</i></h1>
-                    <p class="text-xl text-gray-500 font-light max-w-2xl">We are here to make your travel dreams a reality.</p>
+            <header class="pt-48 pb-20 bg-white border-b border-gray-100 relative overflow-hidden">
+                <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] opacity-[0.02] pointer-events-none z-0" alt="">
+                
+                <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 fade-up perspective-[1000px] relative z-10">
+                    <div class="inner-3d">
+                        <span class="text-brand-cyan text-xs font-bold tracking-[0.3em] uppercase mb-6 block text-3d-light">Connect</span>
+                        <h1 class="text-5xl md:text-8xl font-serif text-brand-navy mb-8 leading-tight text-3d-light">Get in <i class="font-bold text-brand-cyan">Touch</i></h1>
+                        <p class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl leading-relaxed">We are here to make your travel dreams a reality.</p>
+                    </div>
                 </div>
             </header>
 
-            <section class="py-20 bg-white min-h-screen">
+            <section class="py-24 bg-brand-sand min-h-screen relative z-10">
                 <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 perspective-[1000px]">
                         
-                        <!-- Contact Info -->
-                        <div class="lg:col-span-5 fade-up">
-                            <div class="bg-brand-sand rounded-[2.5rem] p-12 h-full border border-gray-100">
-                                <h3 class="font-serif text-3xl mb-12 text-brand-dark">Contact Details</h3>
+                        <!-- Contact Info Box (Lower Elevation) -->
+                        <div class="lg:col-span-5 fade-up card-premium !bg-transparent !border-none !shadow-none">
+                            <div class="bg-white rounded-[2.5rem] p-10 h-full border border-gray-100 shadow-sm inner-3d">
+                                <h3 class="font-serif text-4xl mb-12 text-brand-navy font-bold">Contact Details</h3>
                                 
                                 <div class="flex flex-col gap-10">
-                                    <div>
-                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Address</span>
-                                        <p class="text-gray-600 font-medium leading-relaxed pl-6">Khobib Market/ Bangali Market,<br>King Abdul Aziz Road, Buraydah,<br>Al-Qassim, Saudi Arabia.</p>
+                                    <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
+                                        <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="map-pin" class="w-4 h-4"></i></div> Address</span>
+                                        <p class="text-brand-navy font-medium leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]">Khobib Market/ Bangali Market,<br>King Abdul Aziz Road, Buraydah,<br>Al-Qassim, Saudi Arabia.</p>
                                     </div>
                                     
-                                    <div>
-                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> Mobile</span>
-                                        <p class="text-gray-600 font-medium leading-relaxed pl-6">+966 536 785 506<br>+966 576 473 201</p>
+                                    <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
+                                        <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="phone" class="w-4 h-4"></i></div> Mobile</span>
+                                        <p class="text-brand-navy font-medium leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]">+966 536 785 506<br>+966 576 473 201</p>
                                     </div>
 
-                                    <div>
-                                        <span class="text-brand-cyan text-xs font-semibold uppercase tracking-widest mb-3 block flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> Email</span>
-                                        <p class="text-gray-600 font-medium break-all leading-relaxed pl-6">mbhgoldenglobalcompany@gmail.com<br>mbhgoldenglobal@gmail.com</p>
+                                    <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
+                                        <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="mail" class="w-4 h-4"></i></div> Email</span>
+                                        <p class="text-brand-navy font-medium break-all leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]">mbhgoldenglobalcompany@gmail.com<br>mbhgoldenglobal@gmail.com</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sleek Form -->
-                        <div class="lg:col-span-7 fade-up delay-100">
-                            <div class="bg-white p-2 md:p-8">
-                                <h3 class="text-3xl font-serif text-brand-dark mb-12">Send an Inquiry</h3>
-                                <form class="space-y-10" onsubmit="event.preventDefault(); alert('Form submitted successfully!');">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <!-- Form Block -->
+                        <div class="lg:col-span-7 fade-up delay-100 card-premium bg-white">
+                            <div class="p-8 md:p-12 rounded-[2.5rem] inner-3d relative">
+                                <h3 class="text-4xl font-serif text-brand-navy mb-12 font-bold text-3d-light">Send an Inquiry</h3>
+                                <form class="space-y-8" onsubmit="event.preventDefault(); alert('Form submitted successfully!');">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div>
-                                            <input type="text" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Full Name" required>
+                                            <input type="text" class="input-minimal text-sm" placeholder="Full Name" required>
                                         </div>
                                         <div>
-                                            <input type="email" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Email Address" required>
+                                            <input type="email" class="input-minimal text-sm" placeholder="Email Address" required>
                                         </div>
                                     </div>
                                     <div>
-                                        <input type="text" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors" placeholder="Subject" required>
+                                        <input type="text" class="input-minimal text-sm" placeholder="Subject" required>
                                     </div>
                                     <div>
-                                        <textarea rows="4" class="w-full bg-transparent border-b-2 border-gray-100 py-3 text-brand-dark font-medium placeholder-gray-400 focus:outline-none focus:border-brand-cyan transition-colors resize-none" placeholder="Message" required></textarea>
+                                        <textarea rows="5" class="input-minimal text-sm resize-none" placeholder="Message" required></textarea>
                                     </div>
                                     <div class="pt-6">
-                                        <button type="submit" class="btn-3d-elegant w-full md:w-auto !px-12 !py-4 text-base">Send Message</button>
+                                        <button type="submit" class="btn-primary w-full md:w-auto !px-12 !py-4 text-xs !rounded-xl">Send Message</button>
                                     </div>
                                 </form>
                             </div>
@@ -666,62 +773,64 @@
 
     </main>
 
-    <!-- Footer (Using Dark theme to match logo) -->
-    <footer class="bg-brand-deep pt-24 pb-12 text-white/80 border-t-4 border-brand-cyan">
-        <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+    <!-- Light Theme Footer (Low-Profile 3D) -->
+    <footer class="bg-brand-sand pt-24 pb-12 text-brand-navy border-t-[4px] border-brand-cyan relative overflow-hidden">
+        <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" class="absolute -left-20 -bottom-10 w-[500px] opacity-[0.03] pointer-events-none z-0" alt="">
+        
+        <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16 perspective-[1000px]">
                 
                 <!-- Brand Info -->
-                <div class="lg:col-span-5 pr-8">
-                    <div class="mb-4">
-                        <img src="./Logo png-01.png" alt="MBH Golden Global" class="h-24 md:h-40 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <div class="hidden font-serif font-bold text-3xl tracking-wide text-white">
+                <div class="lg:col-span-5 pr-8 card-premium !bg-transparent !border-none !shadow-none">
+                    <div class="mb-8 inner-3d">
+                        <img src="https://monabbor-hossen.github.io/mhb-golden-global/Logo%20png-01.png" alt="MBH Golden Global" class="h-24 md:h-32 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="hidden font-serif font-bold text-3xl tracking-wide text-brand-navy text-3d-light">
                             <span class="text-brand-cyan">MBH</span> GLOBAL
                         </div>
                     </div>
-                    <p class="text-white/60 mb-10 max-w-sm font-medium leading-relaxed">
+                    <p class="text-gray-500 mb-8 max-w-md font-medium leading-relaxed text-base inner-3d">
                         Our goal is to make travel accessible and stress-free for everyone. Travel with confidence and ease with us.
                     </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                    <div class="flex space-x-4 inner-3d">
+                        <a href="#" class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
                             <i data-lucide="facebook" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                        <a href="#" class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="w-12 h-12 rounded-full border border-white/10 bg-brand-dark flex items-center justify-center hover:bg-brand-cyan hover:border-brand-cyan hover:shadow-glow transition-all duration-300 text-brand-cyan hover:text-white">
+                        <a href="#" class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Quick Links -->
-                <div class="lg:col-span-3 lg:col-start-7">
-                    <h4 class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-8">Discover</h4>
-                    <ul class="space-y-5 font-medium text-sm">
-                        <li><button onclick="navigateTo('home')" class="hover:text-brand-cyan transition-colors">Home</button></li>
-                        <li><button onclick="navigateTo('about')" class="hover:text-brand-cyan transition-colors">About Us</button></li>
-                        <li><button onclick="navigateTo('packages')" class="hover:text-brand-cyan transition-colors">Destinations</button></li>
-                        <li><button onclick="navigateTo('blog')" class="hover:text-brand-cyan transition-colors">Travel Stories</button></li>
+                <div class="lg:col-span-3 lg:col-start-7 fade-up delay-100">
+                    <h4 class="text-brand-cyan text-[10px] font-black tracking-[0.2em] uppercase mb-8 text-3d-light">Discover</h4>
+                    <ul class="space-y-4 font-bold text-sm">
+                        <li><button onclick="navigateTo('home')" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Home</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-brand-cyan hover:translate-x-1 transition-all">About Us</button></li>
+                        <li><button onclick="navigateTo('packages')" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Destinations</button></li>
+                        <li><button onclick="navigateTo('blog')" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Travel Stories</button></li>
                     </ul>
                 </div>
 
                 <!-- Contact -->
-                <div class="lg:col-span-3">
-                    <h4 class="text-brand-cyan text-xs font-bold tracking-widest uppercase mb-8">Contact</h4>
-                    <ul class="space-y-5 font-medium text-sm">
-                        <li class="flex items-center gap-3"><i data-lucide="phone" class="w-4 h-4 text-white/50"></i> +966 536 785 506</li>
-                        <li class="flex items-center gap-3"><i data-lucide="mail" class="w-4 h-4 text-white/50"></i> mbhgoldenglobal@gmail.com</li>
-                        <li class="pt-4 text-white/50 flex items-start gap-3"><i data-lucide="map-pin" class="w-4 h-4 mt-1"></i> Buraydah, Al-Qassim,<br>Saudi Arabia</li>
+                <div class="lg:col-span-3 fade-up delay-200">
+                    <h4 class="text-brand-cyan text-[10px] font-black tracking-[0.2em] uppercase mb-8 text-3d-light">Contact</h4>
+                    <ul class="space-y-6 font-bold text-sm">
+                        <li class="flex items-center gap-4"><div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="phone" class="w-4 h-4 text-brand-cyan"></i></div> +966 536 785 506</li>
+                        <li class="flex items-center gap-4"><div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="mail" class="w-4 h-4 text-brand-cyan"></i></div> mbhgoldenglobal@gmail.com</li>
+                        <li class="pt-2 text-gray-500 flex items-start gap-4"><div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="map-pin" class="w-4 h-4 text-brand-cyan"></i></div> <span class="text-brand-navy">Buraydah, Al-Qassim,<br>Saudi Arabia</span></li>
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-semibold tracking-wider uppercase text-white/40">
-                <p>&copy; 2024 MBH Golden Global. All rights reserved.</p>
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold tracking-[0.15em] uppercase text-gray-400">
+                <p>&copy; 2024 MBH Golden Global.</p>
                 <div class="flex space-x-8">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-brand-cyan transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-brand-cyan transition-colors">Terms of Service</a>
                 </div>
             </div>
         </div>
@@ -732,81 +841,86 @@
         // Render Lucide Icons
         lucide.createIcons();
 
-        // Subtle 3D Mouse Tracking Logic for Cards
-        const tiltCards = document.querySelectorAll('.card-3d-subtle');
+        // Very Subtle 3D Mouse Tracking Logic for Cards
+        const tiltCards = document.querySelectorAll('.card-premium');
         
         tiltCards.forEach(card => {
             card.addEventListener('mousemove', e => {
-                if (window.innerWidth < 768) return; 
+                if (window.innerWidth < 1024) return; // Only on desktop
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left; 
                 const y = e.clientY - rect.top;  
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                // Very subtle rotation threshold (Max 4 degrees for elegance)
-                const rotateX = ((y - centerY) / centerY) * -4; 
-                const rotateY = ((x - centerX) / centerX) * 4;
+                // Reduced rotation threshold (Max 3 degrees)
+                const rotateX = ((y - centerY) / centerY) * -3; 
+                const rotateY = ((x - centerX) / centerX) * 3;
                 
                 card.classList.remove('resetting');
-                card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
                 
-                // Dynamic floating shadow colored with brand cyan
-                card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2}px 30px rgba(0, 130, 202, 0.15)`;
+                // Soft floating shadow
+                card.style.boxShadow = `${-rotateY * 1.5}px ${rotateX * 1.5}px 20px rgba(0, 51, 85, 0.05)`;
             });
 
             card.addEventListener('mouseleave', () => {
-                if (window.innerWidth < 768) return;
+                if (window.innerWidth < 1024) return;
                 card.classList.add('resetting');
-                card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
                 card.style.boxShadow = ``; 
             });
         });
 
-        // Navbar Scroll Effect
+        // 3D Floating Navbar Scroll Effect 
         const navbar = document.getElementById('navbar');
         const navTexts = document.querySelectorAll('.nav-text');
         const navDivider = document.querySelector('.nav-divider');
+        const navLogo = document.getElementById('nav-logo');
 
-        window.addEventListener('scroll', () => {
+        function updateNavbar() {
             const homePage = document.getElementById('home');
+            const isHome = homePage && homePage.classList.contains('active');
             
             if (window.scrollY > 50) {
-                // Scrolled State (Match logo background - deep navy)
-                navbar.classList.add('bg-brand-deep/95', 'backdrop-blur-md', 'shadow-lg', 'border-white/5');
-                navbar.classList.remove('py-6', 'border-transparent');
-                navbar.classList.add('py-4');
+                // Scrolled State - Floating Glass Pill
+                navbar.classList.add('bg-white/95', 'shadow-glass-3d', 'border-white', 'backdrop-blur-xl');
+                navbar.classList.remove('py-6', 'border-transparent', 'border-b', 'w-full', 'rounded-none', 'bg-transparent', 'top-0');
+                navbar.classList.add('py-4', 'w-[95%]', 'max-w-[90rem]', 'rounded-[2rem]', 'top-4', 'md:top-6', 'border');
                 
-                // Keep text white for dark background
-                navTexts.forEach(el => el.classList.add('text-white'));
+                navTexts.forEach(el => {
+                    el.classList.remove('text-white');
+                    el.classList.add('text-brand-navy');
+                });
+                if(navDivider) navDivider.classList.replace('border-white/20', 'border-gray-200');
+                if(navLogo) navLogo.classList.remove('brightness-0', 'invert');
+                
             } else {
                 // Top State
-                navbar.classList.remove('bg-brand-deep/95', 'backdrop-blur-md', 'shadow-lg', 'border-white/5');
-                navbar.classList.add('py-6', 'border-transparent');
-                navbar.classList.remove('py-4');
+                navbar.classList.remove('bg-white/95', 'shadow-glass-3d', 'border-white', 'border', 'w-[95%]', 'max-w-[90rem]', 'rounded-[2rem]', 'top-4', 'md:top-6', 'py-4', 'backdrop-blur-xl');
+                navbar.classList.add('py-6', 'border-transparent', 'border-b', 'w-full', 'rounded-none', 'top-0', 'bg-transparent');
                 
-                if(homePage.classList.contains('active')) {
-                    navTexts.forEach(el => el.classList.add('text-white'));
+                if (isHome) {
+                    // Home page at top: Dark background, needs White text & logo
+                    navTexts.forEach(el => {
+                        el.classList.remove('text-brand-navy');
+                        el.classList.add('text-white');
+                    });
+                    if(navDivider) navDivider.classList.replace('border-gray-200', 'border-white/20');
+                    if(navLogo) navLogo.classList.add('brightness-0', 'invert');
                 } else {
-                    // On light pages at top, nav text should be dark
-                    navTexts.forEach(el => el.classList.remove('text-white'));
-                    navTexts.forEach(el => el.classList.add('text-brand-dark'));
+                    // Other pages at top: Light background, needs Dark text & logo
+                    navTexts.forEach(el => {
+                        el.classList.remove('text-white');
+                        el.classList.add('text-brand-navy');
+                    });
+                    if(navDivider) navDivider.classList.replace('border-white/20', 'border-gray-200');
+                    if(navLogo) navLogo.classList.remove('brightness-0', 'invert');
                 }
             }
-        });
-
-        function updateNavbarStyle(pageId) {
-            if (pageId === 'home' || window.scrollY > 50) {
-                navTexts.forEach(el => el.classList.add('text-white'));
-                navTexts.forEach(el => el.classList.remove('text-brand-dark'));
-                if(navDivider) navDivider.classList.replace('border-gray-200', 'border-white/20');
-            } else {
-                // Light pages at scroll 0
-                navTexts.forEach(el => el.classList.remove('text-white'));
-                navTexts.forEach(el => el.classList.add('text-brand-dark'));
-                if(navDivider) navDivider.classList.replace('border-white/20', 'border-gray-200');
-            }
         }
+
+        window.addEventListener('scroll', updateNavbar);
 
         // Scroll Animation Logic
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
@@ -850,7 +964,7 @@
                 const target = document.getElementById(pageId);
                 if(target) {
                     target.classList.add('active');
-                    updateNavbarStyle(pageId);
+                    updateNavbar(); // Guarantee navbar updates to correct colors on new page
                     
                     const animatedElements = target.querySelectorAll('.fade-up');
                     animatedElements.forEach(el => {
@@ -871,7 +985,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        updateNavbarStyle('home');
+        // Initialize navbar on load
+        updateNavbar();
     </script>
 </body>
 </html>
