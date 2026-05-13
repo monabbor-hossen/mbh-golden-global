@@ -28,6 +28,8 @@ if (ini_get('session.use_cookies')) {
 }
 
 // Redirect to login page
-header('Location: login.php?logged_out=1');
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+header('Location: ' . $protocol . '://' . $host . '/mbh-golden-global/admin/login.php?logged_out=1');
 exit;
 ?>

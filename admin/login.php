@@ -7,32 +7,27 @@
 
 require_once '../includes/db.php';
 
-// 1. HARDENED SESSION SETTINGS (Must be called before session_start)
-ini_set('session.cookie_httponly', 1); // Prevents JavaScript (XSS) from stealing cookies
-ini_set('session.use_only_cookies', 1); // Forces cookies, prevents URL session ID injection
-ini_set('session.cookie_samesite', 'Strict'); // Prevents Cross-Site Request Forgery
+// Hardened Session Settings
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_samesite', 'Strict');
 
-
-// Secure session configuration
 if (session_status() === PHP_SESSION_NONE) {
-    session_set_cookie_params([
-        'lifetime' => 0,
-        'path' => '/admin/',
-        'domain' => $_SERVER['HTTP_HOST'],
-        'secure' => isset($_SERVER['HTTPS']),
-        'httponly' => true,
-        'samesite' => 'Strict'
-    ]);
     session_start();
 }
 
-// Redirect to dashboard if already logged in
+/**
+ * FIXED REDIRECT LOGIC
+ * If session is already active, bounce user away from login to dashboard
+ */
 if (isset($_SESSION['admin_id'])) {
-    header("Location: index.php");
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $protocol . '://' . $host . '/mbh-golden-global/admin/index.php');
     exit;
 }
 
-// Generate CSRF Token
+// 2. CSRF TOKEN GENERATION
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -108,7 +103,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 // Reset failed attempts on success
                 $_SESSION['login_attempts'] = 0;
 
-                header('Location: ' . $redirectUrl);
+                // Build full URL for redirect (supports both relative and absolute paths)
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'];
+                
+                if (strpos($redirectUrl, 'http://') === 0 || strpos($redirectUrl, 'https://') === 0) {
+                    // Already a full URL
+                    $finalUrl = $redirectUrl;
+                } else {
+                    // Path-only - make it a full URL
+                    if (strpos($redirectUrl, '/') !== 0) {
+                        $redirectUrl = '/mbh-golden-global/admin/' . $redirectUrl;
+                    }
+                    $finalUrl = $protocol . '://' . $host . $redirectUrl;
+                }
+                header('Location: ' . $finalUrl);
                 exit;
             } else {
                 // Failed login

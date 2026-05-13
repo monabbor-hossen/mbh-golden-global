@@ -19,7 +19,9 @@ if (session_status() === PHP_SESSION_NONE) {
 if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_email'])) {
     // Destroy any partial session data
     session_destroy();
-    header('Location: ../login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $protocol . '://' . $host . '/mbh-golden-global/admin/login.php');
     exit;
 }
 
@@ -27,7 +29,9 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_email'])) {
 $SESSION_TIMEOUT = 1800; // 30 minutes
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $SESSION_TIMEOUT) {
     session_destroy();
-    header('Location: ../login.php?timeout=1');
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $protocol . '://' . $host . '/mbh-golden-global/admin/login.php?timeout=1');
     exit;
 }
 

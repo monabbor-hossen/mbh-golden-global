@@ -1,17 +1,17 @@
 <IfModule mod_rewrite.c>
     Options -Indexes -MultiViews
     RewriteEngine On
+    RewriteBase /mbh-golden-global/
+    
+    # Set the default file for directories
+    DirectoryIndex index.php login.php
 
-    # 1. ADMIN REDIRECT: Redirect /admin or /admin/ to /admin/login.php
-    # This acts as the entry point since you don't want an index.php file.
-    RewriteRule ^admin/?$ admin/login.php [L,QSA]
-
-    # 2. Existing file/folder logic
+    # 2. Handle existing files and folders
     RewriteCond %{REQUEST_FILENAME} -d [OR]
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # 3. Clean URLs (.php extension)
+    # 3. Clean PHP URLs (e.g., /about -> about.php)
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*)$ $1.php [L]
 
