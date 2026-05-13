@@ -1,5 +1,6 @@
 <?php
 <<<<<<< HEAD
+<<<<<<< HEAD
 header('Content-Type: application/json');
 
 // Only POST requests are allowed
@@ -22,6 +23,11 @@ header('Content-Type: application/json');
 
 // Verify request method
 >>>>>>> 27f9f30 (make php)
+=======
+header('Content-Type: application/json');
+
+// Only POST requests are allowed
+>>>>>>> 980afd584d3b1ad6b4ee493300c2d3a649f7b13e
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed.']);
@@ -29,10 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Validate the uploaded file
 =======
 // Check if file was uploaded
 >>>>>>> 27f9f30 (make php)
+=======
+// Validate the uploaded file
+>>>>>>> 980afd584d3b1ad6b4ee493300c2d3a649f7b13e
 if (!isset($_FILES['file'])) {
     http_response_code(400);
     echo json_encode(['error' => 'No file uploaded.']);
@@ -40,6 +50,9 @@ if (!isset($_FILES['file'])) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 980afd584d3b1ad6b4ee493300c2d3a649f7b13e
 $file = $_FILES['file'];
 if ($file['error'] !== UPLOAD_ERR_OK) {
     $uploadErrors = [
@@ -116,6 +129,7 @@ chmod($destination, 0644);
 $publicPath = '/assets/uploads/' . $safeName;
 
 echo json_encode(['location' => $publicPath]);
+<<<<<<< HEAD
 =======
 // Determine uploaded file key for editors
 $file = $_FILES['file'] ?? $_FILES['upload'] ?? $_FILES['image'] ?? null;
@@ -139,3 +153,5 @@ echo json_encode([
     'location' => $result['url'],
 ]);
 >>>>>>> 27f9f30 (make php)
+=======
+>>>>>>> 980afd584d3b1ad6b4ee493300c2d3a649f7b13e

@@ -105,13 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-full max-w-md">
         <!-- Logo / Branding -->
         <div class="text-center mb-8">
-<<<<<<< HEAD
             <img src="../assets/img/logo.png" alt="MBH Golden Global" class="h-20 md:h-32 object-contain mx-auto">
-=======
-            <h1 class="text-4xl font-serif font-bold text-white mb-2">
-                <span class="text-brand-cyan">MBH</span> GLOBAL
-            </h1>
->>>>>>> 27f9f30 (make php)
             <p class="text-white/80 text-sm tracking-wider">Admin Dashboard</p>
         </div>
 
