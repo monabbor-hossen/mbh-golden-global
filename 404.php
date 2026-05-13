@@ -4,50 +4,58 @@ require_once 'includes/db.php';
 require_once 'includes/header.php';
 ?>
 
-        <section class="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-brand-navy perspective-[1000px] pt-20">
+        <section class="relative min-h-screen flex items-center justify-center bg-brand-navy overflow-hidden pt-32 pb-20 px-6 perspective-[1000px]">
             
-            <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                <div class="orb-3d w-96 h-96 top-[20%] -left-10 animate-float"></div>
-                <div class="orb-3d w-[40rem] h-[40rem] top-[50%] -right-20 animate-float-delayed" style="background: radial-gradient(circle at 30% 30%, rgba(0,130,202,0.4), rgba(0,51,85,0.1), transparent);"></div>
+            <div class="absolute inset-0 pointer-events-none z-0">
+                <div class="orb-3d w-96 h-96 top-[10%] -left-20 animate-float" style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), rgba(0, 130, 202, 0.15), transparent);"></div>
+                <div class="orb-3d w-[45rem] h-[45rem] bottom-[-10%] -right-20 animate-float-delayed" style="background: radial-gradient(circle at 30% 30%, rgba(0,130,202,0.1), rgba(0,51,85,0.3), transparent);"></div>
             </div>
 
-            <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1920&q=80" alt="Lost in the clouds" class="w-full h-full object-cover opacity-30 transform scale-105">
-                <div class="absolute inset-0 bg-gradient-to-b from-brand-navy/95 via-brand-navy/60 to-brand-navy/95 mix-blend-multiply"></div>
-            </div>
-
-            <div class="relative z-10 w-full max-w-4xl px-6 fade-up my-12">
-                <div class="card-premium !bg-white/10 !backdrop-blur-2xl border border-white/20 p-10 md:p-16 rounded-[3rem] text-center overflow-hidden relative shadow-glass-3d">
+            <div class="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-0 items-center card-premium !bg-white/5 !border-white/10 backdrop-blur-2xl rounded-[3rem] p-3 shadow-2xl fade-up">
+                
+                <div class="p-10 md:p-16 inner-3d">
+                    <span class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-brand-cyan/30 bg-brand-cyan/10 text-brand-cyan text-[10px] font-bold tracking-[0.3em] uppercase mb-8">
+                        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse shadow-glow"></span>
+                        Flight 404
+                    </span>
                     
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12rem] md:text-[22rem] font-black text-white/5 select-none pointer-events-none font-sans tracking-tighter">
-                        404
+                    <div class="relative mb-8">
+                        <h1 class="text-[8rem] md:text-[12rem] font-serif font-black text-white/5 leading-none absolute -top-16 md:-top-24 -left-4 select-none pointer-events-none">404</h1>
+                        
+                        <h2 class="relative text-5xl md:text-6xl font-serif text-white leading-[1.1]">
+                            Lost in the <br><i class="font-light text-brand-cyan">clouds?</i>
+                        </h2>
                     </div>
-
-                    <div class="relative z-10 inner-3d">
-                        <span class="inline-flex items-center gap-2 text-brand-cyan text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8 px-5 py-2.5 bg-brand-navy/50 backdrop-blur-md rounded-full border border-brand-cyan/30 shadow-glow">
-                            <i data-lucide="map-pin-off" class="w-4 h-4"></i> Destination Unknown
-                        </span>
-                        
-                        <h1 class="text-5xl md:text-7xl font-serif text-white mb-6 leading-[1.1] text-3d-dark tracking-tight">
-                            You've wandered <br><i class="font-light text-brand-cyan">off the map.</i>
-                        </h1>
-                        
-                        <p class="text-white/80 text-base md:text-lg font-medium leading-relaxed mb-10 max-w-xl mx-auto drop-shadow-sm">
-                            The journey you're looking for doesn't exist, but a world of extraordinary destinations still awaits. Let's get you back on track.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 perspective-[500px]">
-                            <a href="index.php" class="btn-primary !px-10 !py-4 w-full sm:w-auto" style="transform: translateZ(10px);">
-                                Return to Base
-                            </a>
-                            <a href="destinations.php" class="btn-outline !bg-transparent !border-white/30 !text-white hover:!bg-white/10 !px-10 !py-4 w-full sm:w-auto" style="transform: translateZ(10px);">
-                                Explore Packages
-                            </a>
-                        </div>
+                    
+                    <p class="text-gray-300 text-lg font-medium leading-relaxed mb-10 max-w-md relative z-10">
+                        The destination you are looking for seems to have drifted off our radar. It might have been moved, deleted, or perhaps it never existed.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 relative z-10">
+                        <a href="index.php" class="btn-primary !px-8 !py-4">
+                            <i data-lucide="compass" class="w-4 h-4 mr-2"></i> Return Home
+                        </a>
+                        <a href="destinations.php" class="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/20 bg-transparent text-white text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 hover:bg-white/10 hover:border-white/40">
+                            View Destinations
+                        </a>
                     </div>
                 </div>
+
+                <div class="hidden lg:block relative h-full min-h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl inner-3d border border-white/10 group">
+                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=80" alt="Clouds out the window" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-[3s] ease-apple">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/20 to-transparent"></div>
+                    <div class="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.5)]"></div>
+                    
+                    <div class="absolute bottom-10 left-10">
+                        <p class="text-brand-cyan text-[10px] tracking-[0.2em] uppercase font-bold mb-2 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-3 h-3"></i> Current Location
+                        </p>
+                        <p class="text-white font-serif text-3xl">Unknown Territory</p>
+                    </div>
+                </div>
+                
             </div>
-            
         </section>
 
 <?php
