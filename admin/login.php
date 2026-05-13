@@ -212,16 +212,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 </div>
 
                 <div class="relative group">
-                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors"></i>
+                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors pointer-events-none"></i>
+                    
                     <input 
                         type="password" 
                         name="password" 
+                        id="adminPassword"
                         required 
                         autocomplete="current-password"
                         <?php echo $isLockedOut ? 'disabled' : ''; ?>
-                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-12 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Password"
                     >
+
+                    <?php if (!$isLockedOut): ?>
+                    <button 
+                        type="button" 
+                        id="togglePassword" 
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-brand-cyan focus:outline-none transition-colors"
+                        tabindex="-1"
+                        aria-label="Toggle password visibility"
+                    >
+                        <span id="iconShow"><i data-lucide="eye" class="w-5 h-5"></i></span>
+                        <span id="iconHide" class="hidden"><i data-lucide="eye-off" class="w-5 h-5"></i></span>
+                    </button>
+                    <?php endif; ?>
                 </div>
 
                 <button 
@@ -250,7 +265,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
     </div>
 
     <script>
+    
         lucide.createIcons();
+
+        // Password Visibility Toggle Logic
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('adminPassword');
+        const iconShow = document.getElementById('iconShow');
+        const iconHide = document.getElementById('iconHide');
+
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', function () {
+                // Toggle the input type between password and text
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Swap the icons
+                iconShow.classList.toggle('hidden');
+                iconHide.classList.toggle('hidden');
+            });
+        }
     </script>
 </body>
 </html>
