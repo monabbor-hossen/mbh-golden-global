@@ -8,14 +8,16 @@
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/upload.php';
+require_once 'includes/flash.php';
+
+// Read any flash message from a previous redirect (PRG pattern)
+[$message, $message_type] = flash_get();
 
 // Initialize variables
-$packages = [];
+$packages  = [];
 $categories = [];
-$message = '';
-$message_type = '';
-$action = $_GET['action'] ?? 'list';
-$package = null;
+$action    = $_GET['action'] ?? 'list';
+$package   = null;
 
 try {
     // Fetch all categories
@@ -26,19 +28,18 @@ try {
     error_log('Categories fetch error: ' . $e->getMessage());
 }
 
-// Handle delete
+// Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
         $stmt = $pdo->prepare("DELETE FROM packages WHERE id = :id");
         $stmt->execute([':id' => $_GET['id']]);
-        $message = 'Package deleted successfully!';
-        $message_type = 'success';
-        $action = 'list';
+        flash_set('Package deleted successfully!');
     } catch (PDOException $e) {
         error_log('Delete error: ' . $e->getMessage());
-        $message = 'Error deleting package.';
-        $message_type = 'error';
+        flash_set('Error deleting package.', 'error');
     }
+    header('Location: packages.php');
+    exit;
 }
 
 // Handle edit form submission
@@ -92,9 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
                     ':id' => $id,
                 ]);
 
-                $message = 'Package updated successfully!';
-                $message_type = 'success';
-                $action = 'list';
+                // PRG: flash success and redirect so F5 won't re-POST
+                flash_set('Package updated successfully!');
+                header('Location: packages.php');
+                exit;
             }
         }
     } catch (PDOException $e) {
@@ -153,9 +155,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
                     ':is_active' => $is_active,
                 ]);
 
-                $message = 'Package created successfully!';
-                $message_type = 'success';
-                $action = 'list';
+                // PRG: flash success and redirect so F5 won't re-POST
+                flash_set('Package created successfully!');
+                header('Location: packages.php');
+                exit;
             }
         }
     } catch (PDOException $e) {

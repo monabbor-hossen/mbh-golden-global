@@ -1,10 +1,15 @@
 <IfModule mod_rewrite.c>
     Options -Indexes -MultiViews
     RewriteEngine On
+    
+    # Keeps XAMPP from leaking local paths
     RewriteBase /mbh-golden-global/
     
     # Set the default file for directories
     DirectoryIndex index.php login.php
+
+    # 1. ADMIN DIRECTORY GATEWAY (This is the line you were missing!)
+    RewriteRule ^admin/?$ admin/login.php [L,QSA]
 
     # 2. Handle existing files and folders
     RewriteCond %{REQUEST_FILENAME} -d [OR]

@@ -8,26 +8,27 @@
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/upload.php';
+require_once 'includes/flash.php';
+
+// Read any flash message from a previous redirect (PRG pattern)
+[$message, $message_type] = flash_get();
 
 $stories = [];
-$message = '';
-$message_type = '';
-$action = $_GET['action'] ?? 'list';
-$story = null;
+$action  = $_GET['action'] ?? 'list';
+$story   = null;
 
-// Handle delete
+// Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
         $stmt = $pdo->prepare("DELETE FROM stories WHERE id = :id");
         $stmt->execute([':id' => $_GET['id']]);
-        $message = 'Story deleted successfully!';
-        $message_type = 'success';
-        $action = 'list';
+        flash_set('Story deleted successfully!');
     } catch (PDOException $e) {
         error_log('Delete error: ' . $e->getMessage());
-        $message = 'Error deleting story.';
-        $message_type = 'error';
+        flash_set('Error deleting story.', 'error');
     }
+    header('Location: stories.php');
+    exit;
 }
 
 // Handle edit form submission
@@ -83,9 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
                 ':id' => $id,
             ]);
 
-            $message = 'Story updated successfully!';
-            $message_type = 'success';
-            $action = 'list';
+            // PRG: flash success and redirect so F5 won't re-POST
+            flash_set('Story updated successfully!');
+            header('Location: stories.php');
+            exit;
         }
     } catch (PDOException $e) {
         error_log('Update error: ' . $e->getMessage());
@@ -142,9 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
                 ':is_published' => $is_published,
             ]);
 
-            $message = 'Story created successfully!';
-            $message_type = 'success';
-            $action = 'list';
+            // PRG: flash success and redirect so F5 won't re-POST
+            flash_set('Story created successfully!');
+            header('Location: stories.php');
+            exit;
         }
     } catch (PDOException $e) {
         error_log('Insert error: ' . $e->getMessage());

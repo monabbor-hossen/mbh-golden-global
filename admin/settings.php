@@ -7,10 +7,12 @@
 
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
+require_once 'includes/flash.php';
+
+// Read any flash message from a previous redirect (PRG pattern)
+[$message, $message_type] = flash_get();
 
 $settings = [];
-$message = '';
-$message_type = '';
 
 // Fetch current settings
 try {
@@ -48,8 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $settings[$field] = $value;
         }
 
-        $message = 'Settings updated successfully!';
-        $message_type = 'success';
+        // PRG: flash success and redirect so F5 won't re-save
+        flash_set('Settings updated successfully!');
+        header('Location: settings.php');
+        exit;
     } catch (PDOException $e) {
         error_log('Update error: ' . $e->getMessage());
         $message = 'Error updating settings.';

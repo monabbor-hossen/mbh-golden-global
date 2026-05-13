@@ -17,12 +17,21 @@ function handle_image_upload($file, $upload_dir = null)
 {
     // Use default upload directory if not specified
     if ($upload_dir === null) {
-        $upload_dir = __DIR__ . '/../assets/uploads';
+        // __DIR__ = .../admin/includes  →  ../../ = project root
+        $upload_dir = __DIR__ . '/../../assets/uploads';
     }
 
-    // Ensure upload directory exists
+    // Ensure upload directory exists (suppress race-condition warnings)
     if (!is_dir($upload_dir)) {
-        @mkdir($upload_dir, 0755, true);
+        if (!mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+            return ['success' => false, 'error' => 'Server error: could not create upload directory.'];
+        }
+    }
+
+    // Verify the directory is actually writable before attempting a move
+    if (!is_writable($upload_dir)) {
+        $cleanPath = realpath($upload_dir) ?: $upload_dir;
+        return ['success' => false, 'error' => 'Upload directory is not writable. Run: sudo chmod 777 ' . $cleanPath];
     }
 
     // File validation
@@ -106,8 +115,10 @@ function handle_image_upload($file, $upload_dir = null)
     // Set proper permissions
     chmod($destination, 0644);
 
-    // Return the relative URL for web access
-    $relative_url = '/assets/uploads/' . $unique_name;
+    // Return the web-accessible URL.
+    // This app lives at http://localhost/mbh-golden-global/, so the browser path is:
+    //   /mbh-golden-global/assets/uploads/<filename>
+    $relative_url = '/mbh-golden-global/assets/uploads/' . $unique_name;
 
     return [
         'success' => true,
@@ -126,7 +137,8 @@ function handle_image_upload($file, $upload_dir = null)
 function delete_image_file($filename, $upload_dir = null)
 {
     if ($upload_dir === null) {
-        $upload_dir = __DIR__ . '/../assets/uploads';
+        // __DIR__ = .../admin/includes  →  ../../ = project root
+        $upload_dir = __DIR__ . '/../../assets/uploads';
     }
 
     // Security: Prevent directory traversal

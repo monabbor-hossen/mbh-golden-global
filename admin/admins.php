@@ -7,32 +7,31 @@
 
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
+require_once 'includes/flash.php';
+
+// Read any flash message from a previous redirect (PRG pattern)
+[$message, $message_type] = flash_get();
 
 $admins = [];
-$message = '';
-$message_type = '';
 $action = $_GET['action'] ?? 'list';
-$admin = null;
+$admin  = null;
 
-// Handle delete
+// Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
-        // Prevent deleting yourself
         if ((int)$_GET['id'] === (int)$_SESSION['admin_id']) {
-            $message = 'You cannot delete your own account.';
-            $message_type = 'error';
+            flash_set('You cannot delete your own account.', 'error');
         } else {
             $stmt = $pdo->prepare("DELETE FROM admins WHERE id = :id");
             $stmt->execute([':id' => $_GET['id']]);
-            $message = 'Admin deleted successfully!';
-            $message_type = 'success';
+            flash_set('Admin deleted successfully!');
         }
-        $action = 'list';
     } catch (PDOException $e) {
         error_log('Delete error: ' . $e->getMessage());
-        $message = 'Error deleting admin.';
-        $message_type = 'error';
+        flash_set('Error deleting admin.', 'error');
     }
+    header('Location: admins.php');
+    exit;
 }
 
 // Handle edit form submission
@@ -67,8 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admin_id'])) {
                             ':password_hash' => $password_hash,
                             ':id' => $id,
                         ]);
-                        $message = 'Admin updated and password reset successfully!';
-                        $message_type = 'success';
+                        // PRG: flash success and redirect so F5 won't re-POST
+                        flash_set('Admin updated and password reset successfully!');
+                        header('Location: admins.php');
+                        exit;
                     }
                 } else {
                     $stmt = $pdo->prepare("UPDATE admins SET name = :name, email = :email WHERE id = :id");
@@ -77,10 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admin_id'])) {
                         ':email' => $email,
                         ':id' => $id,
                     ]);
-                    $message = 'Admin updated successfully!';
-                    $message_type = 'success';
+                    // PRG: flash success and redirect so F5 won't re-POST
+                    flash_set('Admin updated successfully!');
+                    header('Location: admins.php');
+                    exit;
                 }
-                $action = 'list';
             }
         }
     } catch (PDOException $e) {
@@ -121,9 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_id'])) {
                     ':email' => $email,
                     ':password_hash' => $password_hash,
                 ]);
-                $message = 'New admin created successfully!';
-                $message_type = 'success';
-                $action = 'list';
+                // PRG: flash success and redirect so F5 won't re-POST
+                flash_set('New admin created successfully!');
+                header('Location: admins.php');
+                exit;
             }
         }
     } catch (PDOException $e) {
