@@ -12,17 +12,27 @@ ini_set('session.cookie_httponly', 1); // Prevents JavaScript (XSS) from stealin
 ini_set('session.use_only_cookies', 1); // Forces cookies, prevents URL session ID injection
 ini_set('session.cookie_samesite', 'Strict'); // Prevents Cross-Site Request Forgery
 
+
+// Secure session configuration
 if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/admin/',
+        'domain' => $_SERVER['HTTP_HOST'],
+        'secure' => isset($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
     session_start();
 }
 
-// Redirect if already logged in
+// Redirect to dashboard if already logged in
 if (isset($_SESSION['admin_id'])) {
-    header('Location: index.php');
+    header("Location: index.php");
     exit;
 }
 
-// 2. CSRF TOKEN GENERATION
+// Generate CSRF Token
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }

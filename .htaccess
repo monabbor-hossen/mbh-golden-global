@@ -2,16 +2,20 @@
     Options -Indexes -MultiViews
     RewriteEngine On
 
-    # 1. If the user requests an existing file or folder, load it normally
+    # 1. ADMIN REDIRECT: Redirect /admin or /admin/ to /admin/login.php
+    # This acts as the entry point since you don't want an index.php file.
+    RewriteRule ^admin/?$ admin/login.php [L,QSA]
+
+    # 2. Existing file/folder logic
     RewriteCond %{REQUEST_FILENAME} -d [OR]
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # 2. If they request a clean URL (like /about), add .php ONLY if the file exists!
+    # 3. Clean URLs (.php extension)
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*)$ $1.php [L]
 
-    # 3. THE MAGIC FIX: If the file DOES NOT exist, silently load 404.php
+    # 4. 404 Fallback
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ 404.php [L]
