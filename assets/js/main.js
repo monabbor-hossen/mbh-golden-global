@@ -44,7 +44,7 @@ function updateNavbar() {
     
     // Get current page from body data or script name
     const currentPage = document.body.getAttribute('data-page') || 'home';
-    const isHomePage = currentPage === 'home';
+    const isHomePage = currentPage === 'home' || currentPage === '404';
     
     if (window.scrollY > 50) {
         // Scrolled State - Floating Glass Pill
