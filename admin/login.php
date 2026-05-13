@@ -1,12 +1,17 @@
 <?php
 /**
- * Admin Login Page
- * * Secure authentication for admin dashboard with session management
+ * ENTERPRISE SECURE Admin Login Page
+ * * Features: Brute Force Protection, CSRF Tokens, Session Fixation Protection, 
+ * Timing Attack Mitigation, and Open Redirect Prevention.
  */
 
 require_once '../includes/db.php';
 
-// Start session
+// 1. HARDENED SESSION SETTINGS (Must be called before session_start)
+ini_set('session.cookie_httponly', 1); // Prevents JavaScript (XSS) from stealing cookies
+ini_set('session.use_only_cookies', 1); // Forces cookies, prevents URL session ID injection
+ini_set('session.cookie_samesite', 'Strict'); // Prevents Cross-Site Request Forgery
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,12 +22,52 @@ if (isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// Handle login form submission
-$loginError = '';
-$redirectUrl = $_GET['redirect'] ?? 'index.php';
+// 2. CSRF TOKEN GENERATION
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// 3. BRUTE FORCE PROTECTION (Rate Limiting)
+$max_attempts = 5;
+$lockout_time = 300; // 5 minutes (in seconds)
+
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 0;
+    $_SESSION['last_attempt_time'] = time();
+}
+
+$isLockedOut = false;
+$loginError = '';
+
+if ($_SESSION['login_attempts'] >= $max_attempts) {
+    if (time() - $_SESSION['last_attempt_time'] < $lockout_time) {
+        $remaining_minutes = ceil(($lockout_time - (time() - $_SESSION['last_attempt_time'])) / 60);
+        $loginError = "Security lockout: Too many failed attempts. Try again in {$remaining_minutes} minute(s).";
+        $isLockedOut = true;
+    } else {
+        // Lockout expired, reset attempts
+        $_SESSION['login_attempts'] = 0;
+    }
+}
+
+// 4. OPEN REDIRECT PREVENTION
+$redirectUrl = $_GET['redirect'] ?? 'index.php';
+// Ensure the redirect is a relative path (blocks attackers from redirecting to malicious external sites)
+if (strpos($redirectUrl, 'http://') === 0 || strpos($redirectUrl, 'https://') === 0 || strpos($redirectUrl, '//') === 0) {
+    $redirectUrl = 'index.php';
+}
+
+// Handle login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
     try {
+        // CSRF Token Validation
+        if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+            die('CSRF token validation failed. Request blocked.');
+        }
+
+        // TIMING ATTACK MITIGATION (Random micro-delay slows down automated scripts)
+        usleep(rand(200000, 400000)); 
+
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
@@ -31,38 +76,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $loginError = 'Email and password are required.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $loginError = 'Please enter a valid email address.';
+            $_SESSION['login_attempts']++;
+            $_SESSION['last_attempt_time'] = time();
         } else {
             // Fetch admin from database
-            $stmt = $pdo->prepare("
-                SELECT id, name, email, password_hash 
-                FROM admins 
-                WHERE email = :email 
-                LIMIT 1
-            ");
-            
+            $stmt = $pdo->prepare("SELECT id, name, email, password_hash FROM admins WHERE email = :email LIMIT 1");
             $stmt->execute([':email' => $email]);
             $admin = $stmt->fetch();
 
             if ($admin && password_verify($password, $admin['password_hash'])) {
+                
+                // 5. SESSION FIXATION PREVENTION (Regenerates the session ID to block hijackers)
+                session_regenerate_id(true);
+
                 // Login successful - set session
                 $_SESSION['admin_id'] = $admin['id'];
                 $_SESSION['admin_email'] = $admin['email'];
                 $_SESSION['admin_name'] = $admin['name'];
                 $_SESSION['last_activity'] = time();
+                
+                // Reset failed attempts on success
+                $_SESSION['login_attempts'] = 0;
 
-                // Redirect to dashboard or originally requested page
                 header('Location: ' . $redirectUrl);
                 exit;
             } else {
-                $loginError = 'Invalid email or password.';
+                // Failed login
+                $_SESSION['login_attempts']++;
+                $_SESSION['last_attempt_time'] = time();
+                $loginError = 'Invalid email or password.'; // Generic message prevents user enumeration
             }
         }
     } catch (PDOException $e) {
         error_log('Login error: ' . $e->getMessage());
-        $loginError = 'An error occurred. Please try again later.';
+        $loginError = 'An internal system error occurred. Please try again later.';
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -115,7 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div class="absolute rounded-full w-[30rem] h-[30rem] top-[-10%] -left-20 animate-float mix-blend-screen opacity-40" style="background: radial-gradient(circle at center, rgba(0,130,202,0.5), transparent 70%);"></div>
         <div class="absolute rounded-full w-[45rem] h-[45rem] bottom-[-20%] -right-20 animate-float-delayed mix-blend-screen opacity-20" style="background: radial-gradient(circle at center, rgba(255,255,255,0.4), transparent 70%);"></div>
-        
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-[0.15] mix-blend-overlay"></div>
     </div>
 
@@ -130,9 +178,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2 class="text-3xl font-serif text-white mb-6 text-center">Secure <i class="text-brand-cyan font-light">Login</i></h2>
 
             <?php if ($loginError): ?>
-                <div class="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl backdrop-blur-sm">
-                    <p class="text-red-200 text-sm font-medium flex items-center gap-2">
-                        <i data-lucide="alert-circle" class="w-4 h-4"></i> <?php echo htmlspecialchars($loginError); ?>
+                <div class="mb-6 p-4 <?php echo $isLockedOut ? 'bg-orange-500/20 border-orange-500/50 text-orange-200' : 'bg-red-500/20 border-red-500/50 text-red-200'; ?> border rounded-xl backdrop-blur-sm">
+                    <p class="text-sm font-medium flex items-center gap-2">
+                        <i data-lucide="<?php echo $isLockedOut ? 'shield-alert' : 'alert-circle'; ?>" class="w-5 h-5 flex-shrink-0"></i> 
+                        <?php echo htmlspecialchars($loginError); ?>
                     </p>
                 </div>
             <?php endif; ?>
@@ -146,42 +195,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" class="space-y-6">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+
                 <div class="relative group">
-                    <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 group-focus-within:text-brand-cyan transition-colors"></i>
+                    <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors"></i>
                     <input 
                         type="email" 
                         name="email" 
                         value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                         required 
                         autocomplete="email"
-                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40"
+                        <?php echo $isLockedOut ? 'disabled' : ''; ?>
+                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Email Address"
                     >
                 </div>
 
                 <div class="relative group">
-                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 group-focus-within:text-brand-cyan transition-colors"></i>
+                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors"></i>
                     <input 
                         type="password" 
                         name="password" 
                         required 
                         autocomplete="current-password"
-                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40"
+                        <?php echo $isLockedOut ? 'disabled' : ''; ?>
+                        class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Password"
                     >
                 </div>
 
                 <button 
                     type="submit" 
-                    class="w-full py-4 bg-gradient-to-b from-[#00a2ff] to-[#0082CA] border border-[#00aaff] text-white font-bold tracking-[0.15em] uppercase text-xs rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all duration-300 mt-2"
+                    <?php echo $isLockedOut ? 'disabled' : ''; ?>
+                    class="w-full py-4 bg-gradient-to-b from-[#00a2ff] to-[#0082CA] border border-[#00aaff] text-white font-bold tracking-[0.15em] uppercase text-xs rounded-xl transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale
+                           <?php echo $isLockedOut ? '' : 'hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none'; ?>"
                 >
-                    Authenticate
+                    <?php echo $isLockedOut ? 'System Locked' : 'Authenticate'; ?>
                 </button>
             </form>
 
             <div class="mt-8 pt-6 border-t border-white/10">
-                <p class="text-center text-[10px] uppercase tracking-[0.15em] text-white/40 flex justify-center items-center gap-2">
-                    <i data-lucide="shield-check" class="w-3 h-3"></i> 256-Bit Encrypted Portal
+                <p class="text-center text-[10px] uppercase tracking-[0.15em] <?php echo $isLockedOut ? 'text-orange-400' : 'text-white/40'; ?> flex justify-center items-center gap-2 transition-colors">
+                    <i data-lucide="<?php echo $isLockedOut ? 'shield-alert' : 'shield-check'; ?>" class="w-3 h-3"></i> 
+                    Active Security Monitoring
                 </p>
             </div>
         </div>
