@@ -1,10 +1,21 @@
+
 Options -Indexes -MultiViews
 RewriteEngine On
 
-# 1. Connect the Custom 404 Page
+# 1. Tell Apache what folder we are in
+RewriteBase /mbh-golden-global/
+
+# 2. Point to the exact custom 404 file
 ErrorDocument 404 /mbh-golden-global/404.php
 
-# 2. Prevent routing loops (Stop if the file or directory actually exists)
+# 3. If the user requests an existing file or folder, load it normally
 RewriteCond %{REQUEST_FILENAME} -d [OR]
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
+
+# 4. If they request a clean URL (like /about), add .php ONLY if the file exists!
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# 5. If the file DOES NOT exist, force the 404 Error
+RewriteRule ^ - [R=404,L]

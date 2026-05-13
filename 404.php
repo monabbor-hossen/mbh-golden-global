@@ -1,4 +1,8 @@
 <?php
+<?php
+// We set the correct HTTP header so the browser knows it's a real 404 error
+http_response_code(404);
+require_once 'includes/db.php';
 require_once 'includes/header.php';
 ?>
 
