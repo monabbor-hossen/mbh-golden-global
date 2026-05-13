@@ -39,7 +39,7 @@ require_once 'includes/header.php';
                             foreach ($packages as $pkg) {
                                 $delayClass = $delay > 0 ? 'delay-' . ($delay * 100) : '';
                                 echo "
-                                <div class='group cursor-pointer fade-up {$delayClass} card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100'>
+                                <a href='package-details.php?id=" . (int)$pkg['id'] . "' class='block group cursor-pointer fade-up {$delayClass} card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100'>
                                     <div class='relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d'>
                                         <img src='" . htmlspecialchars($pkg['image_url']) . "' class='w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105'>
                                         <div class='absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90'></div>
@@ -55,7 +55,7 @@ require_once 'includes/header.php';
                                             <span class='font-black text-lg text-brand-navy'>SAR " . number_format($pkg['price'], 0) . "</span>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                                 ";
                                 $delay++;
                             }

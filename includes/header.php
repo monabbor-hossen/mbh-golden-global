@@ -8,7 +8,7 @@ $pageTitles = [
     'stories' => 'Travel Stories | MBH Golden Global',
     'contact' => 'Contact Us | MBH Golden Global',
 ];
-$pageTitle = $pageTitles[$currentPage] ?? 'MBH Golden Global';
+$pageTitle = $pageTitle ?? ($pageTitles[$currentPage] ?? 'MBH Golden Global');
 $isHomePage = $currentPage === 'index';
 
 $siteSettings = [];

@@ -50,7 +50,7 @@ require_once 'includes/header.php';
                                         </div>
                                         <h3 class='text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug'>" . htmlspecialchars($story['title']) . "</h3>
                                         <p class='text-gray-500 font-medium leading-relaxed mb-6 text-sm'>" . htmlspecialchars($story['excerpt']) . "</p>
-                                        <a href='#' class='btn-outline w-full !py-3 !rounded-xl text-[10px]'>Read Story</a>
+                                        <a href='single-post.php?id=" . (int)$story['id'] . "' class='btn-outline w-full !py-3 !rounded-xl text-[10px]'>Read Story →</a>
                                     </div>
                                 </article>
                                 ";
