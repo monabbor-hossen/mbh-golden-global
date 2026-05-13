@@ -26,13 +26,14 @@ $phone1 = $siteSettings['phone_1'] ?? '+966 536 785 506';
 $phone2 = $siteSettings['phone_2'] ?? '+966 576 473 201';
 $email1 = $siteSettings['email_1'] ?? 'mbhgoldenglobalcompany@gmail.com';
 $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
-
-?><!DOCTYPE html>
+$address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -85,6 +86,7 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
             }
         }
     </script>
+    
     <style type="text/tailwindcss">
         @layer base {
             body {
@@ -96,6 +98,7 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
         }
 
         @layer utilities {
+            /* High-end reveal animations */
             .fade-up {
                 @apply opacity-0 translate-y-12 transition-all duration-[1000ms] ease-apple;
             }
@@ -109,6 +112,7 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
             .no-scrollbar::-webkit-scrollbar { display: none; }
             .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+            /* Subtle 3D Extruded Text */
             .text-3d-light {
                 text-shadow: 1px 1px 0 #fff, 2px 2px 5px rgba(0,0,0,0.05);
             }
@@ -121,6 +125,15 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
         }
 
         @layer components {
+            /* SPA Routing UI */
+            .page-view {
+                @apply hidden opacity-0 transition-all duration-500 ease-in-out scale-[0.98];
+            }
+            .page-view.active {
+                @apply block opacity-100 scale-100;
+            }
+
+            /* Elegant Navigation Links */
             .nav-link { 
                 @apply relative text-sm font-bold tracking-[0.15em] uppercase transition-all duration-300 transform text-brand-navy;
             }
@@ -135,6 +148,7 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
                 @apply w-full;
             }
 
+            /* Low-Profile Acrylic Buttons */
             .btn-primary {
                 @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-gradient-to-b from-[#00a2ff] to-[#0082CA] text-white text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 relative border border-[#00aaff];
                 box-shadow: 0 3px 0 #005a8d, 0 8px 15px rgba(0, 130, 202, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
@@ -146,6 +160,7 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
                 transform: translateY(3px);
                 @apply border-[#0082CA] from-[#0082CA] to-[#006096];
             }
+            
             .btn-outline {
                 @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full border border-gray-200 bg-gradient-to-b from-white to-gray-50 text-brand-navy text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 relative;
                 box-shadow: 0 3px 0 #cbd5e1, 0 8px 15px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1);
@@ -157,6 +172,8 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
                 transform: translateY(3px);
                 @apply from-gray-50 to-gray-100;
             }
+
+            /* Low-Profile Glass Cards */
             .card-premium {
                 transform-style: preserve-3d;
                 transform: perspective(1000px);
@@ -167,93 +184,31 @@ $email2 = $siteSettings['email_2'] ?? 'mbhgoldenglobal@gmail.com';
             .card-premium.resetting {
                 transition: transform 0.6s ease-apple, box-shadow 0.6s ease-apple;
             }
+            
+            /* Reduced Z-Axis Depth */
             .inner-3d {
                 transform: translateZ(15px);
                 transition: transform 0.4s ease-apple;
                 will-change: transform;
             }
             .card-premium:hover .inner-3d {
-                transform: translateZ(30px);
+                transform: translateZ(30px); /* Lowered from 80px to 30px */
             }
+
+            /* Ambient Orbs */
             .orb-3d {
                 @apply absolute rounded-full -z-10 opacity-40;
                 background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(0, 130, 202, 0.1), rgba(0, 51, 85, 0.02));
             }
+
+            /* Minimalist Form Inputs */
             .input-minimal {
                 @apply w-full bg-brand-sand/50 backdrop-blur-sm border border-transparent shadow-3d-input py-4 px-5 text-brand-navy font-bold placeholder-gray-400 focus:outline-none focus:bg-white focus:shadow-[inset_0_2px_4px_rgba(0,130,202,0.05),0_0_0_1px_rgba(0,130,202,0.3)] transition-all rounded-xl;
             }
         }
     </style>
 </head>
-<body class="text-brand-navy relative" data-page="<?php echo $currentPage; ?>">
-$address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Tailwind Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        brand: {
-                            navy: '#003355',
-                            cyan: '#0082CA',
-                            cyanDark: '#005a8d',
-                            sand: '#F4F7F9',
-                            white: '#FFFFFF',
-                        }
-                    },
-                    boxShadow: {
-                        'glow': '0 0 15px rgba(0, 130, 202, 0.2)',
-                        'glow-lg': '0 0 30px rgba(0, 130, 202, 0.3)',
-                        'glass-3d': '0 10px 30px -5px rgba(0, 51, 85, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.02)',
-                        '3d-puck': '0 4px 0 rgba(0, 51, 85, 0.05), 0 8px 15px rgba(0, 51, 85, 0.08), inset 0 2px 2px rgba(255, 255, 255, 0.8)',
-                        '3d-puck-hover': '0 2px 0 rgba(0, 130, 202, 0.3), 0 5px 10px rgba(0, 130, 202, 0.15), inset 0 2px 2px rgba(255, 255, 255, 0.8)',
-                        '3d-input': 'inset 0 2px 4px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(255, 255, 255, 0.8)',
-                    },
-                    transitionTimingFunction: {
-                        'apple': 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    },
-                    animation: {
-                        'float': 'floatOrb 12s infinite ease-in-out alternate',
-                        'float-delayed': 'floatOrb 15s infinite ease-in-out alternate-reverse',
-                    },
-                    keyframes: {
-                        floatOrb: {
-                            '0%': { transform: 'translateY(0) rotateX(0) rotateY(0) scale(1)' },
-                            '100%': { transform: 'translateY(-20px) rotateX(5deg) rotateY(-5deg) scale(1.01)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body class="text-brand-navy relative" data-page="<?php echo $currentPage; ?>">
+<body class="text-brand-navy relative">
 
     <!-- Ambient Background Spheres -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
@@ -265,7 +220,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <nav id="navbar" class="fixed w-full left-1/2 -translate-x-1/2 top-0 z-50 transition-all duration-500 border-b border-transparent bg-transparent py-4 px-6 sm:px-8">
         <div class="max-w-[90rem] mx-auto w-full flex justify-between items-center">
             <!-- Logo -->
-            <div class="flex items-center cursor-pointer group" onclick="window.location.href='index.php'">
+            <div class="flex items-center cursor-pointer group">
                 <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global" class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 
                 <div class="hidden font-serif font-bold text-2xl tracking-wide logo-text text-white text-3d-light">
@@ -275,20 +230,20 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             
             <!-- Desktop Menu -->
             <div class="hidden lg:flex space-x-10 items-center">
-                <a href="index.php" class="nav-link nav-text text-white <?php echo $currentPage === 'index' ? 'active-link' : ''; ?>">Home</a>
-                <a href="about.php" class="nav-link nav-text text-white <?php echo $currentPage === 'about' ? 'active-link' : ''; ?>">About Us</a>
-                <a href="destinations.php" class="nav-link nav-text text-white <?php echo $currentPage === 'destinations' ? 'active-link' : ''; ?>">Destinations</a>
-                <a href="stories.php" class="nav-link nav-text text-white <?php echo $currentPage === 'stories' ? 'active-link' : ''; ?>">Stories</a>
-                <a href="contact.php" class="nav-link nav-text text-white <?php echo $currentPage === 'contact' ? 'active-link' : ''; ?>">Contact</a>
+                <a href="index.php" class="nav-link nav-text text-white<?php echo $currentPage === 'index' ? ' active-link' : ''; ?>">Home</a>
+                <a href="about.php" class="nav-link nav-text text-white<?php echo $currentPage === 'about' ? ' active-link' : ''; ?>">About Us</a>
+                <a href="destinations.php" class="nav-link nav-text text-white<?php echo $currentPage === 'destinations' ? ' active-link' : ''; ?>">Destinations</a>
+                <a href="stories.php" class="nav-link nav-text text-white<?php echo $currentPage === 'stories' ? ' active-link' : ''; ?>">Stories</a>
+                <a href="contact.php" class="nav-link nav-text text-white<?php echo $currentPage === 'contact' ? ' active-link' : ''; ?>">Contact</a>
             </div>
 
             <!-- Header Actions -->
             <div class="flex items-center gap-6">
                 <div class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
                     <button class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i data-lucide="search" class="w-6 h-6"></i></button>
-                    <a href="destinations.php" class="btn-primary !py-3 !px-8 hidden xl:flex text-xs !shadow-none !translate-y-0 border-none">Book Now</a>
+                    <a href="destinations.php" class="btn-primary !py-3 !px-8 hidden xl:inline-flex text-xs !shadow-none !translate-y-0 border-none">Book Now</a>
                 </div>
-                <button onclick="toggleMobileMenu()" class="lg:hidden nav-text p-2 -mr-2 text-white hover:text-brand-cyan transition-transform active:scale-90 bg-white/10 rounded-full border border-white/20 shadow-inner">
+                <button onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');" class="lg:hidden nav-text p-2 -mr-2 text-white hover:text-brand-cyan transition-transform active:scale-90 bg-white/10 rounded-full border border-white/20 shadow-inner">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -301,7 +256,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
 
         <div class="flex justify-between items-center p-6 border-b border-gray-100">
             <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain" onerror="this.style.display='none';">
-            <button onclick="toggleMobileMenu()" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
+            <button onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
@@ -320,5 +275,5 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
         </div>
     </div>
 
-    <!-- Main Content Container -->
+    <!-- MAIN APP CONTAINER -->
     <main id="app-root">
