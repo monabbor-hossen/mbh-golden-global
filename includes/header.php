@@ -208,7 +208,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
         }
     </style>
 </head>
-<body class="text-brand-navy relative">
+<body class="text-brand-navy relative" data-page="<?php echo $currentPage === 'index' ? 'home' : $currentPage; ?>">
 
     <!-- Ambient Background Spheres -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
