@@ -1,0 +1,10 @@
+Options -Indexes -MultiViews
+RewriteEngine On
+
+# 1. Connect the Custom 404 Page (Fixed the spelling to "global")
+ErrorDocument 404 /mbh-golden-global/404.php
+
+# 3. Remove .php extensions from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
