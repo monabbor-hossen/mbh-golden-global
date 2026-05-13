@@ -10,7 +10,7 @@ require_once 'includes/header.php';
         <div class="orb-3d w-96 h-96 top-[20%] -left-20 animate-float" style="background: radial-gradient(circle at 30% 30%, rgba(0,130,202,0.4), transparent); opacity: 0.6;"></div>
         <div class="orb-3d w-[40rem] h-[40rem] bottom-[-10%] -right-20 animate-float-delayed" style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), transparent); opacity: 0.3;"></div>
         
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-[url('../assets/img/bg1.avif')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
     </div>
 
     <div class="relative z-10 w-full max-w-4xl px-6 fade-up perspective-[1000px] mt-20">
