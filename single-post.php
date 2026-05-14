@@ -201,7 +201,7 @@ require_once 'includes/header.php';
                     </div>
 
                     <!-- WYSIWYG body content -->
-                    <div class="story-content">
+                    <div class="story-content wysiwyg-content">
                         <?= $bodyContent ?>
                     </div>
 
@@ -321,13 +321,7 @@ require_once 'includes/header.php';
         font-size: 1.1rem;
     }
 
-    .story-content img {
-        width: 100%;
-        border-radius: 1rem;
-        margin: 2rem 0;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    }
+
 
     .story-content strong { color: #ffffff; font-weight: 700; }
     .story-content em { color: rgba(255,255,255,0.85); }
@@ -383,6 +377,41 @@ require_once 'includes/header.php';
     }
     .story-content tr:nth-child(even) td {
         background: rgba(255,255,255,0.03);
+    }
+
+    .wysiwyg-content .ql-align-center { display: block; margin: 0 auto; text-align: center; }
+    .wysiwyg-content .ql-align-justify { text-align: justify; }
+
+    /* Override Tailwind's default block display for Quill images */
+    .wysiwyg-content img {
+        display: inline-block; 
+        max-width: 100%;
+        height: auto;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Force text wrapping for left-aligned images */
+    .wysiwyg-content img[style*="float: left"],
+    .wysiwyg-content .ql-align-left {
+        float: left !important;
+        margin: 0.5rem 1.5rem 1rem 0 !important;
+        display: block !important;
+    }
+
+    /* Force text wrapping for right-aligned images */
+    .wysiwyg-content img[style*="float: right"],
+    .wysiwyg-content .ql-align-right {
+        float: right !important;
+        margin: 0.5rem 0 1rem 1.5rem !important;
+        display: block !important;
+    }
+
+    /* Ensure the container stretches to fit floated images */
+    .wysiwyg-content::after {
+        content: "";
+        display: table;
+        clear: both;
     }
 </style>
 

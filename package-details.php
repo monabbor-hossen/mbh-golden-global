@@ -153,7 +153,7 @@ require_once 'includes/header.php';
                         <div class="h-px bg-gradient-to-r from-white/20 via-white/10 to-transparent w-full mb-12"></div>
 
                         <!-- Description WYSIWYG -->
-                        <div class="prose prose-invert prose-lg max-w-none text-white/80 leading-relaxed font-sans package-content">
+                        <div class="prose prose-invert prose-lg max-w-none text-white/80 leading-relaxed font-sans package-content wysiwyg-content">
                             <?= $bodyContent ?>
                         </div>
 
@@ -252,6 +252,41 @@ require_once 'includes/header.php';
     .package-content ul { list-style: disc; }
     .package-content ol { list-style: decimal; }
     .package-content li { margin-bottom: 0.5rem; padding-left: 0.25rem; }
+
+    .wysiwyg-content .ql-align-center { display: block; margin: 0 auto; text-align: center; }
+    .wysiwyg-content .ql-align-justify { text-align: justify; }
+
+    /* Override Tailwind's default block display for Quill images */
+    .wysiwyg-content img {
+        display: inline-block; 
+        max-width: 100%;
+        height: auto;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Force text wrapping for left-aligned images */
+    .wysiwyg-content img[style*="float: left"],
+    .wysiwyg-content .ql-align-left {
+        float: left !important;
+        margin: 0.5rem 1.5rem 1rem 0 !important;
+        display: block !important;
+    }
+
+    /* Force text wrapping for right-aligned images */
+    .wysiwyg-content img[style*="float: right"],
+    .wysiwyg-content .ql-align-right {
+        float: right !important;
+        margin: 0.5rem 0 1rem 1.5rem !important;
+        display: block !important;
+    }
+
+    /* Ensure the container stretches to fit floated images */
+    .wysiwyg-content::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 </style>
 
 <script>

@@ -2,47 +2,112 @@
 /**
  * Admin Footer & Script Initialization
  * 
- * Includes WYSIWYG editor (TinyMCE) and other admin scripts
+ * Includes WYSIWYG editor (Quill) and other admin scripts
  */
 ?>
 
     </main>
 
-    <!-- TinyMCE Rich Text Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+    <!-- Quill Rich Text Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .ql-toolbar.ql-snow { background-color: rgba(255, 255, 255, 0.9); border-color: rgba(255, 255, 255, 0.4); border-radius: 0.75rem 0.75rem 0 0; }
+        .ql-container.ql-snow { border-color: rgba(255, 255, 255, 0.4); font-family: 'Inter', sans-serif; font-size: 1rem; }
+    </style>
+
+    <!-- Quill Rich Text Editor JS & Modules -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script>window.Quill = Quill;</script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script>
-        tinymce.init({
-            selector: '.wysiwyg-editor',
-            menubar: false,
-            height: 400,
-            plugins: 'image link lists advlist',
-            toolbar: 'bold italic underline | bullist numlist | alignleft aligncenter alignright | image',
-            automatic_uploads: true,
-            images_upload_url: '/mbh-golden-global/admin/ajax/upload_image.php',
-            file_picker_types: 'image',
-            images_reuse_filename: false,
-            skin: 'oxide',
-            content_style: `
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; line-height: 1.6; }
-                img { max-width: 100%; height: auto; }
-            `,
-            setup: function(editor) {
-                editor.on('change', function() {
-                    editor.save();
-                });
-                editor.on('init', function() {
-                    var form = document.querySelector('form');
-                    if (form) {
-                        form.addEventListener('submit', function() {
-                            editor.save();
-                        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const editorEl = document.getElementById('quill-editor');
+            if (editorEl) {
+                // 5. Custom Image Handler
+                function imageHandler() {
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    input.click();
+
+                    input.onchange = async () => {
+                        const file = input.files[0];
+                        if (!file) return;
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        try {
+                            const response = await fetch('/mbh-golden-global/admin/ajax/upload_image.php', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const data = await response.json();
+
+                            if (data.location) {
+                                const range = quill.getSelection(true); // true focuses the editor and gets selection
+                                quill.insertEmbed(range.index, 'image', data.location);
+                            } else {
+                                alert(data.error || 'Upload failed');
+                            }
+                        } catch (err) {
+                            console.error('Error:', err);
+                            alert('Image upload failed');
+                        }
+                    };
+                }
+
+                // 4. Initialize Quill with ALL Tools
+                const toolbarOptions = [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                    ['blockquote', 'code-block'],
+
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                    [{ 'direction': 'rtl' }],                         // text direction
+
+                    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                    [{ 'color': [false, '#000000', '#003355', '#0082CA', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc'] }, { 'background': [] }],
+                    [{ 'font': [] }],
+                    [{ 'align': [] }],
+
+                    ['clean'],                                        // remove formatting button
+                    ['link', 'image', 'video']                        // media
+                ];
+
+                const quill = new Quill('#quill-editor', {
+                    theme: 'snow',
+                    modules: {
+                        imageResize: { 
+                            displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' }, 
+                            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ] 
+                        },
+                        toolbar: {
+                            container: toolbarOptions,
+                            handlers: {
+                                image: imageHandler
+                            }
+                        }
                     }
                 });
-            }
-        });
 
-        // Lucide Icons Initialization
-        document.addEventListener('DOMContentLoaded', function() {
+                // 6. Form Synchronization
+                const form = document.querySelector('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        const contentInput = document.getElementById('content-input');
+                        if (contentInput) {
+                            let html = quill.root.innerHTML;
+                            if (html === '<p><br></p>') html = '';
+                            contentInput.value = html;
+                        }
+                    });
+                }
+            }
+
+            // Lucide Icons Initialization
             lucide.createIcons();
         });
     </script>

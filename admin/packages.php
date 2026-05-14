@@ -351,7 +351,8 @@ if ($action === 'list') {
                     <!-- Description -->
                     <div>
                         <label class="block text-sm font-semibold mb-2">Description *</label>
-                        <textarea name="description" required rows="4" class="wysiwyg-editor w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-cyan" placeholder="Describe the package..."><?php echo htmlspecialchars($package['description'] ?? ''); ?></textarea>
+                        <div id="quill-editor" class="bg-white/80 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"><?php echo $package['description'] ?? ''; ?></div>
+                        <input type="hidden" name="description" id="content-input">
                     </div>
 
                     <!-- Price -->
