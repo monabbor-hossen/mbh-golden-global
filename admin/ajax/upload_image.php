@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+
 /**
  * WYSIWYG Editor Image Upload Handler
  *
