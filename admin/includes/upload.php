@@ -162,3 +162,34 @@ function delete_image_file($filename, $upload_dir = null)
 
     return ['success' => false, 'message' => 'Failed to delete file.'];
 }
+
+/**
+ * Safely extracts filenames from WYSIWYG HTML
+ */
+function extract_images_from_html($html) {
+    $filenames = [];
+    if (empty($html)) return $filenames;
+    
+    // Matches the src attribute and captures just the filename (img_...)
+    if (preg_match_all('/src=["\'](?:[^"\']*assets\/uploads\/)(img_[^"\']+)["\']/i', $html, $matches)) {
+        foreach ($matches[1] as $filename) {
+            $filenames[] = basename($filename); // Extra safety
+        }
+    }
+    return array_unique($filenames);
+}
+
+/**
+ * Compares old and new HTML, and deletes any images removed from the editor
+ */
+function sync_wysiwyg_images($old_html, $new_html, $upload_dir = null) {
+    $old_images = extract_images_from_html($old_html);
+    $new_images = extract_images_from_html($new_html);
+
+    // Find images that are in the old text but missing from the new text
+    $orphaned_images = array_diff($old_images, $new_images);
+
+    foreach ($orphaned_images as $filename) {
+        delete_image_file($filename, $upload_dir);
+    }
+}

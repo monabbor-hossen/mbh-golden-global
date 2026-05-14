@@ -20,6 +20,22 @@ $story   = null;
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
+        // Fetch story to delete associated images
+        $stmt_fetch = $pdo->prepare("SELECT content, image_url FROM stories WHERE id = :id");
+        $stmt_fetch->execute([':id' => $_GET['id']]);
+        $story_to_delete = $stmt_fetch->fetch();
+        
+        if ($story_to_delete) {
+            $upload_dir = realpath(__DIR__ . '/../assets/uploads');
+            // Delete WYSIWYG images
+            sync_wysiwyg_images($story_to_delete['content'], '', $upload_dir);
+            // Delete main cover image
+            if (!empty($story_to_delete['image_url'])) {
+                $main_img_filename = basename($story_to_delete['image_url']);
+                delete_image_file($main_img_filename, $upload_dir);
+            }
+        }
+
         $stmt = $pdo->prepare("DELETE FROM stories WHERE id = :id");
         $stmt->execute([':id' => $_GET['id']]);
         flash_set('Story deleted successfully!');
@@ -43,11 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
         $published_date = $_POST['published_date'];
         $is_published = isset($_POST['is_published']) ? 1 : 0;
 
-        // Fetch existing image_url
-        $stmt = $pdo->prepare("SELECT image_url FROM stories WHERE id = :id");
+        // Fetch existing image_url and content
+        $stmt = $pdo->prepare("SELECT content, image_url FROM stories WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $existing_story = $stmt->fetch();
         $image_url = $existing_story['image_url'];
+        $old_content = $existing_story['content'] ?? '';
 
         // Handle image upload if file provided
         if (isset($_FILES['cover_image']) && $_FILES['cover_image']['size'] > 0) {
@@ -64,6 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
             $message = 'Please fill all required fields.';
             $message_type = 'error';
         } elseif (!isset($upload_result) || $upload_result['success'] !== false) {
+            $upload_dir = realpath(__DIR__ . '/../assets/uploads');
+            sync_wysiwyg_images($old_content, $content, $upload_dir);
+
             $stmt = $pdo->prepare("
                 UPDATE stories 
                 SET tag = :tag, title = :title, slug = :slug, excerpt = :excerpt, 

@@ -31,6 +31,22 @@ try {
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
+        // Fetch package to delete associated images
+        $stmt_fetch = $pdo->prepare("SELECT description, image_url FROM packages WHERE id = :id");
+        $stmt_fetch->execute([':id' => $_GET['id']]);
+        $pkg_to_delete = $stmt_fetch->fetch();
+        
+        if ($pkg_to_delete) {
+            $upload_dir = realpath(__DIR__ . '/../assets/uploads');
+            // Delete WYSIWYG images
+            sync_wysiwyg_images($pkg_to_delete['description'], '', $upload_dir);
+            // Delete main cover image
+            if (!empty($pkg_to_delete['image_url'])) {
+                $main_img_filename = basename($pkg_to_delete['image_url']);
+                delete_image_file($main_img_filename, $upload_dir);
+            }
+        }
+
         $stmt = $pdo->prepare("DELETE FROM packages WHERE id = :id");
         $stmt->execute([':id' => $_GET['id']]);
         flash_set('Package deleted successfully!');
@@ -73,6 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
                 $message = 'Please fill all required fields with valid data and upload a cover image.';
                 $message_type = 'error';
             } else {
+                $stmt_fetch = $pdo->prepare("SELECT description FROM packages WHERE id = :id");
+                $stmt_fetch->execute([':id' => $id]);
+                $old_record = $stmt_fetch->fetch();
+                if ($old_record) {
+                    $upload_dir = realpath(__DIR__ . '/../assets/uploads');
+                    sync_wysiwyg_images($old_record['description'], $description, $upload_dir);
+                }
+
                 $stmt = $pdo->prepare("
                     UPDATE packages 
                     SET category_id = :category_id, title = :title, location = :location, 
