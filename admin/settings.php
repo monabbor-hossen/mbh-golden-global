@@ -128,9 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Site Settings</h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Site Settings</h2>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="logout.php" class="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 text-white/80 hover:text-red-400 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] rounded-xl transition-all font-medium text-sm">
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-3xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <div class="w-full max-w-3xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 md:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <p class="text-white/60 mb-8">Update your website's contact information and other key settings. These values are displayed across the website.</p>
 
                 <form method="POST" class="space-y-8">
@@ -222,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
+
         </main>
     </div> <!-- Close flex wrapper -->
 

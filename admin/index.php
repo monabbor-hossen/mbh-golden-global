@@ -119,9 +119,9 @@ try {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div>
-                    <h2 class="text-3xl font-serif text-white">Welcome Back, <span class="font-light text-brand-cyan"><?php echo htmlspecialchars($adminName ?? 'Admin'); ?></span></h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Welcome Back, <span class="font-light text-brand-cyan"><?php echo htmlspecialchars($adminName ?? 'Admin'); ?></span></h2>
                     <p class="text-white/60 mt-1 text-sm tracking-wide">Here's an overview of your website's performance.</p>
                 </div>
                 <div class="flex items-center gap-4">
@@ -133,7 +133,7 @@ try {
             </header>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
                 <!-- Active Packages -->
                 <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:-translate-y-1 hover:border-white/20 transition-all shadow-[0_4px_30px_rgba(0,0,0,0.1)] group">
                     <div class="flex items-center justify-between mb-4">
@@ -210,26 +210,26 @@ try {
                 </div>
 
                 <?php if (!empty($recentInquiries)): ?>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                    <div class="overflow-x-auto rounded-xl">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
                                 <tr>
-                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold">Name</th>
-                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold">Subject</th>
-                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold">Date</th>
-                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold">Status</th>
-                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
+                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Name</th>
+                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Subject</th>
+                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Date</th>
+                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
+                                    <th class="border-b border-white/10 py-4 px-4 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($recentInquiries as $inquiry): ?>
                                     <tr class="hover:bg-white/5 transition-colors group">
-                                        <td class="py-4 px-4 text-sm text-white/90 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($inquiry['full_name']); ?></td>
-                                        <td class="py-4 px-4 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars(substr($inquiry['subject'], 0, 40)); ?></td>
-                                        <td class="py-4 px-4 text-sm text-white/50 border-b border-white/5 group-last:border-none">
+                                        <td class="py-4 px-4 text-sm text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($inquiry['full_name']); ?></td>
+                                        <td class="py-4 px-4 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars(substr($inquiry['subject'], 0, 40)); ?></td>
+                                        <td class="py-4 px-4 text-sm text-white/50 border-b border-white/5 group-last:border-none whitespace-nowrap">
                                             <?php echo date('M d, Y', strtotime($inquiry['created_at'])); ?>
                                         </td>
-                                        <td class="py-4 px-4 text-sm border-b border-white/5 group-last:border-none">
+                                        <td class="py-4 px-4 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                             <?php if ($inquiry['status'] === 'unread'): ?>
                                                 <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-red-500/20 border border-red-500/50 text-red-300 shadow-[0_0_10px_rgba(239,68,68,0.2)]">Unread</span>
                                             <?php elseif ($inquiry['status'] === 'read'): ?>
@@ -238,7 +238,7 @@ try {
                                                 <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Replied</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="py-4 px-4 text-sm border-b border-white/5 group-last:border-none">
+                                        <td class="py-4 px-4 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                             <a href="inquiries.php?id=<?php echo $inquiry['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
                                                 <i data-lucide="eye" class="w-4 h-4"></i>
                                             </a>

@@ -270,9 +270,9 @@ if ($action === 'list') {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Travel Stories</h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Travel Stories</h2>
                     <?php if ($action === 'list'): ?>
                         <a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2">
                             <i data-lucide="plus" class="w-4 h-4"></i> New Story
@@ -302,27 +302,27 @@ if ($action === 'list') {
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($stories)): ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <div class="overflow-x-auto rounded-xl">
+                            <table class="w-full text-left border-collapse min-w-[800px]">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Title</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Tag</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Date</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Status</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Title</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Tag</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Date</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($stories as $s): ?>
                                         <tr class="hover:bg-white/5 transition-colors group">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?></td>
-                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none"><span class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo date('M d, Y', strtotime($s['published_date'])); ?></td>
-                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?></td>
+                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none whitespace-nowrap"><span class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo date('M d, Y', strtotime($s['published_date'])); ?></td>
+                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold <?php echo $s['is_published'] ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)]' : 'bg-white/10 border border-white/20 text-white/50'; ?>"><?php echo $s['is_published'] ? 'Published' : 'Draft'; ?></span>
                                             </td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=edit&id=<?php echo $s['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
@@ -348,7 +348,7 @@ if ($action === 'list') {
 
             <!-- Create/Edit Form -->
             <?php else: ?>
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-3xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-[#001a2d]/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-[#001a2d]/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                     <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Story' : 'Edit Story'; ?></h3>
 
                     <form method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -356,7 +356,7 @@ if ($action === 'list') {
                             <input type="hidden" name="story_id" value="<?php echo $story['id']; ?>">
                         <?php endif; ?>
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-semibold mb-2 text-white/80">Title *</label>
                                 <input type="text" name="title" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($story['title'] ?? ''); ?>" placeholder="Story title">
@@ -374,7 +374,7 @@ if ($action === 'list') {
 
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Content *</label>
-                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"></div>
+                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
                             <input type="hidden" name="content" id="content-input" value="<?php echo htmlspecialchars($story['content'] ?? ''); ?>">
                         </div>
 
@@ -407,6 +407,7 @@ if ($action === 'list') {
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
                         </div>
                     </form>
+                </div>
                 </div>
             <?php endif; ?>
         <?php require_once 'includes/footer.php'; ?>

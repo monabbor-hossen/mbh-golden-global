@@ -123,9 +123,9 @@ if ($action === 'list') {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Contact Inquiries</h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Contact Inquiries</h2>
                     <?php if ($action === 'view'): ?>
                         <a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2">
                             <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List
@@ -151,26 +151,26 @@ if ($action === 'list') {
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($inquiries)): ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <div class="overflow-x-auto rounded-xl">
+                            <table class="w-full text-left border-collapse min-w-[800px]">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Name</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Email</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Subject</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Date</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Status</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Name</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Email</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Subject</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Date</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($inquiries as $inq): ?>
                                         <tr class="hover:bg-white/5 transition-colors group <?php echo $inq['status'] === 'unread' ? 'bg-white/5' : ''; ?>">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($inq['full_name']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($inq['email']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars(substr($inq['subject'], 0, 40)); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo date('M d, Y', strtotime($inq['created_at'])); ?></td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($inq['full_name']); ?></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($inq['email']); ?></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars(substr($inq['subject'], 0, 40)); ?></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo date('M d, Y', strtotime($inq['created_at'])); ?></td>
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <?php if ($inq['status'] === 'unread'): ?>
                                                     <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-red-500/20 border border-red-500/50 text-red-300 shadow-[0_0_10px_rgba(239,68,68,0.2)]">Unread</span>
                                                 <?php elseif ($inq['status'] === 'read'): ?>
@@ -179,7 +179,7 @@ if ($action === 'list') {
                                                     <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Replied</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=view&id=<?php echo $inq['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
                                                         <i data-lucide="eye" class="w-4 h-4"></i>
@@ -199,21 +199,12 @@ if ($action === 'list') {
                     <?php endif; ?>
                 </div>
 
-            <!-- View Detail -->
             <?php elseif ($action === 'view' && $inquiry): ?>
-                <div class="grid grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
-        <!-- Mobile Top Bar -->
-        <div class="md:hidden flex items-center justify-between p-6 bg-white/5 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30 w-full">
-            <h1 class="text-xl font-serif font-bold text-white"><span class="text-brand-cyan">MBH</span> Admin</h1>
-            <button id="hamburger-btn" class="text-white hover:text-brand-cyan transition-colors">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </div>
-
-        <!-- Main Content -->
-                    <div class="col-span-2">
-                        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)] h-full">
+                    <!-- Main Detail -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 md:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)] h-full">
                             <div class="mb-8 pb-6 border-b border-white/10">
                                 <h2 class="text-2xl font-serif text-white mb-3"><?php echo htmlspecialchars($inquiry['subject']); ?></h2>
                                 <p class="text-white/70">From: <span class="text-white/90 font-medium"><?php echo htmlspecialchars($inquiry['full_name']); ?></span> (<?php echo htmlspecialchars($inquiry['email']); ?>)</p>
@@ -237,7 +228,7 @@ if ($action === 'list') {
                     </div>
 
                     <!-- Status Sidebar -->
-                    <div class="col-span-1">
+                    <div class="lg:col-span-1">
                         <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.1)] sticky top-6">
                             <h3 class="text-lg font-serif text-white mb-6">Update Status</h3>
                             

@@ -231,9 +231,9 @@ if ($action === 'list') {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Manage Users</h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Manage Users</h2>
                     <?php if ($action === 'list'): ?>
                         <a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2">
                             <i data-lucide="plus" class="w-4 h-4"></i> New User
@@ -263,36 +263,36 @@ if ($action === 'list') {
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($admins)): ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <div class="overflow-x-auto rounded-xl">
+                            <table class="w-full text-left border-collapse min-w-[800px]">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Name</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Email</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Role</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Joined</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Name</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Email</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Role</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Joined</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($admins as $adm): ?>
                                         <tr class="hover:bg-white/5 transition-colors group">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <?php echo htmlspecialchars($adm['name']); ?>
                                                 <?php if ((int)$adm['id'] === (int)$_SESSION['admin_id']): ?>
                                                     <span class="ml-2 px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 text-[10px] uppercase font-bold rounded shadow-[0_0_10px_rgba(0,130,202,0.2)]">You</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($adm['email']); ?></td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($adm['email']); ?></td>
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <?php if ($adm['role'] === 'admin'): ?>
                                                     <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/50">Admin</span>
                                                 <?php else: ?>
                                                     <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/60 border border-white/20">Staff</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo date('M d, Y', strtotime($adm['created_at'])); ?></td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo date('M d, Y', strtotime($adm['created_at'])); ?></td>
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=edit&id=<?php echo $adm['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
@@ -319,7 +319,7 @@ if ($action === 'list') {
 
             <!-- Create/Edit Form -->
             <?php else: ?>
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-[#001a2d]/80 backdrop-blur-sm"><div class="w-full max-w-2xl bg-[#001a2d]/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                     <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New User' : 'Edit User'; ?></h3>
 
                     <form method="POST" class="space-y-6">
@@ -399,6 +399,7 @@ if ($action === 'list') {
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
                         </div>
                     </form>
+                </div>
                 </div>
             <?php endif; ?>
         </main>

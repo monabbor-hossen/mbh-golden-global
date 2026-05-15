@@ -291,9 +291,9 @@ if ($action === 'list') {
         <!-- Main Content -->
         <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Tour Packages</h2>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Tour Packages</h2>
                     <?php if ($action === 'list'): ?>
                         <a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2">
                             <i data-lucide="plus" class="w-4 h-4"></i> New Package
@@ -323,33 +323,33 @@ if ($action === 'list') {
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($packages)): ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <div class="overflow-x-auto rounded-xl">
+                            <table class="w-full text-left border-collapse min-w-[800px]">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Title</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Location</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Category</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Price</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Status</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Title</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Location</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Category</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Price</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($packages as $pkg): ?>
                                         <tr class="hover:bg-white/5 transition-colors group">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($pkg['title']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($pkg['location']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?></td>
-                                            <td class="py-4 px-6 font-semibold text-brand-cyan border-b border-white/5 group-last:border-none">SAR <?php echo number_format($pkg['price'], 0); ?></td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['title']); ?></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['location']); ?></td>
+                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?></td>
+                                            <td class="py-4 px-6 font-semibold text-brand-cyan border-b border-white/5 group-last:border-none whitespace-nowrap">SAR <?php echo number_format($pkg['price'], 0); ?></td>
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <?php if ($pkg['is_active']): ?>
                                                     <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Active</span>
                                                 <?php else: ?>
                                                     <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-white/10 border border-white/20 text-white/50">Inactive</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=edit&id=<?php echo $pkg['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
@@ -375,7 +375,7 @@ if ($action === 'list') {
 
             <!-- Create/Edit Form -->
             <?php else: ?>
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-3xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-[#001a2d]/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-[#001a2d]/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                     <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Package' : 'Edit Package'; ?></h3>
 
                     <form method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -411,7 +411,7 @@ if ($action === 'list') {
                         <!-- Description -->
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Description *</label>
-                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"></div>
+                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
                             <input type="hidden" name="description" id="content-input" value="<?php echo htmlspecialchars($package['description'] ?? ''); ?>">
                         </div>
 
@@ -454,6 +454,7 @@ if ($action === 'list') {
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
                         </div>
                     </form>
+                </div>
                 </div>
             <?php endif; ?>
         <?php require_once 'includes/footer.php'; ?>

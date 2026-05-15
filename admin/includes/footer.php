@@ -49,6 +49,12 @@
         display: table;
         clear: both;
     }
+
+    /* Quill toolbar responsive — wrap on mobile instead of pushing container wide */
+    .ql-toolbar {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
 </style>
 
 <!-- Quill Rich Text Editor JS & Modules -->
