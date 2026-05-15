@@ -72,17 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             <div class="flex flex-col gap-10">
                                 <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
-                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="map-pin" class="w-4 h-4"></i></div> Address</span>
+                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i class="fas fa-map-marker-alt w-4 h-4"></i></div> Address</span>
                                     <p class="text-brand-navy font-medium leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]"><?php echo htmlspecialchars($address); ?></p>
                                 </div>
                                 
                                 <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
-                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="phone" class="w-4 h-4"></i></div> Mobile</span>
+                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i class="fas fa-phone w-4 h-4"></i></div> Mobile</span>
                                     <p class="text-brand-navy font-medium leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]"><?php echo htmlspecialchars($phone1); ?><br><?php echo htmlspecialchars($phone2); ?></p>
                                 </div>
 
                                 <div class="bg-brand-sand p-6 rounded-[1.5rem] border border-white">
-                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i data-lucide="mail" class="w-4 h-4"></i></div> Email</span>
+                                    <span class="text-brand-cyan text-[10px] font-bold uppercase tracking-[0.2em] mb-3 flex items-center gap-3"><div class="p-2 bg-white rounded-lg shadow-sm"><i class="fas fa-envelope w-4 h-4"></i></div> Email</span>
                                     <p class="text-brand-navy font-medium break-all leading-relaxed text-sm drop-shadow-sm pl-[3.25rem]"><?php echo htmlspecialchars($email1); ?><br><?php echo htmlspecialchars($email2); ?></p>
                                 </div>
                             </div>

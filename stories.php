@@ -53,7 +53,7 @@ require_once 'includes/header.php';
                         } else {
                             $delay = 0;
                             foreach ($stories as $story) {
-                                $delayClass = $delay > 0 ? 'delay-' . ($delay * 100) : '';
+                                $delayClass = $delay> 0 ? 'delay-' . ($delay * 100) : '';
                                 $publishedDate = new DateTime($story['published_date']);
                                 echo "
                                 <article class='group cursor-pointer fade-up {$delayClass} card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500'>

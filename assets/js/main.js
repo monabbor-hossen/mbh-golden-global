@@ -1,5 +1,3 @@
-// Render Lucide Icons
-lucide.createIcons();
 
 // Very Subtle 3D Mouse Tracking Logic for Cards
 const tiltCards = document.querySelectorAll('.card-premium');
@@ -46,7 +44,7 @@ function updateNavbar() {
     const currentPage = document.body.getAttribute('data-page') || 'home';
     const isHomePage = currentPage === 'home' || currentPage === '404';
     
-    if (window.scrollY > 50) {
+    if (window.scrollY> 50) {
         // Scrolled State - Floating Glass Pill
         navbar.classList.add('bg-white/95', 'shadow-glass-3d', 'border-white', 'backdrop-blur-xl');
         navbar.classList.remove('py-4', 'border-transparent', 'border-b', 'w-full', 'rounded-none', 'bg-transparent', 'top-0');

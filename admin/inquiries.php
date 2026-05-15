@@ -61,7 +61,7 @@ if ($action === 'list') {
 $page_title = 'Inquiries | Admin - MBH Golden Global';
 
 $page_heading = 'Contact Inquiries';
-ob_start(); ?><?php if ($action === 'view'): ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
+ob_start(); ?><?php if ($action === 'view'): ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i class="fas fa-arrow-left w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
 require_once 'includes/header.php';
 ?>
 
@@ -107,7 +107,7 @@ require_once 'includes/header.php';
                                             <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=view&id=<?php echo $inq['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                                        <i class="fas fa-eye w-4 h-4"></i>
                                                     </a>
                                                 </div>
                                             </td>
@@ -118,7 +118,7 @@ require_once 'includes/header.php';
                         </div>
                     <?php else: ?>
                         <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
-                            <i data-lucide="mail-open" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
+                            <i class="fas fa-envelope-open w-12 h-12 text-white/20 mx-auto mb-3"></i>
                             <p class="text-white/50 text-sm">No inquiries yet.</p>
                         </div>
                     <?php endif; ?>

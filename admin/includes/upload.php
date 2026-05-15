@@ -60,7 +60,7 @@ function handle_image_upload($file, $upload_dir = null)
     }
 
     // Validate file size
-    if ($file['size'] > $max_file_size) {
+    if ($file['size']> $max_file_size) {
         return ['success' => false, 'error' => 'File size exceeds 5MB limit.'];
     }
 

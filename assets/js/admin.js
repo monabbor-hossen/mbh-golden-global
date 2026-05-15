@@ -8,13 +8,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ──────────────────────────────────────────────────────────
-       1. Lucide Icons — render any <i data-lucide="..."> tags
-       ────────────────────────────────────────────────────────── */
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-
 
     /* ──────────────────────────────────────────────────────────
        2. Mobile Sidebar / Hamburger Toggle
@@ -105,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
             }
             format(name, value) {
-                if (['alt', 'style', 'width', 'height'].indexOf(name) > -1) {
+                if (['alt', 'style', 'width', 'height'].indexOf(name)> -1) {
                     if (value) {
                         this.domNode.setAttribute(name, value);
                     } else {

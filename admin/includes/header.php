@@ -28,8 +28,8 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,7 +107,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
             </span>
             <button id="hamburger-btn" aria-label="Open navigation menu"
                 class="p-2 text-white hover:text-brand-cyan transition-colors rounded-lg hover:bg-white/10">
-                <i data-lucide="menu" class="w-6 h-6"></i>
+                <i class="fas fa-bars w-6 h-6"></i>
             </button>
         </div>
 

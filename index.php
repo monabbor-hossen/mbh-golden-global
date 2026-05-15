@@ -89,7 +89,7 @@ require_once 'includes/header.php';
             <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex justify-between items-end mb-16 fade-up">
                     <h2 class="text-4xl md:text-6xl font-serif text-brand-navy leading-tight text-3d-light">Curated <br><i class="font-light text-brand-cyan">Destinations</i></h2>
-                    <a href="destinations.php" class="btn-outline !py-3 !px-6">View All <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+                    <a href="destinations.php" class="btn-outline !py-3 !px-6">View All <i class="fas fa-arrow-right w-4 h-4 ml-2"></i></a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[1000px]">
@@ -150,7 +150,7 @@ require_once 'includes/header.php';
             <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
                 <div class="flex justify-between items-end mb-16 fade-up">
                     <h2 class="text-4xl md:text-6xl font-serif text-brand-navy leading-tight text-3d-light">Latest <br><i class="font-light text-brand-cyan">Stories</i></h2>
-                    <a href="stories.php" class="btn-outline !py-3 !px-6 hidden md:inline-flex">View All <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+                    <a href="stories.php" class="btn-outline !py-3 !px-6 hidden md:inline-flex">View All <i class="fas fa-arrow-right w-4 h-4 ml-2"></i></a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[1000px]">
@@ -203,7 +203,7 @@ require_once 'includes/header.php';
                 </div>
                 
                 <div class="mt-12 text-center md:hidden fade-up">
-                    <a href="stories.php" class="btn-outline w-full !py-3 !px-6">View All Stories <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i></a>
+                    <a href="stories.php" class="btn-outline w-full !py-3 !px-6">View All Stories <i class="fas fa-arrow-right w-4 h-4 ml-2"></i></a>
                 </div>
             </div>
         </section>

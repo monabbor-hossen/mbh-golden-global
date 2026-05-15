@@ -32,7 +32,7 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_email'])) {
 
 // Optional: Verify session hasn't expired (30 minutes of inactivity)
 $SESSION_TIMEOUT = 1800; // 30 minutes
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $SESSION_TIMEOUT) {
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'])> $SESSION_TIMEOUT) {
     session_destroy();
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];

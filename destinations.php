@@ -37,7 +37,7 @@ require_once 'includes/header.php';
                         } else {
                             $delay = 0;
                             foreach ($packages as $pkg) {
-                                $delayClass = $delay > 0 ? 'delay-' . ($delay * 100) : '';
+                                $delayClass = $delay> 0 ? 'delay-' . ($delay * 100) : '';
                                 echo "
                                 <a href='package-details.php?id=" . (int)$pkg['id'] . "' class='block group cursor-pointer fade-up {$delayClass} card-premium rounded-[2rem] bg-white p-4 hover:border-brand-cyan transition-colors duration-500 border border-gray-100'>
                                     <div class='relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d'>

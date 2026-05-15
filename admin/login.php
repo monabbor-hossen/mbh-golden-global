@@ -44,7 +44,7 @@ if (!isset($_SESSION['login_attempts'])) {
 $isLockedOut = false;
 $loginError = '';
 
-if ($_SESSION['login_attempts'] >= $max_attempts) {
+if ($_SESSION['login_attempts']>= $max_attempts) {
     if (time() - $_SESSION['last_attempt_time'] < $lockout_time) {
         $remaining_minutes = ceil(($lockout_time - (time() - $_SESSION['last_attempt_time'])) / 60);
         $loginError = "Security lockout: Too many failed attempts. Try again in {$remaining_minutes} minute(s).";
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Area | MBH Golden Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
             <?php if ($loginError): ?>
                 <div class="mb-6 p-4 <?php echo $isLockedOut ? 'bg-orange-500/20 border-orange-500/50 text-orange-200' : 'bg-red-500/20 border-red-500/50 text-red-200'; ?> border rounded-xl backdrop-blur-sm">
                     <p class="text-sm font-medium flex items-center gap-2">
-                        <i data-lucide="<?php echo $isLockedOut ? 'shield-alert' : 'alert-circle'; ?>" class="w-5 h-5 flex-shrink-0"></i> 
+                        <i class="fas <?php echo $isLockedOut ? 'fa-shield-alt' : 'fa-exclamation-circle'; ?> w-5 h-5 flex-shrink-0"></i> 
                         <?php echo htmlspecialchars($loginError); ?>
                     </p>
                 </div>
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
             <?php if (isset($_GET['timeout'])): ?>
                 <div class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-xl backdrop-blur-sm">
                     <p class="text-yellow-200 text-sm font-medium flex items-center gap-2">
-                        <i data-lucide="clock" class="w-4 h-4"></i> Session expired. Please log in again.
+                        <i class="fas fa-clock w-4 h-4"></i> Session expired. Please log in again.
                     </p>
                 </div>
             <?php endif; ?>
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
 
                 <div class="relative group">
-                    <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors"></i>
+                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none transition-colors <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?>"></i>
                     <input 
                         type="email" 
                         name="email" 
@@ -231,12 +231,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                         autocomplete="email"
                         <?php echo $isLockedOut ? 'disabled' : ''; ?>
                         class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
-                        placeholder="Email Address"
-                    >
+                        placeholder="Email Address">
                 </div>
 
                 <div class="relative group">
-                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?> transition-colors pointer-events-none"></i>
+                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none transition-colors <?php echo $isLockedOut ? '' : 'group-focus-within:text-brand-cyan'; ?>"></i>
                     
                     <input 
                         type="password" 
@@ -246,8 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                         autocomplete="current-password"
                         <?php echo $isLockedOut ? 'disabled' : ''; ?>
                         class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-12 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
-                        placeholder="Password"
-                    >
+                        placeholder="Password">
 
                     <?php if (!$isLockedOut): ?>
                     <button 
@@ -255,10 +253,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                         id="togglePassword" 
                         class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-brand-cyan focus:outline-none transition-colors"
                         tabindex="-1"
-                        aria-label="Toggle password visibility"
-                    >
-                        <span id="iconShow"><i data-lucide="eye" class="w-5 h-5"></i></span>
-                        <span id="iconHide" class="hidden"><i data-lucide="eye-off" class="w-5 h-5"></i></span>
+                        aria-label="Toggle password visibility">
+                        <span id="iconShow"><i class="fas fa-eye w-5 h-5"></i></span>
+                        <span id="iconHide" class="hidden"><i class="fas fa-eye-slash w-5 h-5"></i></span>
                     </button>
                     <?php endif; ?>
                 </div>
@@ -267,15 +264,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                     type="submit" 
                     <?php echo $isLockedOut ? 'disabled' : ''; ?>
                     class="w-full py-4 bg-gradient-to-b from-brand-cyanLight to-brand-cyan border border-brand-cyanLight text-white font-bold tracking-[0.15em] uppercase text-xs rounded-xl transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale
-                           <?php echo $isLockedOut ? '' : 'hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none'; ?>"
-                >
+                           <?php echo $isLockedOut ? '' : 'hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none'; ?>">
                     <?php echo $isLockedOut ? 'System Locked' : 'Authenticate'; ?>
                 </button>
             </form>
 
             <div class="mt-8 pt-6 border-t border-white/10">
                 <p class="text-center text-[10px] uppercase tracking-[0.15em] <?php echo $isLockedOut ? 'text-orange-400' : 'text-white/40'; ?> flex justify-center items-center gap-2 transition-colors">
-                    <i data-lucide="<?php echo $isLockedOut ? 'shield-alert' : 'shield-check'; ?>" class="w-3 h-3"></i> 
+                    <i class="fas <?php echo $isLockedOut ? 'fa-shield-alt' : 'fa-shield-alt'; ?> w-3 h-3"></i> 
                     Active Security Monitoring
                 </p>
             </div>
@@ -283,12 +279,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
 
         <div class="text-center mt-8">
             <a href="../index.php" class="inline-flex items-center gap-2 text-white/60 hover:text-white text-xs font-bold tracking-[0.15em] uppercase transition-colors">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i> Return to Main Site
+                <i class="fas fa-arrow-left w-4 h-4"></i> Return to Main Site
             </a>
         </div>
     </div>
 
-    <!-- Consolidated Admin JS (password eye toggle, Lucide init) -->
+    <!-- Consolidated Admin JS (password eye toggle) -->
     <script src="/mbh-golden-global/assets/js/admin.js" defer></script>
 </body>
 </html>

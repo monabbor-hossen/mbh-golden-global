@@ -35,11 +35,11 @@ require_once 'includes/header.php';
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
                     <a href="index.php" class="btn-primary !px-10 !py-4 shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:shadow-[0_0_30px_rgba(0,130,202,0.6)]">
-                        <i data-lucide="home" class="w-4 h-4 mr-2"></i> Return to Home
+                        <i class="fas fa-home w-4 h-4 mr-2"></i> Return to Home
                     </a>
                     
                     <a href="destinations.php" class="text-white hover:text-brand-cyan font-bold text-xs tracking-[0.15em] uppercase transition-colors flex items-center gap-2 drop-shadow-md">
-                        Explore Packages <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        Explore Packages <i class="fas fa-arrow-right w-4 h-4"></i>
                     </a>
                 </div>
 

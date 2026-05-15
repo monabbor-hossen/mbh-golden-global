@@ -165,7 +165,7 @@ if ($action === 'list') {
 $page_title = 'Manage Users | Admin - MBH Golden Global';
 
 $page_heading = 'Manage Users';
-ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> New User</a><?php else: ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
+ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i class="fas fa-plus w-4 h-4"></i> New User</a><?php else: ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i class="fas fa-arrow-left w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
 require_once 'includes/header.php';
 ?>
 
@@ -212,11 +212,11 @@ require_once 'includes/header.php';
                                             <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
                                                     <a href="?action=edit&id=<?php echo $adm['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="edit" class="w-4 h-4"></i>
+                                                        <i class="fas fa-edit w-4 h-4"></i>
                                                     </a>
                                                     <?php if ((int)$adm['id'] !== (int)$_SESSION['admin_id']): ?>
                                                         <a href="?action=delete&id=<?php echo $adm['id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" onclick="return confirm('Delete this user? This cannot be undone.')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
-                                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                            <i class="fas fa-trash-alt w-4 h-4"></i>
                                                         </a>
                                                     <?php endif; ?>
                                                 </div>
@@ -228,7 +228,7 @@ require_once 'includes/header.php';
                         </div>
                     <?php else: ?>
                         <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
-                            <i data-lucide="users" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
+                            <i class="fas fa-users w-12 h-12 text-white/20 mx-auto mb-3"></i>
                             <p class="text-white/50 text-sm mb-4">No users found.</p>
                         </div>
                     <?php endif; ?>
@@ -276,7 +276,7 @@ require_once 'includes/header.php';
                                 Password <?php echo $action === 'create' ? '*' : '<span class="text-xs text-white/40 font-normal">(Leave blank to keep current)</span>'; ?>
                             </label>
                             <div class="relative group">
-                                <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 group-focus-within:text-brand-cyan transition-colors pointer-events-none"></i>
+                                <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 group-focus-within:text-brand-cyan transition-colors pointer-events-none"></i>
                                 
                                 <input 
                                     type="password" 
@@ -284,18 +284,16 @@ require_once 'includes/header.php';
                                     id="adminPassword"
                                     <?php echo $action === 'create' ? 'required' : ''; ?>
                                     class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-12 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
-                                    placeholder="Minimum 8 characters"
-                                >
+                                    placeholder="Minimum 8 characters">
 
                                 <button 
                                     type="button" 
                                     id="togglePassword" 
                                     class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-brand-cyan focus:outline-none transition-colors"
                                     tabindex="-1"
-                                    aria-label="Toggle password visibility"
-                                >
-                                    <span id="iconShow"><i data-lucide="eye" class="w-5 h-5"></i></span>
-                                    <span id="iconHide" class="hidden"><i data-lucide="eye-off" class="w-5 h-5"></i></span>
+                                    aria-label="Toggle password visibility">
+                                    <span id="iconShow"><i class="fas fa-eye w-5 h-5"></i></span>
+                                    <span id="iconHide" class="hidden"><i class="fas fa-eye-slash w-5 h-5"></i></span>
                                 </button>
                             </div>
                             <p class="text-xs text-white/40 mt-2">Password must be at least 8 characters long.</p>

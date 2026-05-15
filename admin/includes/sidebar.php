@@ -8,9 +8,9 @@ function get_nav_class($page, $current_page) {
 }
 function get_icon_class($page, $current_page) {
     if ($page === $current_page) {
-        return "w-5 h-5 text-brand-cyan";
+        return "text-brand-cyan";
     }
-    return "w-5 h-5";
+    return "";
 }
 ?>
 <div id="sidebar-overlay" class="fixed inset-0 bg-brand-bg/80 backdrop-blur-sm z-40 hidden transition-opacity md:hidden"></div>
@@ -27,32 +27,32 @@ function get_icon_class($page, $current_page) {
     <!-- Navigation -->
     <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
         <a href="index.php" class="<?php echo get_nav_class('index.php', $current_page); ?>">
-            <i data-lucide="layout-dashboard" class="<?php echo get_icon_class('index.php', $current_page); ?>"></i>
+            <i class="fas fa-chart-pie w-5 h-5 <?php echo get_icon_class('index.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Dashboard</span>
         </a>
         <a href="packages.php" class="<?php echo get_nav_class('packages.php', $current_page); ?>">
-            <i data-lucide="package" class="<?php echo get_icon_class('packages.php', $current_page); ?>"></i>
+            <i class="fas fa-box w-5 h-5 <?php echo get_icon_class('packages.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Packages</span>
         </a>
         <a href="categories.php" class="<?php echo get_nav_class('categories.php', $current_page); ?>">
-            <i data-lucide="folder-tree" class="<?php echo get_icon_class('categories.php', $current_page); ?>"></i>
+            <i class="fas fa-folder-tree w-5 h-5 <?php echo get_icon_class('categories.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Categories</span>
         </a>
         <a href="stories.php" class="<?php echo get_nav_class('stories.php', $current_page); ?>">
-            <i data-lucide="pen-tool" class="<?php echo get_icon_class('stories.php', $current_page); ?>"></i>
+            <i class="fas fa-pen w-5 h-5 <?php echo get_icon_class('stories.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Stories</span>
         </a>
         <a href="inquiries.php" class="<?php echo get_nav_class('inquiries.php', $current_page); ?>">
-            <i data-lucide="mail" class="<?php echo get_icon_class('inquiries.php', $current_page); ?>"></i>
+            <i class="fas fa-envelope w-5 h-5 <?php echo get_icon_class('inquiries.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Inquiries</span>
         </a>
         <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin'): ?>
         <a href="admins.php" class="<?php echo get_nav_class('admins.php', $current_page); ?>">
-            <i data-lucide="users" class="<?php echo get_icon_class('admins.php', $current_page); ?>"></i>
+            <i class="fas fa-users w-5 h-5 <?php echo get_icon_class('admins.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Admins</span>
         </a>
         <a href="settings.php" class="<?php echo get_nav_class('settings.php', $current_page); ?>">
-            <i data-lucide="settings" class="<?php echo get_icon_class('settings.php', $current_page); ?>"></i>
+            <i class="fas fa-cog w-5 h-5 <?php echo get_icon_class('settings.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Settings</span>
         </a>
         <?php endif; ?>
@@ -61,7 +61,7 @@ function get_icon_class($page, $current_page) {
     <!-- Pinned Logout Footer -->
     <div class="p-4 border-t border-white/10">
         <a href="logout.php" class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all group">
-            <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+            <i class="fas fa-sign-out-alt w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
             <span class="font-medium text-sm">Logout</span>
         </a>
     </div>

@@ -101,7 +101,7 @@ require_once 'includes/header.php';
                             <span class="inline-flex items-center gap-2 bg-brand-cyan/20 backdrop-blur-md
                                          border border-brand-cyan/40 text-brand-cyan text-[10px] font-black
                                          tracking-[0.25em] uppercase px-4 py-2 rounded-full">
-                                <i data-lucide="award" class="w-3 h-3"></i>
+                                <i class="fas fa-award w-3 h-3"></i>
                                 <?= $safeTag ?>
                             </span>
                         </div>
@@ -118,7 +118,7 @@ require_once 'includes/header.php';
                             <!-- Destination -->
                             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 hover:bg-white/10 transition-colors">
                                 <div class="w-12 h-12 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex flex-shrink-0 items-center justify-center">
-                                    <i data-lucide="map-pin" class="w-6 h-6 text-brand-cyan"></i>
+                                    <i class="fas fa-map-marker-alt w-6 h-6 text-brand-cyan"></i>
                                 </div>
                                 <div>
                                     <span class="block text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">Destination</span>
@@ -129,7 +129,7 @@ require_once 'includes/header.php';
                             <!-- Duration -->
                             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 hover:bg-white/10 transition-colors">
                                 <div class="w-12 h-12 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex flex-shrink-0 items-center justify-center">
-                                    <i data-lucide="clock" class="w-6 h-6 text-brand-cyan"></i>
+                                    <i class="fas fa-clock w-6 h-6 text-brand-cyan"></i>
                                 </div>
                                 <div>
                                     <span class="block text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">Duration</span>
@@ -140,7 +140,7 @@ require_once 'includes/header.php';
                             <!-- Group Size -->
                             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 hover:bg-white/10 transition-colors">
                                 <div class="w-12 h-12 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex flex-shrink-0 items-center justify-center">
-                                    <i data-lucide="users" class="w-6 h-6 text-brand-cyan"></i>
+                                    <i class="fas fa-users w-6 h-6 text-brand-cyan"></i>
                                 </div>
                                 <div>
                                     <span class="block text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">Group Size</span>
@@ -174,15 +174,15 @@ require_once 'includes/header.php';
 
                             <ul class="space-y-4 mb-10 text-sm text-white/70 font-medium">
                                 <li class="flex items-center gap-3">
-                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-cyan"></i>
+                                    <i class="fas fa-check-circle w-5 h-5 text-brand-cyan"></i>
                                     Expert Local Guides
                                 </li>
                                 <li class="flex items-center gap-3">
-                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-cyan"></i>
+                                    <i class="fas fa-check-circle w-5 h-5 text-brand-cyan"></i>
                                     Premium Accommodation
                                 </li>
                                 <li class="flex items-center gap-3">
-                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-cyan"></i>
+                                    <i class="fas fa-check-circle w-5 h-5 text-brand-cyan"></i>
                                     24/7 Concierge Support
                                 </li>
                             </ul>
@@ -196,7 +196,7 @@ require_once 'includes/header.php';
                             </a>
 
                             <div class="mt-6 flex items-center justify-center gap-3 text-white/40 text-[10px] uppercase tracking-[0.1em] font-semibold">
-                                <i data-lucide="shield-check" class="w-4 h-4"></i> Secure Booking Guaranteed
+                                <i class="fas fa-shield-alt w-4 h-4"></i> Secure Booking Guaranteed
                             </div>
                         </div>
                     </div>
@@ -299,6 +299,5 @@ require_once 'includes/header.php';
         }, { passive: true });
     }
 
-    // ── Initialise Lucide icons ───────────────────────────────────────────────
-    lucide.createIcons();
+
 </script>

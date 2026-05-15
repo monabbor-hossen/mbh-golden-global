@@ -30,6 +30,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,9 +40,12 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Tailwind Configuration -->
     <script>
@@ -86,7 +90,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             }
         }
     </script>
-    
+
     <style type="text/tailwindcss">
         @layer base {
             body {
@@ -95,6 +99,20 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             ::selection {
                 @apply bg-brand-cyan text-white;
             }
+            /* Font Awesome icon sizing via w-*h-* Tailwind classes */
+            i.fas, i.far, i.fab {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+                vertical-align: middle;
+            }
+            i.w-3  { font-size: 0.75rem;  }
+            i.w-4  { font-size: 1rem;     }
+            i.w-5  { font-size: 1.25rem;  }
+            i.w-6  { font-size: 1.5rem;   }
+            i.w-7  { font-size: 1.75rem;  }
+            i.w-8  { font-size: 2rem;     }
         }
 
         @layer utilities {
@@ -208,65 +226,94 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
         }
     </style>
 </head>
+
 <body class="text-brand-navy relative" data-page="<?php echo $currentPage === 'index' ? 'home' : $currentPage; ?>">
 
     <!-- Ambient Background Spheres -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
         <div class="orb-3d w-80 h-80 top-[10%] -left-10 animate-float"></div>
-        <div class="orb-3d w-[35rem] h-[35rem] top-[60%] -right-20 animate-float-delayed" style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,1), rgba(0,130,202,0.03), rgba(0,51,85,0.01));"></div>
+        <div class="orb-3d w-[35rem] h-[35rem] top-[60%] -right-20 animate-float-delayed"
+            style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,1), rgba(0,130,202,0.03), rgba(0,51,85,0.01));">
+        </div>
     </div>
 
     <!-- Floating Navbar Pill -->
-    <nav id="navbar" class="fixed w-full left-1/2 -translate-x-1/2 top-0 z-50 transition-all duration-500 border-b border-transparent bg-transparent py-4 px-6 sm:px-8">
+    <nav id="navbar"
+        class="fixed w-full left-1/2 -translate-x-1/2 top-0 z-50 transition-all duration-500 border-b border-transparent bg-transparent py-4 px-6 sm:px-8">
         <div class="max-w-[90rem] mx-auto w-full flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center cursor-pointer group">
-                <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global" class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                
+                <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global"
+                    class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
                 <div class="hidden font-serif font-bold text-2xl tracking-wide logo-text text-white text-3d-light">
                     <span class="text-brand-cyan">MBH</span> GLOBAL
                 </div>
             </div>
-            
+
             <!-- Desktop Menu -->
             <div class="hidden lg:flex space-x-10 items-center">
-                <a href="index.php" class="nav-link nav-text text-white<?php echo $currentPage === 'index' ? ' active-link' : ''; ?>">Home</a>
-                <a href="about.php" class="nav-link nav-text text-white<?php echo $currentPage === 'about' ? ' active-link' : ''; ?>">About Us</a>
-                <a href="destinations.php" class="nav-link nav-text text-white<?php echo $currentPage === 'destinations' ? ' active-link' : ''; ?>">Destinations</a>
-                <a href="stories.php" class="nav-link nav-text text-white<?php echo $currentPage === 'stories' ? ' active-link' : ''; ?>">Stories</a>
-                <a href="contact.php" class="nav-link nav-text text-white<?php echo $currentPage === 'contact' ? ' active-link' : ''; ?>">Contact</a>
+                <a href="index.php"
+                    class="nav-link nav-text text-white<?php echo $currentPage === 'index' ? ' active-link' : ''; ?>">Home</a>
+                <a href="about.php"
+                    class="nav-link nav-text text-white<?php echo $currentPage === 'about' ? ' active-link' : ''; ?>">About
+                    Us</a>
+                <a href="destinations.php"
+                    class="nav-link nav-text text-white<?php echo $currentPage === 'destinations' ? ' active-link' : ''; ?>">Destinations</a>
+                <a href="stories.php"
+                    class="nav-link nav-text text-white<?php echo $currentPage === 'stories' ? ' active-link' : ''; ?>">Stories</a>
+                <a href="contact.php"
+                    class="nav-link nav-text text-white<?php echo $currentPage === 'contact' ? ' active-link' : ''; ?>">Contact</a>
             </div>
 
             <!-- Header Actions -->
             <div class="flex items-center gap-6">
-                <div class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
-                    <button class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i data-lucide="search" class="w-6 h-6"></i></button>
-                    <a href="destinations.php" class="btn-primary !py-3 !px-8 hidden xl:inline-flex text-xs !shadow-none !translate-y-0 border-none">Book Now</a>
+                <div
+                    class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
+                    <button class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i
+                            class="fas fa-search w-6 h-6"></i></button>
+                    <a href="destinations.php"
+                        class="btn-primary !py-3 !px-8 hidden xl:inline-flex text-xs !shadow-none !translate-y-0 border-none">Book
+                        Now</a>
                 </div>
-                <button onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');" class="lg:hidden nav-text p-2 -mr-2 text-white hover:text-brand-cyan transition-transform active:scale-90 bg-white/10 rounded-full border border-white/20 shadow-inner">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
+                <button
+                    onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');"
+                    class="lg:hidden nav-text p-2 -mr-2 text-white hover:text-brand-cyan transition-transform active:scale-90 bg-white/10 rounded-full border border-white/20 shadow-inner">
+                    <i class="fas fa-bars w-5 h-5"></i>
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
-        <img src="./assets/img/logo.png" class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]" alt="">
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
+        <img src="./assets/img/logo.png"
+            class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]" alt="">
 
         <div class="flex justify-between items-center p-6 border-b border-gray-100">
-            <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain" onerror="this.style.display='none';">
-            <button onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
-                <i data-lucide="x" class="w-5 h-5"></i>
+            <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
+                onerror="this.style.display='none';">
+            <button
+                onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');"
+                class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
+                <i class="fas fa-times w-5 h-5"></i>
             </button>
         </div>
         <div class="flex flex-col gap-6 px-8 py-12 overflow-y-auto h-full justify-center">
-            <a href="index.php" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Home.</a>
-            <a href="about.php" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">About Us.</a>
-            <a href="destinations.php" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Destinations.</a>
-            <a href="stories.php" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Stories.</a>
-            <a href="contact.php" class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Contact.</a>
-            
+            <a href="index.php"
+                class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Home.</a>
+            <a href="about.php"
+                class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">About
+                Us.</a>
+            <a href="destinations.php"
+                class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Destinations.</a>
+            <a href="stories.php"
+                class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Stories.</a>
+            <a href="contact.php"
+                class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Contact.</a>
+
             <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col gap-2">
                 <span class="text-[10px] uppercase tracking-[0.2em] font-semibold text-brand-cyan">Direct Line</span>
                 <p class="text-brand-navy text-lg tracking-wide font-bold"><?php echo htmlspecialchars($phone1); ?></p>

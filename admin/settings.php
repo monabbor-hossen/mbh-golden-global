@@ -1,39 +1,10 @@
 <?php
-/**
- * Admin - Site Settings Management
- * 
- * Update global site settings
- */
+ob_start();
 
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
 requireAdmin();
 require_once 'includes/flash.php';
-
-// Read any flash message from a previous redirect (PRG pattern)
-[$message, $message_type] = flash_get();
-
-$settings = [];
-
-// Fetch current settings
-try {
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
-    $stmt->execute();
-    $rows = $stmt->fetchAll();
-    foreach ($rows as $row) {
-        $settings[$row['setting_key']] = $row['setting_value'];
-    }
-} catch (PDOException $e) {
-    error_log('Settings fetch error: ' . $e->getMessage());
-}
-
-$social_links_arr = [];
-if (!empty($settings['social_links'])) {
-    $decoded = json_decode($settings['social_links'], true);
-    if (is_array($decoded)) {
-        $social_links_arr = $decoded;
-    }
-}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -74,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtSocial->execute([$social_json, $social_json]);
 
         // 5. Success Redirect
-        flash_set("Settings updated successfully!");
+        $_SESSION['success_msg'] = "Settings saved!";
         header("Location: settings.php");
         exit;
 
@@ -82,6 +53,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // If it fails, show the EXACT database error so we know why
         $message = "Database Error: " . $e->getMessage();
         $message_type = "error";
+    }
+}
+
+/**
+ * Admin - Site Settings Management
+ * 
+ * Update global site settings
+ */
+
+// Read any flash message from a previous redirect (PRG pattern)
+[$message, $message_type] = flash_get();
+
+$settings = [];
+
+// Fetch current settings
+try {
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    foreach ($rows as $row) {
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
+} catch (PDOException $e) {
+    error_log('Settings fetch error: ' . $e->getMessage());
+}
+
+$social_links_arr = [];
+if (!empty($settings['social_links'])) {
+    $decoded = json_decode($settings['social_links'], true);
+    if (is_array($decoded)) {
+        $social_links_arr = $decoded;
     }
 }
 
@@ -108,7 +110,7 @@ require_once 'includes/header.php';
                     <!-- Contact Section -->
                     <div>
                         <h3 class="text-lg font-serif text-white mb-6 flex items-center gap-2 border-b border-white/10 pb-3">
-                            <i data-lucide="contact" class="w-5 h-5 text-brand-cyan"></i>
+                            <i class="fas fa-address-book w-5 h-5 text-brand-cyan"></i>
                             Contact Information
                         </h3>
 
@@ -140,12 +142,12 @@ require_once 'includes/header.php';
                     <div>
                         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-6">
                             <h3 class="text-lg font-serif text-white flex items-center gap-2">
-                                <i data-lucide="share-2" class="w-5 h-5 text-brand-cyan"></i>
+                                <i class="fas fa-share-alt w-5 h-5 text-brand-cyan"></i>
                                 Social Media Links
                             </h3>
                             <button type="button" id="add-social-btn"
                                 class="px-4 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white transition-all font-medium text-xs flex items-center gap-2">
-                                <i data-lucide="plus" class="w-3 h-3"></i> Add New Link
+                                <i class="fas fa-plus w-3 h-3"></i> Add New Link
                             </button>
                         </div>
 
@@ -158,15 +160,23 @@ require_once 'includes/header.php';
                                         <input type="text" name="social_platform[]" placeholder="Facebook" class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                                     </div>
                                     <div class="flex-1 w-full">
-                                        <label class="block text-xs font-semibold mb-1 text-white/60">Lucide Icon Name</label>
-                                        <input type="text" name="social_icon[]" placeholder="facebook" class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
+                                        <label class="block text-xs font-semibold mb-1 text-white/60">Icon</label>
+                                        <select name="social_icon[]" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan [&>option]:bg-[#003355]">
+                                            <option value="fas fa-link">🌐 Website (Default)</option>
+                                            <option value="fab fa-facebook">📘 Facebook</option>
+                                            <option value="fab fa-instagram">📸 Instagram</option>
+                                            <option value="fab fa-twitter">🐦 Twitter / X</option>
+                                            <option value="fab fa-youtube">▶️ YouTube</option>
+                                            <option value="fab fa-linkedin">💼 LinkedIn</option>
+                                            <option value="fab fa-tiktok">🎵 TikTok</option>
+                                        </select>
                                     </div>
                                     <div class="flex-1 w-full md:flex-[2]">
                                         <label class="block text-xs font-semibold mb-1 text-white/60">URL</label>
                                         <input type="url" name="social_url[]" placeholder="https://facebook.com/..." class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                                     </div>
                                     <button type="button" class="remove-btn p-2.5 bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Remove Link">
-                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        <i class="fas fa-trash-alt w-4 h-4"></i>
                                     </button>
                                 </div>
                             <?php else: ?>
@@ -177,21 +187,29 @@ require_once 'includes/header.php';
                                             <input type="text" name="social_platform[]" value="<?php echo htmlspecialchars($link['platform'] ?? ''); ?>" required class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                                         </div>
                                         <div class="flex-1 w-full">
-                                            <label class="block text-xs font-semibold mb-1 text-white/60">Lucide Icon Name</label>
-                                            <input type="text" name="social_icon[]" value="<?php echo htmlspecialchars($link['icon'] ?? ''); ?>" required class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
+                                            <label class="block text-xs font-semibold mb-1 text-white/60">Icon</label>
+                                            <select name="social_icon[]" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan [&>option]:bg-[#003355]">
+                                                <option value="fas fa-link" <?= ($link['icon'] ?? '') == 'fas fa-link' ? 'selected' : '' ?>>🌐 Website (Default)</option>
+                                                <option value="fab fa-facebook" <?= ($link['icon'] ?? '') == 'fab fa-facebook' ? 'selected' : '' ?>>📘 Facebook</option>
+                                                <option value="fab fa-instagram" <?= ($link['icon'] ?? '') == 'fab fa-instagram' ? 'selected' : '' ?>>📸 Instagram</option>
+                                                <option value="fab fa-twitter" <?= ($link['icon'] ?? '') == 'fab fa-twitter' ? 'selected' : '' ?>>🐦 Twitter / X</option>
+                                                <option value="fab fa-youtube" <?= ($link['icon'] ?? '') == 'fab fa-youtube' ? 'selected' : '' ?>>▶️ YouTube</option>
+                                                <option value="fab fa-linkedin" <?= ($link['icon'] ?? '') == 'fab fa-linkedin' ? 'selected' : '' ?>>💼 LinkedIn</option>
+                                                <option value="fab fa-tiktok" <?= ($link['icon'] ?? '') == 'fab fa-tiktok' ? 'selected' : '' ?>>🎵 TikTok</option>
+                                            </select>
                                         </div>
                                         <div class="flex-1 w-full md:flex-[2]">
                                             <label class="block text-xs font-semibold mb-1 text-white/60">URL</label>
                                             <input type="url" name="social_url[]" value="<?php echo htmlspecialchars($link['url'] ?? ''); ?>" required class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                                         </div>
                                         <button type="button" class="remove-btn p-2.5 bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Remove Link">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            <i class="fas fa-trash-alt w-4 h-4"></i>
                                         </button>
                                     </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
-                        <p class="text-xs text-white/40 mt-3"><i data-lucide="info" class="w-3 h-3 inline"></i> Icon names must exactly match <a href="https://lucide.dev/icons/" target="_blank" class="text-brand-cyan hover:underline">Lucide icon names</a> (e.g., 'facebook', 'instagram', 'twitter', 'linkedin').</p>
+                        <p class="text-xs text-white/40 mt-3"><i class="fas fa-info-circle w-3 h-3 inline"></i> Select the Font Awesome icon class that matches the social platform.</p>
                     </div>
 
                     <!-- Submit Button -->
@@ -218,15 +236,23 @@ require_once 'includes/header.php';
                             <input type="text" name="social_platform[]" placeholder="New Platform" class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                         </div>
                         <div class="flex-1 w-full">
-                            <label class="block text-xs font-semibold mb-1 text-white/60">Lucide Icon Name</label>
-                            <input type="text" name="social_icon[]" placeholder="icon-name" class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
+                            <label class="block text-xs font-semibold mb-1 text-white/60">Icon</label>
+                            <select name="social_icon[]" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan [&>option]:bg-[#003355]">
+                                <option value="fas fa-link">🌐 Website (Default)</option>
+                                <option value="fab fa-facebook">📘 Facebook</option>
+                                <option value="fab fa-instagram">📸 Instagram</option>
+                                <option value="fab fa-twitter">🐦 Twitter / X</option>
+                                <option value="fab fa-youtube">▶️ YouTube</option>
+                                <option value="fab fa-linkedin">💼 LinkedIn</option>
+                                <option value="fab fa-tiktok">🎵 TikTok</option>
+                            </select>
                         </div>
                         <div class="flex-1 w-full md:flex-[2]">
                             <label class="block text-xs font-semibold mb-1 text-white/60">URL</label>
                             <input type="url" name="social_url[]" placeholder="https://..." class="w-full px-3 py-2 text-sm bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-brand-cyan">
                         </div>
                         <button type="button" class="remove-btn p-2.5 bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Remove Link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                        <i class="fas fa-trash-alt w-4 h-4"></i>
                         </button>
                     `;
                     repeater.appendChild(row);

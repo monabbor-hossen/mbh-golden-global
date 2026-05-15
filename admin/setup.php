@@ -14,7 +14,7 @@ try {
     $checkStmt->execute();
     $result = $checkStmt->fetch();
     
-    if ($result['count'] > 0) {
+    if ($result['count']> 0) {
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -162,8 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             name="name" 
                             required 
                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Administrator"
-                        >
+                            placeholder="Administrator">
                     </div>
 
                     <!-- Email -->
@@ -175,8 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             name="email" 
                             required 
                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="admin@mbh.com"
-                        >
+                            placeholder="admin@mbh.com">
                     </div>
 
                     <!-- Password -->
@@ -189,8 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             required 
                             minlength="8"
                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Minimum 8 characters"
-                        >
+                            placeholder="Minimum 8 characters">
                         <p class="text-xs text-gray-500 mt-1">Min 8 characters recommended for security</p>
                     </div>
 
@@ -204,15 +201,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             required 
                             minlength="8"
                             class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Re-enter password"
-                        >
+                            placeholder="Re-enter password">
                     </div>
 
                     <!-- Submit -->
                     <button 
                         type="submit" 
-                        class="w-full py-3 px-4 bg-gradient-to-b from-[#00a2ff] to-[#0082CA] text-white font-bold rounded-lg hover:shadow-lg transition mt-6 uppercase tracking-[0.1em] text-sm"
-                    >
+                        class="w-full py-3 px-4 bg-gradient-to-b from-[#00a2ff] to-[#0082CA] text-white font-bold rounded-lg hover:shadow-lg transition mt-6 uppercase tracking-[0.1em] text-sm">
                         Create Admin Account
                     </button>
                 </form>

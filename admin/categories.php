@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uploadError = false;
 
         // Image Upload Logic
-        if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+        if (isset($_FILES['image']) && $_FILES['image']['size']> 0) {
             $file = $_FILES['image'];
             $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
             $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -175,11 +175,11 @@ $page_heading = 'Categories';
 ob_start(); ?>
 <?php if ($action === 'list'): ?>
     <a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2">
-        <i data-lucide="plus" class="w-4 h-4"></i> New Category
+        <i class="fas fa-plus w-4 h-4"></i> New Category
     </a>
 <?php else: ?>
     <a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List
+        <i class="fas fa-arrow-left w-4 h-4"></i> Back to List
     </a>
 <?php endif; ?>
 <?php $page_actions = ob_get_clean();
@@ -218,7 +218,7 @@ require_once 'includes/header.php';
                                         <img src="../assets/uploads/categories/<?php echo htmlspecialchars($cat['image']); ?>" alt="Category" class="w-12 h-12 rounded object-cover border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                                     <?php else: ?>
                                         <div class="w-12 h-12 rounded bg-white/10 flex items-center justify-center border border-white/20">
-                                            <i data-lucide="image" class="w-5 h-5 text-white/50"></i>
+                                            <i class="fas fa-image w-5 h-5 text-white/50"></i>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -227,10 +227,10 @@ require_once 'includes/header.php';
                                 <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         <a href="?action=edit&id=<?php echo $cat['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
-                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                            <i class="fas fa-edit w-4 h-4"></i>
                                         </a>
                                         <a href="?action=delete&id=<?php echo $cat['id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" onclick="return confirm('Delete this category?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            <i class="fas fa-trash-alt w-4 h-4"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -241,9 +241,9 @@ require_once 'includes/header.php';
             </div>
         <?php else: ?>
             <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
-                <i data-lucide="folder-tree" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
+                <i class="fas fa-folder-tree w-12 h-12 text-white/20 mx-auto mb-3"></i>
                 <p class="text-white/50 text-sm mb-4">No categories found.</p>
-                <a href="?action=create" class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create your first category <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="?action=create" class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create your first category <i class="fas fa-arrow-right w-4 h-4"></i></a>
             </div>
         <?php endif; ?>
     </div>

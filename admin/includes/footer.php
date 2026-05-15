@@ -15,7 +15,7 @@
 <script>window.Quill = Quill;</script>
 <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 
-<!-- Consolidated Admin JS (sidebar toggle, password eye, Quill init, Lucide) -->
+<!-- Consolidated Admin JS (sidebar toggle, password eye, Quill init) -->
 <script src="/mbh-golden-global/assets/js/admin.js"></script>
 
 </body>

@@ -93,7 +93,7 @@ require_once 'includes/header.php';
                     <span class="inline-flex items-center gap-2 bg-brand-cyan/20 backdrop-blur-md
                                  border border-brand-cyan/40 text-brand-cyan text-[10px] font-black
                                  tracking-[0.25em] uppercase px-4 py-2 rounded-full">
-                        <i data-lucide="tag" class="w-3 h-3"></i>
+                        <i class="fas fa-tag w-3 h-3"></i>
                         <?= $safeTag ?>
                     </span>
                 </div>
@@ -110,17 +110,17 @@ require_once 'includes/header.php';
                             font-bold tracking-[0.15em] uppercase fade-up"
                      style="transition-delay:200ms">
                     <span class="flex items-center gap-2">
-                        <i data-lucide="calendar" class="w-4 h-4 text-brand-cyan"></i>
+                        <i class="fas fa-calendar w-4 h-4 text-brand-cyan"></i>
                         <?= $formattedDate ?>
                     </span>
                     <span class="w-px h-4 bg-white/20"></span>
                     <span class="flex items-center gap-2">
-                        <i data-lucide="clock" class="w-4 h-4 text-brand-cyan"></i>
+                        <i class="fas fa-clock w-4 h-4 text-brand-cyan"></i>
                         <?= $readingMins ?> min read
                     </span>
                     <span class="w-px h-4 bg-white/20"></span>
                     <span class="flex items-center gap-2">
-                        <i data-lucide="book-open" class="w-4 h-4 text-brand-cyan"></i>
+                        <i class="fas fa-book-open w-4 h-4 text-brand-cyan"></i>
                         <?= number_format($wordCount) ?> words
                     </span>
                 </div>
@@ -156,7 +156,7 @@ require_once 'includes/header.php';
                                      bg-white/10 border border-white/20 backdrop-blur-md
                                      group-hover:bg-brand-cyan/20 group-hover:border-brand-cyan/40
                                      transition-all duration-300">
-                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            <i class="fas fa-arrow-left w-4 h-4"></i>
                         </span>
                         Back to Stories
                     </a>
@@ -171,7 +171,7 @@ require_once 'includes/header.php';
                                            justify-center text-white/50 hover:text-brand-cyan hover:bg-brand-cyan/10
                                            hover:border-brand-cyan/30 transition-all duration-300"
                                     title="Copy link">
-                                <i data-lucide="link" class="w-3.5 h-3.5"></i>
+                                <i class="fas fa-link w-3.5 h-3.5"></i>
                             </button>
                         </div>
                         <span id="copied-msg"
@@ -196,7 +196,7 @@ require_once 'includes/header.php';
                     <!-- Divider -->
                     <div class="flex items-center gap-4 mb-10">
                         <div class="flex-1 h-px bg-white/10"></div>
-                        <i data-lucide="plane" class="w-4 h-4 text-brand-cyan/50"></i>
+                        <i class="fas fa-plane w-4 h-4 text-brand-cyan/50"></i>
                         <div class="flex-1 h-px bg-white/10"></div>
                     </div>
 
@@ -217,7 +217,7 @@ require_once 'includes/header.php';
                         <span class="inline-flex items-center gap-1.5 bg-brand-cyan/10 border border-brand-cyan/30
                                      text-brand-cyan text-[10px] font-black tracking-[0.2em] uppercase
                                      px-4 py-2 rounded-full">
-                            <i data-lucide="tag" class="w-3 h-3"></i>
+                            <i class="fas fa-tag w-3 h-3"></i>
                             <?= $safeTag ?>
                         </span>
                     </div>
@@ -229,7 +229,7 @@ require_once 'includes/header.php';
                               text-white text-[10px] font-black tracking-[0.2em] uppercase
                               px-6 py-3 rounded-full transition-all duration-300
                               hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,130,202,0.3)]">
-                        <i data-lucide="library" class="w-4 h-4 text-brand-cyan"></i>
+                        <i class="fas fa-book-reader w-4 h-4 text-brand-cyan"></i>
                         More Stories
                     </a>
                 </div>
@@ -241,7 +241,7 @@ require_once 'includes/header.php';
                      style="transition-delay:300ms">
                     <div class="w-14 h-14 rounded-2xl bg-brand-cyan/20 border border-brand-cyan/30
                                 flex items-center justify-center mx-auto mb-6">
-                        <i data-lucide="globe" class="w-7 h-7 text-brand-cyan"></i>
+                        <i class="fas fa-globe w-7 h-7 text-brand-cyan"></i>
                     </div>
                     <h3 class="font-serif text-white text-2xl md:text-3xl font-bold mb-3">
                         Ready to <i class="text-brand-cyan font-light">experience</i> it yourself?
@@ -254,7 +254,7 @@ require_once 'includes/header.php';
                               border border-[#00aaff] text-white text-xs font-black tracking-[0.2em] uppercase
                               px-8 py-4 rounded-full transition-all duration-300
                               hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(0,130,202,0.5)]">
-                        <i data-lucide="map" class="w-4 h-4"></i>
+                        <i class="fas fa-map w-4 h-4"></i>
                         Explore Packages
                     </a>
                 </div>
@@ -421,7 +421,7 @@ require_once 'includes/header.php';
     window.addEventListener('scroll', () => {
         const scrollTop    = window.scrollY;
         const docHeight    = document.documentElement.scrollHeight - window.innerHeight;
-        const progress     = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        const progress     = docHeight> 0 ? (scrollTop / docHeight) * 100 : 0;
         progressBar.style.width = progress + '%';
     }, { passive: true });
 
@@ -442,6 +442,5 @@ require_once 'includes/header.php';
         setTimeout(() => { msg.style.opacity = '0'; }, 2000);
     }
 
-    // ── Initialise Lucide icons ───────────────────────────────────────────────
-    lucide.createIcons();
+
 </script>
