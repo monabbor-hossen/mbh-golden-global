@@ -17,7 +17,7 @@ $page_title = $page_title ?? 'Admin Panel | MBH Golden Global';
 $page_description = $page_description ?? 'MBH Golden Global Admin Command Center';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth scroll-pt-24 md:scroll-pt-8">
 
 <head>
     <meta charset="UTF-8">
@@ -80,7 +80,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
     </script>
 </head>
 
-<body class="bg-brand-bg text-white min-h-screen overflow-x-hidden flex flex-col md:flex-row selection:bg-brand-cyan selection:text-white">
+<body class="bg-brand-navy text-white min-h-screen overflow-x-hidden flex flex-col">
 
     <!-- ── Ambient Background Orbs ──────────────────────── -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -99,12 +99,11 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
         <!-- Sidebar (desktop: fixed pill; mobile: off-canvas) -->
         <?php require_once __DIR__ . '/sidebar.php'; ?>
 
-        <!-- Mobile-only Top Bar -->
-        <div
-            class="md:hidden fixed top-0 left-0 right-0 z-40 bg-brand-bg/90 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/10 flex justify-between items-center p-4 shadow-lg shadow-black/20">
+        <!-- Mobile-only Top Bar (fixed so main content scrolls beneath it) -->
+        <div class="md:hidden fixed top-0 left-0 right-0 z-30 bg-brand-bg/95 backdrop-blur-2xl border-b border-white/10 shadow-lg shadow-black/20 flex justify-between items-center p-4">
             <span class="text-lg font-serif font-bold text-white">
                 <img src="../assets/img/logo.png" alt="MBH"
-                    class="h-12 object-contain mx-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] mb-2">
+                    class="h-10 object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             </span>
             <button id="hamburger-btn" aria-label="Open navigation menu"
                 class="p-2 text-white hover:text-brand-cyan transition-colors rounded-lg hover:bg-white/10">
@@ -114,7 +113,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
 
         <!-- Main Content Wrapper (opened here, closed in footer.php) -->
         <main
-            class="flex-1 w-full pt-[5.5rem] pb-12 px-4 sm:px-6 md:pt-8 md:pb-8 md:pl-[21rem] md:pr-8 min-h-screen relative z-10 transition-all duration-300">
+            class="flex-1 w-full max-w-[100vw] overflow-x-hidden pt-24 pb-12 px-4 sm:px-6 md:pt-8 md:pl-80 md:pr-8 min-h-screen flex flex-col relative z-10 transition-all duration-300">
 
             <!-- ── Universal Page Header Bar ─────────────────── -->
             <?php if (!empty($page_heading)): ?>
