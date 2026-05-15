@@ -1,3 +1,25 @@
+<?php
+// Fetch all settings
+$settings = [];
+try {
+    if (isset($pdo)) {
+        $stmt = $pdo->query("SELECT key_name, value FROM settings");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['key_name']] = $row['value'];
+        }
+    }
+} catch (PDOException $e) {
+    // Silently handle error
+}
+
+$social_links = [];
+if (!empty($settings['social_links'])) {
+    $decoded = json_decode($settings['social_links'], true);
+    if (is_array($decoded)) {
+        $social_links = $decoded;
+    }
+}
+?>
 </main>
 
 <!-- Light Theme Footer (Low-Profile 3D) -->
@@ -22,18 +44,13 @@
                     with us.
                 </p>
                 <div class="flex space-x-4 inner-3d">
-                    <a href="#"
-                        class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
-                        <i data-lucide="facebook" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#"
-                        class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
-                        <i data-lucide="instagram" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#"
-                        class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white">
-                        <i data-lucide="twitter" class="w-5 h-5"></i>
-                    </a>
+                    <?php foreach ($social_links as $link): ?>
+                        <a href="<?php echo htmlspecialchars($link['url']); ?>" target="_blank"
+                            class="btn-outline !w-12 !h-12 !p-0 !rounded-xl flex items-center justify-center text-brand-cyan hover:text-white"
+                            title="<?php echo htmlspecialchars($link['platform']); ?>">
+                            <i data-lucide="<?php echo htmlspecialchars($link['icon']); ?>" class="w-5 h-5"></i>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -61,17 +78,17 @@
                     <li class="flex items-center gap-4">
                         <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="phone"
                                 class="w-4 h-4 text-brand-cyan"></i></div>
-                        <?php echo htmlspecialchars($phone1 ?? '+966 536 785 506'); ?>
+                        <?php echo htmlspecialchars($settings['phone_1'] ?? '+966 536 785 506'); ?>
                     </li>
                     <li class="flex items-center gap-4">
                         <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="mail"
                                 class="w-4 h-4 text-brand-cyan"></i></div>
-                        <?php echo htmlspecialchars($email1 ?? 'mbhgoldenglobal@gmail.com'); ?>
+                        <?php echo htmlspecialchars($settings['email_1'] ?? 'mbhgoldenglobal@gmail.com'); ?>
                     </li>
                     <li class="pt-2 text-gray-500 flex items-start gap-4">
                         <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100"><i data-lucide="map-pin"
                                 class="w-4 h-4 text-brand-cyan"></i></div> <span
-                            class="text-brand-navy"><?php echo htmlspecialchars($address ?? 'Buraydah, Al-Qassim, Saudi Arabia'); ?></span>
+                            class="text-brand-navy"><?php echo nl2br(htmlspecialchars($settings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia')); ?></span>
                     </li>
                 </ul>
             </div>
