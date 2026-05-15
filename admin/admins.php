@@ -386,9 +386,31 @@ if ($action === 'list') {
                         <!-- Password -->
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">
-                                Password <?php echo $action === 'create' ? '*' : '(Leave blank to keep current)'; ?>
+                                Password <?php echo $action === 'create' ? '*' : '<span class="text-xs text-white/40 font-normal">(Leave blank to keep current)</span>'; ?>
                             </label>
-                            <input type="password" name="password" <?php echo $action === 'create' ? 'required' : ''; ?> class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" placeholder="Minimum 8 characters">
+                            <div class="relative group">
+                                <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 group-focus-within:text-brand-cyan transition-colors pointer-events-none"></i>
+                                
+                                <input 
+                                    type="password" 
+                                    name="password" 
+                                    id="adminPassword"
+                                    <?php echo $action === 'create' ? 'required' : ''; ?>
+                                    class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-3.5 pl-12 pr-12 focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                                    placeholder="Minimum 8 characters"
+                                >
+
+                                <button 
+                                    type="button" 
+                                    id="togglePassword" 
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-brand-cyan focus:outline-none transition-colors"
+                                    tabindex="-1"
+                                    aria-label="Toggle password visibility"
+                                >
+                                    <span id="iconShow"><i data-lucide="eye" class="w-5 h-5"></i></span>
+                                    <span id="iconHide" class="hidden"><i data-lucide="eye-off" class="w-5 h-5"></i></span>
+                                </button>
+                            </div>
                             <p class="text-xs text-white/40 mt-2">Password must be at least 8 characters long.</p>
                         </div>
 
@@ -412,6 +434,26 @@ if ($action === 'list') {
         </main>
     </div> <!-- Close flex wrapper -->
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+
+        // Password Visibility Toggle Logic
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('adminPassword');
+        const iconShow = document.getElementById('iconShow');
+        const iconHide = document.getElementById('iconHide');
+
+        if (togglePasswordBtn && passwordInput) {
+            togglePasswordBtn.addEventListener('click', function () {
+                // Toggle the input type between password and text
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Swap the icons
+                iconShow.classList.toggle('hidden');
+                iconHide.classList.toggle('hidden');
+            });
+        }
+    </script>
 </body>
 </html>
