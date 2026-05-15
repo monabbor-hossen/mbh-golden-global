@@ -17,11 +17,11 @@ $settings = [];
 
 // Fetch current settings
 try {
-    $stmt = $pdo->prepare("SELECT key_name, value FROM settings");
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
     $stmt->execute();
     $rows = $stmt->fetchAll();
     foreach ($rows as $row) {
-        $settings[$row['key_name']] = $row['value'];
+        $settings[$row['setting_key']] = $row['setting_value'];
     }
 } catch (PDOException $e) {
     error_log('Settings fetch error: ' . $e->getMessage());
@@ -37,73 +37,51 @@ if (!empty($settings['social_links'])) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf_token($_POST['csrf_token'] ?? '');
+    // 1. Verify CSRF Token (Assuming verify_csrf_token() exists in auth.php)
+    if (isset($_POST['csrf_token'])) {
+        verify_csrf_token($_POST['csrf_token']);
+    }
+
     try {
-        $fields = ['phone_1', 'phone_2', 'email_1', 'email_2', 'address'];
-
-        foreach ($fields as $field) {
-            $value = trim($_POST[$field] ?? '');
-            
-            // Check if record exists
-            $stmt = $pdo->prepare("SELECT id FROM settings WHERE key_name = :key");
-            $stmt->execute([':key' => $field]);
-            $exists = $stmt->fetch();
-
-            if ($exists) {
-                $stmt = $pdo->prepare("UPDATE settings SET value = :value WHERE key_name = :key");
-                $stmt->execute([':value' => $value, ':key' => $field]);
-            } else {
-                $stmt = $pdo->prepare("INSERT INTO settings (key_name, value) VALUES (:key, :value)");
-                $stmt->execute([':key' => $field, ':value' => $value]);
+        // 2. Update Standard Text Settings
+        $standard_keys = ['phone_1', 'phone_2', 'email_1', 'email_2', 'address'];
+        $stmt = $pdo->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = ?");
+        foreach ($standard_keys as $key) {
+            if (isset($_POST[$key])) {
+                $stmt->execute([trim($_POST[$key]), $key]);
             }
-
-            $settings[$field] = $value;
         }
 
-        // Process Social Links into JSON array
+        // 3. Safely Build Social Links Array
         $social_links = [];
-        if (!empty($_POST['social_platform']) && is_array($_POST['social_platform'])) {
-            $platforms = $_POST['social_platform'];
-            $icons = $_POST['social_icon'] ?? [];
-            $urls = $_POST['social_url'] ?? [];
-
-            for ($i = 0; $i < count($platforms); $i++) {
-                $p = trim($platforms[$i]);
-                $ic = trim($icons[$i] ?? '');
-                $u = trim($urls[$i] ?? '');
-
-                if ($p !== '' && $ic !== '' && $u !== '') {
+        if (isset($_POST['social_platform']) && is_array($_POST['social_platform'])) {
+            $count = count($_POST['social_platform']);
+            for ($i = 0; $i < $count; $i++) {
+                // Only add if the platform name isn't empty
+                if (!empty(trim($_POST['social_platform'][$i]))) {
                     $social_links[] = [
-                        'platform' => $p,
-                        'icon' => $ic,
-                        'url' => $u
+                        'platform' => trim($_POST['social_platform'][$i]),
+                        'icon'     => trim($_POST['social_icon'][$i] ?? 'link'),
+                        'url'      => trim($_POST['social_url'][$i] ?? '#')
                     ];
                 }
             }
         }
-        $social_links_json = json_encode($social_links);
+        
+        // 4. Save Social Links (Upsert: Insert if missing, Update if exists)
+        $social_json = json_encode($social_links);
+        $stmtSocial = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('social_links', ?) ON DUPLICATE KEY UPDATE setting_value = ?");
+        $stmtSocial->execute([$social_json, $social_json]);
 
-        // Update social_links
-        $stmt = $pdo->prepare("SELECT id FROM settings WHERE key_name = 'social_links'");
-        $stmt->execute();
-        $exists = $stmt->fetch();
-        if ($exists) {
-            $stmt = $pdo->prepare("UPDATE settings SET value = :value WHERE key_name = 'social_links'");
-            $stmt->execute([':value' => $social_links_json]);
-        } else {
-            $stmt = $pdo->prepare("INSERT INTO settings (key_name, value) VALUES ('social_links', :value)");
-            $stmt->execute([':value' => $social_links_json]);
-        }
-        $settings['social_links'] = $social_links_json;
-
-        // PRG: flash success and redirect so F5 won't re-save
-        flash_set('Settings updated successfully!');
-        header('Location: settings.php');
+        // 5. Success Redirect
+        flash_set("Settings updated successfully!");
+        header("Location: settings.php");
         exit;
+
     } catch (PDOException $e) {
-        error_log('Update error: ' . $e->getMessage());
-        $message = 'Error updating settings.';
-        $message_type = 'error';
+        // If it fails, show the EXACT database error so we know why
+        $message = "Database Error: " . $e->getMessage();
+        $message_type = "error";
     }
 }
 

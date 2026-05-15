@@ -3,9 +3,9 @@
 $settings = [];
 try {
     if (isset($pdo)) {
-        $stmt = $pdo->query("SELECT key_name, value FROM settings");
+        $stmt = $pdo->query("SELECT setting_key, setting_value FROM settings");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $settings[$row['key_name']] = $row['value'];
+            $settings[$row['setting_key']] = $row['setting_value'];
         }
     }
 } catch (PDOException $e) {
