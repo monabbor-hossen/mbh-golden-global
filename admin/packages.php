@@ -375,8 +375,8 @@ if ($action === 'list') {
                     <!-- Description -->
                     <div>
                         <label class="block text-sm font-semibold mb-2">Description *</label>
-                        <div id="quill-editor" class="bg-white/80 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"><?php echo $package['description'] ?? ''; ?></div>
-                        <input type="hidden" name="description" id="content-input">
+                        <div id="quill-editor" class="bg-white/80 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"></div>
+                        <input type="hidden" name="description" id="content-input" value="<?php echo htmlspecialchars($package['description'] ?? ''); ?>">
                     </div>
 
                     <!-- Price -->

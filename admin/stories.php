@@ -328,8 +328,8 @@ if ($action === 'list') {
 
                     <div>
                         <label class="block text-sm font-semibold mb-2">Content *</label>
-                        <div id="quill-editor" class="bg-white/80 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"><?php echo $story['content'] ?? ''; ?></div>
-                        <input type="hidden" name="content" id="content-input">
+                        <div id="quill-editor" class="bg-white/80 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl" style="min-height: 300px;"></div>
+                        <input type="hidden" name="content" id="content-input" value="<?php echo htmlspecialchars($story['content'] ?? ''); ?>">
                     </div>
 
                     <div>
