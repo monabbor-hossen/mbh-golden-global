@@ -104,50 +104,20 @@ try {
         <div class="absolute inset-0 bg-[url('../assets/img/bg1.avif')] bg-cover bg-center opacity-[0.15] mix-blend-overlay"></div>
     </div>
 
-    <div class="flex min-h-screen relative z-10">
-        <!-- Sidebar -->
-        <aside class="w-64 fixed top-6 left-6 bottom-6 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_30px_rgba(0,130,202,0.15)] flex flex-col z-20">
-            <!-- Logo -->
-            <div class="p-8 pb-6 border-b border-white/10 text-center">
-                <img src="../assets/img/logo.png" alt="MBH" class="h-12 object-contain mx-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] mb-2">
-                <h1 class="text-xl font-serif text-white tracking-widest uppercase text-xs opacity-80">
-                    Admin
-                </h1>
-            </div>
-            
-            <!-- Navigation -->
-            <nav class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
-                <a href="index.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-cyan/20 to-transparent border border-brand-cyan/30 text-white shadow-[0_0_15px_rgba(0,130,202,0.2)] transition-all">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-brand-cyan"></i>
-                    <span class="font-medium text-sm">Dashboard</span>
-                </a>
-                <a href="packages.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
-                    <i data-lucide="package" class="w-5 h-5"></i>
-                    <span class="font-medium text-sm">Packages</span>
-                </a>
-                <a href="stories.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
-                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
-                    <span class="font-medium text-sm">Stories</span>
-                </a>
-                <a href="inquiries.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
-                    <i data-lucide="mail" class="w-5 h-5"></i>
-                    <span class="font-medium text-sm">Inquiries</span>
-                </a>
-                <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin'): ?>
-<a href="admins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span class="font-medium text-sm">Admins</span>
-                </a>
-                <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                    <span class="font-medium text-sm">Settings</span>
-                </a>
-            <?php endif; ?>
-            </nav>
-        </aside>
+    <div class="flex flex-col min-h-screen relative z-10">
+        <?php require_once 'includes/sidebar.php'; ?>
+
+        
+        <!-- Mobile Top Bar -->
+        <div class="md:hidden flex items-center justify-between p-6 bg-white/5 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30 w-full">
+            <h1 class="text-xl font-serif font-bold text-white"><span class="text-brand-cyan">MBH</span> Admin</h1>
+            <button id="hamburger-btn" class="text-white hover:text-brand-cyan transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
 
         <!-- Main Content -->
-        <main class="flex-1 ml-80 py-6 pr-6 min-h-screen flex flex-col">
+        <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
             <!-- Top Header -->
             <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div>
