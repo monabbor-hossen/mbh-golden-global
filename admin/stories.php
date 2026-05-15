@@ -14,8 +14,8 @@ require_once 'includes/flash.php';
 [$message, $message_type] = flash_get();
 
 $stories = [];
-$action  = $_GET['action'] ?? 'list';
-$story   = null;
+$action = $_GET['action'] ?? 'list';
+$story = null;
 
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
@@ -24,7 +24,7 @@ if ($action === 'delete' && isset($_GET['id'])) {
         $stmt_fetch = $pdo->prepare("SELECT content, image_url FROM stories WHERE id = :id");
         $stmt_fetch->execute([':id' => $_GET['id']]);
         $story_to_delete = $stmt_fetch->fetch();
-        
+
         if ($story_to_delete) {
             $upload_dir = realpath(__DIR__ . '/../assets/uploads');
             // Delete WYSIWYG images
@@ -208,127 +208,185 @@ if ($action === 'list') {
 $page_title = 'Travel Stories | Admin - MBH Golden Global';
 
 $page_heading = 'Travel Stories';
-ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> New Story</a><?php else: ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
+ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create"
+        class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i
+            data-lucide="plus" class="w-4 h-4"></i> New Story</a><?php else: ?><a href="?action=list"
+        class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i
+            data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?>
+<?php $page_actions = ob_get_clean();
 require_once 'includes/header.php';
 ?>
 
-            <!-- Messages -->
-            <?php if ($message): ?>
-                <div class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <?php echo htmlspecialchars($message); ?>
-                </div>
-            <?php endif; ?>
+<!-- Messages -->
+<?php if ($message): ?>
+    <div
+        class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+        <?php echo htmlspecialchars($message); ?>
+    </div>
+<?php endif; ?>
 
-            <!-- List View -->
-            <?php if ($action === 'list'): ?>
-                <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
-                    <?php if (!empty($stories)): ?>
-                        <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
-                            <table class="w-full min-w-max text-left border-collapse">
-                                <thead>
-                                    <tr>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Title</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Tag</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Date</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Status</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($stories as $s): ?>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium"><?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><span class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo date('M d, Y', strtotime($s['published_date'])); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
-                                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold <?php echo $s['is_published'] ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)]' : 'bg-white/10 border border-white/20 text-white/50'; ?>"><?php echo $s['is_published'] ? 'Published' : 'Draft'; ?></span>
-                                            </td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
-                                                <div class="flex items-center gap-3">
-                                                    <a href="?action=edit&id=<?php echo $s['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="edit" class="w-4 h-4"></i>
-                                                    </a>
-                                                    <a href="?action=delete&id=<?php echo $s['id']; ?>" onclick="return confirm('Delete this story?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
-                            <i data-lucide="pen-tool" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
-                            <p class="text-white/50 text-sm mb-4">No stories found.</p>
-                            <a href="?action=create" class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create your first story <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+<!-- List View -->
+<?php if ($action === 'list'): ?>
+    <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
+        <?php if (!empty($stories)): ?>
+            <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
+                <table class="w-full min-w-max text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Title</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Tag</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Date</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Status</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($stories as $s): ?>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium">
+                                    <?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <span
+                                        class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <?php echo date('M d, Y', strtotime($s['published_date'])); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <span
+                                        class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold <?php echo $s['is_published'] ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)]' : 'bg-white/10 border border-white/20 text-white/50'; ?>"><?php echo $s['is_published'] ? 'Published' : 'Draft'; ?></span>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <div class="flex items-center gap-3">
+                                        <a href="?action=edit&id=<?php echo $s['id']; ?>"
+                                            class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </a>
+                                        <a href="?action=delete&id=<?php echo $s['id']; ?>"
+                                            onclick="return confirm('Delete this story?')"
+                                            class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
+                <i data-lucide="pen-tool" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
+                <p class="text-white/50 text-sm mb-4">No stories found.</p>
+                <a href="?action=create"
+                    class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create
+                    your first story <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Create/Edit Form -->
+<?php else: ?>
+    <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm">
+        <div
+            class="w-full max-w-3xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[82vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <h3 class="text-2xl font-serif text-white mb-6">
+                <?php echo $action === 'create' ? 'Create New Story' : 'Edit Story'; ?>
+            </h3>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <?php if ($action === 'edit' && $story): ?>
+                    <input type="hidden" name="story_id" value="<?php echo $story['id']; ?>">
+                <?php endif; ?>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-white/80">Title *</label>
+                        <input type="text" name="title" required
+                            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                            value="<?php echo htmlspecialchars($story['title'] ?? ''); ?>" placeholder="Story title">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-white/80">Tag *</label>
+                        <input type="text" name="tag" required
+                            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                            value="<?php echo htmlspecialchars($story['tag'] ?? ''); ?>" placeholder="Tips, Guide, News">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Excerpt *</label>
+                    <textarea name="excerpt" required rows="3"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        placeholder="Brief summary..."><?php echo htmlspecialchars($story['excerpt'] ?? ''); ?></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Content *</label>
+                    <div id="quill-editor"
+                        class="bg-white/90 border border-white/40 text-brand-navy rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden">
+                    </div>
+                    <input type="hidden" name="content" id="content-input"
+                        value="<?php echo htmlspecialchars($story['content'] ?? ''); ?>">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Cover Image *</label>
+                    <?php if ($action === 'edit' && !empty($story['image_url'])): ?>
+                        <div class="mb-4">
+                            <img src="<?php echo htmlspecialchars($story['image_url']); ?>" alt="Current cover image"
+                                class="w-full max-h-60 object-cover rounded-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                            <input type="hidden" name="existing_image_url"
+                                value="<?php echo htmlspecialchars($story['image_url']); ?>">
                         </div>
                     <?php endif; ?>
+                    <input type="file" name="cover_image" accept=".jpg,.jpeg,.png,.webp"
+                        class="w-full text-sm text-white/60 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-cyan/20 file:text-brand-cyan hover:file:bg-brand-cyan/30 border border-white/10 rounded-xl bg-white/5 focus:outline-none transition-all cursor-pointer"
+                        <?php echo $action === 'create' ? 'required' : ''; ?>>
+                    <p class="text-xs text-white/40 mt-2">Upload JPG, PNG, or WEBP. Leave blank to preserve the current
+                        image.</p>
                 </div>
 
-            <!-- Create/Edit Form -->
-            <?php else: ?>
-                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Story' : 'Edit Story'; ?></h3>
-
-                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
-                        <?php if ($action === 'edit' && $story): ?>
-                            <input type="hidden" name="story_id" value="<?php echo $story['id']; ?>">
-                        <?php endif; ?>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-semibold mb-2 text-white/80">Title *</label>
-                                <input type="text" name="title" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($story['title'] ?? ''); ?>" placeholder="Story title">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-2 text-white/80">Tag *</label>
-                                <input type="text" name="tag" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($story['tag'] ?? ''); ?>" placeholder="Tips, Guide, News">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Excerpt *</label>
-                            <textarea name="excerpt" required rows="3" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" placeholder="Brief summary..."><?php echo htmlspecialchars($story['excerpt'] ?? ''); ?></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Content *</label>
-                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-brand-navy rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
-                            <input type="hidden" name="content" id="content-input" value="<?php echo htmlspecialchars($story['content'] ?? ''); ?>">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Cover Image *</label>
-                            <?php if ($action === 'edit' && !empty($story['image_url'])): ?>
-                                <div class="mb-4">
-                                    <img src="<?php echo htmlspecialchars($story['image_url']); ?>" alt="Current cover image" class="w-full max-h-60 object-cover rounded-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                                    <input type="hidden" name="existing_image_url" value="<?php echo htmlspecialchars($story['image_url']); ?>">
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="cover_image" accept=".jpg,.jpeg,.png,.webp" class="w-full text-sm text-white/60 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-cyan/20 file:text-brand-cyan hover:file:bg-brand-cyan/30 border border-white/10 rounded-xl bg-white/5 focus:outline-none transition-all cursor-pointer" <?php echo $action === 'create' ? 'required' : ''; ?>>
-                            <p class="text-xs text-white/40 mt-2">Upload JPG, PNG, or WEBP. Leave blank to preserve the current image.</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Publish Date *</label>
-                            <input type="date" name="published_date" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" style="color-scheme: dark;" value="<?php echo htmlspecialchars($story['published_date'] ?? date('Y-m-d')); ?>">
-                        </div>
-
-                        <div class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
-                            <input type="checkbox" id="is_published" name="is_published" <?php echo ($action === 'create' || $story['is_published']) ? 'checked' : ''; ?> class="w-5 h-5 accent-brand-cyan bg-white/10 border-white/20 rounded">
-                            <label for="is_published" class="text-sm font-medium text-white/90 cursor-pointer">Published</label>
-                        </div>
-
-                        <div class="flex gap-4 pt-4 border-t border-white/10">
-                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
-                                <?php echo $action === 'create' ? 'Create Story' : 'Save Changes'; ?>
-                            </button>
-                            <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
-                        </div>
-                    </form>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Publish Date *</label>
+                    <input type="date" name="published_date" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        style="color-scheme: dark;"
+                        value="<?php echo htmlspecialchars($story['published_date'] ?? date('Y-m-d')); ?>">
                 </div>
+
+                <div class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
+                    <input type="checkbox" id="is_published" name="is_published" <?php echo ($action === 'create' || $story['is_published']) ? 'checked' : ''; ?>
+                        class="w-5 h-5 accent-brand-cyan bg-white/10 border-white/20 rounded">
+                    <label for="is_published" class="text-sm font-medium text-white/90 cursor-pointer">Published</label>
                 </div>
-            <?php endif; ?>
-        <?php require_once 'includes/footer.php'; ?>
+
+                <div class="flex gap-4 pt-4 border-t border-white/10">
+                    <button type="submit"
+                        class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
+                        <?php echo $action === 'create' ? 'Create Story' : 'Save Changes'; ?>
+                    </button>
+                    <a href="?action=list"
+                        class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+<?php require_once 'includes/footer.php'; ?>

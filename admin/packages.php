@@ -14,10 +14,10 @@ require_once 'includes/flash.php';
 [$message, $message_type] = flash_get();
 
 // Initialize variables
-$packages  = [];
+$packages = [];
 $categories = [];
-$action    = $_GET['action'] ?? 'list';
-$package   = null;
+$action = $_GET['action'] ?? 'list';
+$package = null;
 
 try {
     // Fetch all categories
@@ -35,7 +35,7 @@ if ($action === 'delete' && isset($_GET['id'])) {
         $stmt_fetch = $pdo->prepare("SELECT description, image_url FROM packages WHERE id = :id");
         $stmt_fetch->execute([':id' => $_GET['id']]);
         $pkg_to_delete = $stmt_fetch->fetch();
-        
+
         if ($pkg_to_delete) {
             $upload_dir = realpath(__DIR__ . '/../assets/uploads');
             // Delete WYSIWYG images
@@ -229,153 +229,218 @@ if ($action === 'list') {
 $page_title = 'Tour Packages | Admin - MBH Golden Global';
 
 $page_heading = 'Tour Packages';
-ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> New Package</a><?php else: ?><a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?><?php $page_actions = ob_get_clean();
+ob_start(); ?><?php if ($action === 'list'): ?><a href="?action=create"
+        class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2"><i
+            data-lucide="plus" class="w-4 h-4"></i> New Package</a><?php else: ?><a href="?action=list"
+        class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2"><i
+            data-lucide="arrow-left" class="w-4 h-4"></i> Back to List</a><?php endif; ?>
+<?php $page_actions = ob_get_clean();
 require_once 'includes/header.php';
 ?>
 
-            <!-- Messages -->
-            <?php if ($message): ?>
-                <div class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <?php echo htmlspecialchars($message); ?>
-                </div>
-            <?php endif; ?>
+<!-- Messages -->
+<?php if ($message): ?>
+    <div
+        class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+        <?php echo htmlspecialchars($message); ?>
+    </div>
+<?php endif; ?>
 
-            <!-- List View -->
-            <?php if ($action === 'list'): ?>
-                <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
-                    <?php if (!empty($packages)): ?>
-                        <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
-                            <table class="w-full min-w-max text-left border-collapse">
-                                <thead>
-                                    <tr>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Title</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Location</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Category</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Price</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Status</th>
-                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($packages as $pkg): ?>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium"><?php echo htmlspecialchars($pkg['title']); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo htmlspecialchars($pkg['location']); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-semibold text-brand-cyan">SAR <?php echo number_format($pkg['price'], 0); ?></td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
-                                                <?php if ($pkg['is_active']): ?>
-                                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Active</span>
-                                                <?php else: ?>
-                                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-white/10 border border-white/20 text-white/50">Inactive</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
-                                                <div class="flex items-center gap-3">
-                                                    <a href="?action=edit&id=<?php echo $pkg['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="edit" class="w-4 h-4"></i>
-                                                    </a>
-                                                    <a href="?action=delete&id=<?php echo $pkg['id']; ?>" onclick="return confirm('Delete this package?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
-                                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
-                            <i data-lucide="package-x" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
-                            <p class="text-white/50 text-sm mb-4">No packages found.</p>
-                            <a href="?action=create" class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create your first package <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+<!-- List View -->
+<?php if ($action === 'list'): ?>
+    <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
+        <?php if (!empty($packages)): ?>
+            <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
+                <table class="w-full min-w-max text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Title</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Location</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Category</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Price</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Status</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($packages as $pkg): ?>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium">
+                                    <?php echo htmlspecialchars($pkg['title']); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <?php echo htmlspecialchars($pkg['location']); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-semibold text-brand-cyan">
+                                    SAR <?php echo number_format($pkg['price'], 0); ?></td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <?php if ($pkg['is_active']): ?>
+                                        <span
+                                            class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Active</span>
+                                    <?php else: ?>
+                                        <span
+                                            class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-white/10 border border-white/20 text-white/50">Inactive</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <div class="flex items-center gap-3">
+                                        <a href="?action=edit&id=<?php echo $pkg['id']; ?>"
+                                            class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </a>
+                                        <a href="?action=delete&id=<?php echo $pkg['id']; ?>"
+                                            onclick="return confirm('Delete this package?')"
+                                            class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
+                <i data-lucide="package-x" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
+                <p class="text-white/50 text-sm mb-4">No packages found.</p>
+                <a href="?action=create"
+                    class="inline-flex items-center gap-2 text-brand-cyan hover:text-white transition-colors text-sm font-medium">Create
+                    your first package <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Create/Edit Form -->
+<?php else: ?>
+    <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm">
+        <div
+            class="w-full max-w-3xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[82vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <h3 class="text-2xl font-serif text-white mb-6">
+                <?php echo $action === 'create' ? 'Create New Package' : 'Edit Package'; ?>
+            </h3>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <?php if ($action === 'edit' && $package): ?>
+                    <input type="hidden" name="package_id" value="<?php echo $package['id']; ?>">
+                <?php endif; ?>
+
+                <!-- Title -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Package Title *</label>
+                    <input type="text" name="title" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($package['title'] ?? ''); ?>"
+                        placeholder="e.g., Swiss Alps Adventure">
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Location *</label>
+                    <input type="text" name="location" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($package['location'] ?? ''); ?>" placeholder="e.g., Switzerland">
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Category</label>
+                    <select name="category_id"
+                        class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
+                        <option value="">Select a category</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?php echo $cat['id']; ?>" <?php echo ($package && $package['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($cat['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Description *</label>
+                    <div id="quill-editor"
+                        class="bg-white/90 border border-white/40 text-brand-navy rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden">
+                    </div>
+                    <input type="hidden" name="description" id="content-input"
+                        value="<?php echo htmlspecialchars($package['description'] ?? ''); ?>">
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Price (SAR) *</label>
+                    <input type="number" name="price" required step="0.01" min="0"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($package['price'] ?? ''); ?>" placeholder="5500.00">
+                </div>
+
+                <!-- Cover Image -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Cover Image *</label>
+                    <?php if ($action === 'edit' && !empty($package['image_url'])): ?>
+                        <div class="mb-4">
+                            <img src="<?php echo htmlspecialchars($package['image_url']); ?>" alt="Current cover image"
+                                class="w-full max-h-60 object-cover rounded-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                            <input type="hidden" name="existing_image_url"
+                                value="<?php echo htmlspecialchars($package['image_url']); ?>">
                         </div>
                     <?php endif; ?>
+                    <input type="file" name="cover_image" accept=".jpg,.jpeg,.png,.webp"
+                        class="w-full text-sm text-white/60 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-cyan/20 file:text-brand-cyan hover:file:bg-brand-cyan/30 border border-white/10 rounded-xl bg-white/5 focus:outline-none transition-all cursor-pointer"
+                        <?php echo $action === 'create' ? 'required' : ''; ?>>
+                    <p class="text-xs text-white/40 mt-2">Upload JPG, PNG, or WEBP. Leave blank to preserve the current
+                        cover image.</p>
                 </div>
 
-            <!-- Create/Edit Form -->
-            <?php else: ?>
-                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Package' : 'Edit Package'; ?></h3>
-
-                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
-                        <?php if ($action === 'edit' && $package): ?>
-                            <input type="hidden" name="package_id" value="<?php echo $package['id']; ?>">
-                        <?php endif; ?>
-
-                        <!-- Title -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Package Title *</label>
-                            <input type="text" name="title" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($package['title'] ?? ''); ?>" placeholder="e.g., Swiss Alps Adventure">
-                        </div>
-
-                        <!-- Location -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Location *</label>
-                            <input type="text" name="location" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($package['location'] ?? ''); ?>" placeholder="e.g., Switzerland">
-                        </div>
-
-                        <!-- Category -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Category</label>
-                            <select name="category_id" class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
-                                <option value="">Select a category</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo $cat['id']; ?>" <?php echo ($package && $package['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($cat['name']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <!-- Description -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Description *</label>
-                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-brand-navy rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
-                            <input type="hidden" name="description" id="content-input" value="<?php echo htmlspecialchars($package['description'] ?? ''); ?>">
-                        </div>
-
-                        <!-- Price -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Price (SAR) *</label>
-                            <input type="number" name="price" required step="0.01" min="0" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($package['price'] ?? ''); ?>" placeholder="5500.00">
-                        </div>
-
-                        <!-- Cover Image -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Cover Image *</label>
-                            <?php if ($action === 'edit' && !empty($package['image_url'])): ?>
-                                <div class="mb-4">
-                                    <img src="<?php echo htmlspecialchars($package['image_url']); ?>" alt="Current cover image" class="w-full max-h-60 object-cover rounded-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                                    <input type="hidden" name="existing_image_url" value="<?php echo htmlspecialchars($package['image_url']); ?>">
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="cover_image" accept=".jpg,.jpeg,.png,.webp" class="w-full text-sm text-white/60 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-cyan/20 file:text-brand-cyan hover:file:bg-brand-cyan/30 border border-white/10 rounded-xl bg-white/5 focus:outline-none transition-all cursor-pointer" <?php echo $action === 'create' ? 'required' : ''; ?>>
-                            <p class="text-xs text-white/40 mt-2">Upload JPG, PNG, or WEBP. Leave blank to preserve the current cover image.</p>
-                        </div>
-
-                        <!-- Tag -->
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 text-white/80">Tag (Optional)</label>
-                            <input type="text" name="tag" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($package['tag'] ?? ''); ?>" placeholder="e.g., Best Seller, Trending">
-                        </div>
-
-                        <!-- Active Status -->
-                        <div class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
-                            <input type="checkbox" id="is_active" name="is_active" <?php echo ($action === 'create' || $package['is_active']) ? 'checked' : ''; ?> class="w-5 h-5 accent-brand-cyan bg-white/10 border-white/20 rounded">
-                            <label for="is_active" class="text-sm font-medium text-white/90 cursor-pointer">Active / Visible on site</label>
-                        </div>
-
-                        <!-- Buttons -->
-                        <div class="flex gap-4 pt-4 border-t border-white/10">
-                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
-                                <?php echo $action === 'create' ? 'Create Package' : 'Save Changes'; ?>
-                            </button>
-                            <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
-                        </div>
-                    </form>
+                <!-- Tag -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Tag (Optional)</label>
+                    <input type="text" name="tag"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($package['tag'] ?? ''); ?>"
+                        placeholder="e.g., Best Seller, Trending">
                 </div>
+
+                <!-- Active Status -->
+                <div class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
+                    <input type="checkbox" id="is_active" name="is_active" <?php echo ($action === 'create' || $package['is_active']) ? 'checked' : ''; ?>
+                        class="w-5 h-5 accent-brand-cyan bg-white/10 border-white/20 rounded">
+                    <label for="is_active" class="text-sm font-medium text-white/90 cursor-pointer">Active / Visible on
+                        site</label>
                 </div>
-            <?php endif; ?>
-        <?php require_once 'includes/footer.php'; ?>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 pt-4 border-t border-white/10">
+                    <button type="submit"
+                        class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
+                        <?php echo $action === 'create' ? 'Create Package' : 'Save Changes'; ?>
+                    </button>
+                    <a href="?action=list"
+                        class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+<?php require_once 'includes/footer.php'; ?>
