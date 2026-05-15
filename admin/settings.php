@@ -62,83 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
+$page_title = 'Site Settings | Admin - MBH Golden Global';
+
+$page_heading = 'Site Settings';
+$page_actions = '';
+require_once 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Settings | Admin - MBH Golden Global</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        brand: {
-                            navy: '#003355',
-                            cyan: '#0082CA',
-                            sand: '#F4F7F9',
-                        }
-                    },
-                    animation: {
-                        'float': 'floatOrb 12s infinite ease-in-out alternate',
-                        'float-delayed': 'floatOrb 15s infinite ease-in-out alternate-reverse',
-                    },
-                    keyframes: {
-                        floatOrb: {
-                            '0%': { transform: 'translateY(0) scale(1)' },
-                            '100%': { transform: 'translateY(-20px) scale(1.05)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-[#003355] text-white overflow-x-hidden min-h-screen relative">
-
-    <!-- Ambient Background Orbs -->
-    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div class="absolute rounded-full w-[30rem] h-[30rem] top-[-10%] -left-20 animate-float mix-blend-screen opacity-20" style="background: radial-gradient(circle at center, rgba(0,130,202,0.5), transparent 70%);"></div>
-        <div class="absolute rounded-full w-[45rem] h-[45rem] bottom-[-20%] -right-20 animate-float-delayed mix-blend-screen opacity-20" style="background: radial-gradient(circle at center, rgba(255,255,255,0.4), transparent 70%);"></div>
-        <div class="absolute inset-0 bg-[url('../assets/img/bg1.avif')] bg-cover bg-center opacity-[0.15] mix-blend-overlay"></div>
-    </div>
-
-    <div class="flex flex-col min-h-screen relative z-10">
-        <?php require_once 'includes/sidebar.php'; ?>
-
-        
-        <!-- Mobile Top Bar -->
-        <div class="md:hidden flex items-center justify-between p-6 bg-white/5 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30 w-full">
-            <h1 class="text-xl font-serif font-bold text-white"><span class="text-brand-cyan">MBH</span> Admin</h1>
-            <button id="hamburger-btn" class="text-white hover:text-brand-cyan transition-colors">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </div>
-
-        <!-- Main Content -->
-        <main class="w-full flex-1 md:pl-80 p-6 md:py-8 md:pr-8 min-h-screen flex flex-col">
-            <!-- Top Header -->
-            <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                <div class="flex items-center gap-6">
-                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif text-white">Site Settings</h2>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="logout.php" class="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 text-white/80 hover:text-red-400 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] rounded-xl transition-all font-medium text-sm">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                        Logout
-                    </a>
-                </div>
-            </header>
 
             <?php if ($message): ?>
                 <div class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
@@ -222,10 +152,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
-
-        </main>
-    </div> <!-- Close flex wrapper -->
-
-    <script>lucide.createIcons();</script>
-</body>
-</html>
+        <?php require_once 'includes/footer.php'; ?>

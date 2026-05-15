@@ -9,54 +9,6 @@
 </main>
 </div>
 
-<!-- Quill Rich Text Editor CSS -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<style>
-    .ql-toolbar.ql-snow {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-color: rgba(255, 255, 255, 0.4);
-        border-radius: 0.75rem 0.75rem 0 0;
-    }
-
-    .ql-container.ql-snow {
-        border-color: rgba(255, 255, 255, 0.4);
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
-    }
-
-    /* Force Quill's editor to respect image floats upon reload */
-    .ql-editor img {
-        display: inline-block;
-    }
-
-    /* Handle Left Alignment inside the Editor */
-    .ql-editor img[style*="float: left"],
-    .ql-editor .ql-align-left {
-        float: left !important;
-        margin: 0.5rem 1.5rem 1rem 0 !important;
-    }
-
-    /* Handle Right Alignment inside the Editor */
-    .ql-editor img[style*="float: right"],
-    .ql-editor .ql-align-right {
-        float: right !important;
-        margin: 0.5rem 0 1rem 1.5rem !important;
-    }
-
-    /* Clearfix so the editor height stretches correctly */
-    .ql-editor::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    /* Quill toolbar responsive — wrap on mobile instead of pushing container wide */
-    .ql-toolbar {
-        display: flex !important;
-        flex-wrap: wrap !important;
-    }
-</style>
-
 <!-- Quill Rich Text Editor JS & Modules -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>window.Quill = Quill;</script>
