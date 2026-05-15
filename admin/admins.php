@@ -10,6 +10,11 @@ require_once 'includes/auth.php';
 requireAdmin();
 require_once 'includes/flash.php';
 
+// Generate CSRF token if not exists
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Read any flash message from a previous redirect (PRG pattern)
 [$message, $message_type] = flash_get();
 
@@ -25,114 +30,109 @@ if ($action === 'delete' && isset($_GET['id'])) {
         } else {
             $stmt = $pdo->prepare("DELETE FROM admins WHERE id = :id");
             $stmt->execute([':id' => $_GET['id']]);
-            flash_set('Admin deleted successfully!');
+            flash_set('User deleted successfully!');
         }
     } catch (PDOException $e) {
         error_log('Delete error: ' . $e->getMessage());
-        flash_set('Error deleting admin.', 'error');
+        flash_set('Error deleting user.', 'error');
     }
     header('Location: admins.php');
     exit;
 }
 
-// Handle edit form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admin_id'])) {
+// Handle POST submissions (Create & Update)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF Validation
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed. Request blocked.');
+    }
+
+    $is_edit = isset($_POST['admin_id']);
+    
     try {
-        $id = $_POST['admin_id'];
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $new_password = trim($_POST['password'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+        $role = $_POST['role'] ?? 'staff';
+
+        if ($is_edit) {
+            $id = $_POST['admin_id'];
+            // Demotion Protection: Force 'admin' if editing own account
+            if ((int)$id === (int)$_SESSION['admin_id']) {
+                $role = 'admin';
+            }
+        }
 
         if (empty($name) || empty($email)) {
             $message = 'Name and email are required.';
             $message_type = 'error';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = 'Invalid email format.';
+            $message_type = 'error';
+        } elseif (!$is_edit && empty($password)) {
+            $message = 'Password is required for new accounts.';
+            $message_type = 'error';
+        } elseif (!empty($password) && strlen($password) < 8) {
+            $message = 'Password must be at least 8 characters.';
+            $message_type = 'error';
         } else {
-            // Check email uniqueness (excluding current admin)
-            $stmt = $pdo->prepare("SELECT id FROM admins WHERE email = :email AND id != :id");
-            $stmt->execute([':email' => $email, ':id' => $id]);
-            if ($stmt->fetch()) {
-                $message = 'Email already in use by another admin.';
-                $message_type = 'error';
-            } else {
-                if (!empty($new_password)) {
-                    if (strlen($new_password) < 8) {
-                        $message = 'Password must be at least 8 characters.';
-                        $message_type = 'error';
-                    } else {
-                        $password_hash = password_hash($new_password, PASSWORD_BCRYPT, ['cost' => 12]);
-                        $stmt = $pdo->prepare("UPDATE admins SET name = :name, email = :email, password_hash = :password_hash WHERE id = :id");
+            if ($is_edit) {
+                // Check email uniqueness (excluding current admin)
+                $stmt = $pdo->prepare("SELECT id FROM admins WHERE email = :email AND id != :id");
+                $stmt->execute([':email' => $email, ':id' => $id]);
+                if ($stmt->fetch()) {
+                    $message = 'Email already in use by another user.';
+                    $message_type = 'error';
+                } else {
+                    if (!empty($password)) {
+                        $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+                        $stmt = $pdo->prepare("UPDATE admins SET name = :name, email = :email, password_hash = :password_hash, role = :role WHERE id = :id");
                         $stmt->execute([
                             ':name' => $name,
                             ':email' => $email,
                             ':password_hash' => $password_hash,
+                            ':role' => $role,
                             ':id' => $id,
                         ]);
-                        // PRG: flash success and redirect so F5 won't re-POST
-                        flash_set('Admin updated and password reset successfully!');
-                        header('Location: admins.php');
-                        exit;
+                        flash_set('User updated and password reset successfully!');
+                    } else {
+                        $stmt = $pdo->prepare("UPDATE admins SET name = :name, email = :email, role = :role WHERE id = :id");
+                        $stmt->execute([
+                            ':name' => $name,
+                            ':email' => $email,
+                            ':role' => $role,
+                            ':id' => $id,
+                        ]);
+                        flash_set('User updated successfully!');
                     }
+                    header('Location: admins.php');
+                    exit;
+                }
+            } else {
+                // Check email uniqueness for new
+                $stmt = $pdo->prepare("SELECT id FROM admins WHERE email = :email");
+                $stmt->execute([':email' => $email]);
+                if ($stmt->fetch()) {
+                    $message = 'Email already in use.';
+                    $message_type = 'error';
                 } else {
-                    $stmt = $pdo->prepare("UPDATE admins SET name = :name, email = :email WHERE id = :id");
+                    $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+                    $stmt = $pdo->prepare("INSERT INTO admins (name, email, password_hash, role, created_at) VALUES (:name, :email, :password_hash, :role, NOW())");
                     $stmt->execute([
                         ':name' => $name,
                         ':email' => $email,
-                        ':id' => $id,
+                        ':password_hash' => $password_hash,
+                        ':role' => $role
                     ]);
-                    // PRG: flash success and redirect so F5 won't re-POST
-                    flash_set('Admin updated successfully!');
+                    flash_set('New user created successfully!');
                     header('Location: admins.php');
                     exit;
                 }
             }
         }
     } catch (PDOException $e) {
-        error_log('Update error: ' . $e->getMessage());
-        $message = 'Error updating admin.';
-        $message_type = 'error';
-    }
-}
-
-// Handle new admin form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_id'])) {
-    try {
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $password = trim($_POST['password']);
-
-        if (empty($name) || empty($email) || empty($password)) {
-            $message = 'All fields are required.';
-            $message_type = 'error';
-        } elseif (strlen($password) < 8) {
-            $message = 'Password must be at least 8 characters.';
-            $message_type = 'error';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $message = 'Invalid email format.';
-            $message_type = 'error';
-        } else {
-            // Check email uniqueness
-            $stmt = $pdo->prepare("SELECT id FROM admins WHERE email = :email");
-            $stmt->execute([':email' => $email]);
-            if ($stmt->fetch()) {
-                $message = 'Email already in use.';
-                $message_type = 'error';
-            } else {
-                $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-                $stmt = $pdo->prepare("INSERT INTO admins (name, email, password_hash, created_at) VALUES (:name, :email, :password_hash, NOW())");
-                $stmt->execute([
-                    ':name' => $name,
-                    ':email' => $email,
-                    ':password_hash' => $password_hash,
-                ]);
-                // PRG: flash success and redirect so F5 won't re-POST
-                flash_set('New admin created successfully!');
-                header('Location: admins.php');
-                exit;
-            }
-        }
-    } catch (PDOException $e) {
-        error_log('Insert error: ' . $e->getMessage());
-        $message = 'Error creating admin.';
+        error_log('Database error: ' . $e->getMessage());
+        $message = 'A system error occurred. Please try again.';
         $message_type = 'error';
     }
 }
@@ -145,7 +145,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
         $admin = $stmt->fetch();
         if (!$admin) {
             $action = 'list';
-            $message = 'Admin not found.';
+            $message = 'User not found.';
             $message_type = 'error';
         }
     } catch (PDOException $e) {
@@ -157,7 +157,7 @@ if ($action === 'edit' && isset($_GET['id'])) {
 // Fetch all admins for list view
 if ($action === 'list') {
     try {
-        $stmt = $pdo->prepare("SELECT id, name, email, created_at FROM admins ORDER BY created_at DESC");
+        $stmt = $pdo->prepare("SELECT id, name, email, role, created_at FROM admins ORDER BY created_at DESC");
         $stmt->execute();
         $admins = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -246,7 +246,7 @@ if ($action === 'list') {
                     <span class="font-medium text-sm">Inquiries</span>
                 </a>
                 <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin'): ?>
-<a href="admins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-cyan/20 to-transparent border border-brand-cyan/30 text-white shadow-[0_0_15px_rgba(0,130,202,0.2)] transition-all">
+                <a href="admins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-cyan/20 to-transparent border border-brand-cyan/30 text-white shadow-[0_0_15px_rgba(0,130,202,0.2)] transition-all">
                     <i data-lucide="users" class="w-5 h-5 text-brand-cyan"></i>
                     <span class="font-medium text-sm">Admins</span>
                 </a>
@@ -254,7 +254,7 @@ if ($action === 'list') {
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span class="font-medium text-sm">Settings</span>
                 </a>
-            <?php endif; ?>
+                <?php endif; ?>
             </nav>
         </aside>
 
@@ -263,10 +263,10 @@ if ($action === 'list') {
             <!-- Top Header -->
             <header class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-between items-center mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                 <div class="flex items-center gap-6">
-                    <h2 class="text-3xl font-serif text-white">Admin Users</h2>
+                    <h2 class="text-3xl font-serif text-white">Manage Users</h2>
                     <?php if ($action === 'list'): ?>
                         <a href="?action=create" class="px-5 py-2 bg-brand-cyan/20 border border-brand-cyan/50 text-brand-cyan rounded-xl hover:bg-brand-cyan hover:text-white hover:shadow-[0_0_15px_rgba(0,130,202,0.4)] transition-all font-medium text-sm flex items-center gap-2">
-                            <i data-lucide="plus" class="w-4 h-4"></i> New Admin
+                            <i data-lucide="plus" class="w-4 h-4"></i> New User
                         </a>
                     <?php else: ?>
                         <a href="?action=list" class="px-5 py-2 bg-white/5 border border-white/10 text-white/80 rounded-xl hover:bg-white/10 hover:text-white transition-all font-medium text-sm flex items-center gap-2">
@@ -299,6 +299,7 @@ if ($action === 'list') {
                                     <tr>
                                         <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Name</th>
                                         <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Email</th>
+                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Role</th>
                                         <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Joined</th>
                                         <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold">Action</th>
                                     </tr>
@@ -313,6 +314,13 @@ if ($action === 'list') {
                                                 <?php endif; ?>
                                             </td>
                                             <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo htmlspecialchars($adm['email']); ?></td>
+                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
+                                                <?php if ($adm['role'] === 'admin'): ?>
+                                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/50">Admin</span>
+                                                <?php else: ?>
+                                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/60 border border-white/20">Staff</span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none"><?php echo date('M d, Y', strtotime($adm['created_at'])); ?></td>
                                             <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none">
                                                 <div class="flex items-center gap-3">
@@ -320,7 +328,7 @@ if ($action === 'list') {
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
                                                     </a>
                                                     <?php if ((int)$adm['id'] !== (int)$_SESSION['admin_id']): ?>
-                                                        <a href="?action=delete&id=<?php echo $adm['id']; ?>" onclick="return confirm('Delete this admin? This cannot be undone.')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-block">
+                                                        <a href="?action=delete&id=<?php echo $adm['id']; ?>" onclick="return confirm('Delete this user? This cannot be undone.')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-block">
                                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                         </a>
                                                     <?php endif; ?>
@@ -334,7 +342,7 @@ if ($action === 'list') {
                     <?php else: ?>
                         <div class="text-center py-12 px-4 border border-white/5 rounded-xl bg-white/5 m-6">
                             <i data-lucide="users" class="w-12 h-12 text-white/20 mx-auto mb-3"></i>
-                            <p class="text-white/50 text-sm mb-4">No admins found.</p>
+                            <p class="text-white/50 text-sm mb-4">No users found.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -342,9 +350,11 @@ if ($action === 'list') {
             <!-- Create/Edit Form -->
             <?php else: ?>
                 <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Admin' : 'Edit Admin'; ?></h3>
+                    <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New User' : 'Edit User'; ?></h3>
 
                     <form method="POST" class="space-y-6">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                        
                         <?php if ($action === 'edit' && $admin): ?>
                             <input type="hidden" name="admin_id" value="<?php echo $admin['id']; ?>">
                         <?php endif; ?>
@@ -359,6 +369,18 @@ if ($action === 'list') {
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Email *</label>
                             <input type="email" name="email" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30" value="<?php echo htmlspecialchars($admin['email'] ?? ''); ?>" placeholder="admin@example.com">
+                        </div>
+
+                        <!-- Role -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-white/80">Role *</label>
+                            <select name="role" class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-1 focus:ring-cyan-500 [&>option]:bg-[#003355] transition-all">
+                                <option value="staff" <?php echo ($action === 'edit' && $admin && $admin['role'] === 'staff') ? 'selected' : ''; ?>>Staff (Limited Access)</option>
+                                <option value="admin" <?php echo ($action === 'edit' && $admin && $admin['role'] === 'admin') ? 'selected' : ''; ?>>Administrator (Full Access)</option>
+                            </select>
+                            <?php if ($action === 'edit' && $admin && (int)$admin['id'] === (int)$_SESSION['admin_id']): ?>
+                                <p class="text-xs text-brand-cyan mt-2">You cannot demote your own account.</p>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Password -->
@@ -380,7 +402,7 @@ if ($action === 'list') {
                         <!-- Buttons -->
                         <div class="flex gap-4 pt-4 border-t border-white/10">
                             <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-[#00aaff] text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
-                                <?php echo $action === 'create' ? 'Create Admin' : 'Save Changes'; ?>
+                                <?php echo $action === 'create' ? 'Create User' : 'Save Changes'; ?>
                             </button>
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
                         </div>
