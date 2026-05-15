@@ -14,11 +14,20 @@ require_once 'includes/flash.php';
 [$message, $message_type] = flash_get();
 
 $stories = [];
+$categories = [];
+try {
+    $stmt = $pdo->prepare("SELECT id, name FROM categories ORDER BY name ASC");
+    $stmt->execute();
+    $categories = $stmt->fetchAll();
+} catch (PDOException $e) {
+    error_log('Categories fetch error: ' . $e->getMessage());
+}
 $action = $_GET['action'] ?? 'list';
 $story = null;
 
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
+    verify_csrf_token($_GET['csrf_token'] ?? '');
     try {
         // Fetch story to delete associated images
         $stmt_fetch = $pdo->prepare("SELECT content, image_url FROM stories WHERE id = :id");
@@ -49,13 +58,15 @@ if ($action === 'delete' && isset($_GET['id'])) {
 
 // Handle edit form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
+    verify_csrf_token($_POST['csrf_token'] ?? '');
     try {
         $id = $_POST['story_id'];
+        $category_id = $_POST['category_id'] !== '' ? $_POST['category_id'] : null;
         $tag = trim($_POST['tag']);
         $title = trim($_POST['title']);
         $slug = strtolower(str_replace(' ', '-', $title));
         $excerpt = trim($_POST['excerpt']);
-        $content = trim($_POST['content']);
+        $content = sanitize_wysiwyg_html(trim($_POST['content']));
         $published_date = $_POST['published_date'];
         $is_published = isset($_POST['is_published']) ? 1 : 0;
 
@@ -86,13 +97,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
 
             $stmt = $pdo->prepare("
                 UPDATE stories 
-                SET tag = :tag, title = :title, slug = :slug, excerpt = :excerpt, 
+                SET category_id = :category_id, tag = :tag, title = :title, slug = :slug, excerpt = :excerpt, 
                     content = :content, image_url = :image_url, published_date = :published_date, 
                     is_published = :is_published 
                 WHERE id = :id
             ");
 
             $stmt->execute([
+                ':category_id' => $category_id,
                 ':tag' => $tag,
                 ':title' => $title,
                 ':slug' => $slug,
@@ -118,12 +130,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
 
 // Handle new story form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
+    verify_csrf_token($_POST['csrf_token'] ?? '');
     try {
+        $category_id = $_POST['category_id'] !== '' ? $_POST['category_id'] : null;
         $tag = trim($_POST['tag']);
         $title = trim($_POST['title']);
         $slug = strtolower(str_replace(' ', '-', $title));
         $excerpt = trim($_POST['excerpt']);
-        $content = trim($_POST['content']);
+        $content = sanitize_wysiwyg_html(trim($_POST['content']));
         $published_date = $_POST['published_date'];
         $is_published = isset($_POST['is_published']) ? 1 : 0;
         $image_url = '';
@@ -149,11 +163,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
             }
         } elseif (isset($upload_result) && $upload_result['success']) {
             $stmt = $pdo->prepare("
-                INSERT INTO stories (tag, title, slug, excerpt, content, image_url, published_date, is_published, created_at) 
-                VALUES (:tag, :title, :slug, :excerpt, :content, :image_url, :published_date, :is_published, NOW())
+                INSERT INTO stories (category_id, tag, title, slug, excerpt, content, image_url, published_date, is_published, created_at) 
+                VALUES (:category_id, :tag, :title, :slug, :excerpt, :content, :image_url, :published_date, :is_published, NOW())
             ");
 
             $stmt->execute([
+                ':category_id' => $category_id,
                 ':tag' => $tag,
                 ':title' => $title,
                 ':slug' => $slug,
@@ -196,7 +211,12 @@ if ($action === 'edit' && isset($_GET['id'])) {
 // Fetch all stories for list view
 if ($action === 'list') {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM stories ORDER BY published_date DESC");
+        $stmt = $pdo->prepare("
+            SELECT s.*, c.name as category_name 
+            FROM stories s 
+            LEFT JOIN categories c ON s.category_id = c.id 
+            ORDER BY s.published_date DESC
+        ");
         $stmt->execute();
         $stories = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -238,6 +258,9 @@ require_once 'includes/header.php';
                                 Title</th>
                             <th
                                 class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
+                                Category</th>
+                            <th
+                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
                                 Tag</th>
                             <th
                                 class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
@@ -256,6 +279,10 @@ require_once 'includes/header.php';
                                 <td
                                     class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium">
                                     <?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?>
+                                </td>
+                                <td
+                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                    <?php echo htmlspecialchars($s['category_name'] ?? '-'); ?>
                                 </td>
                                 <td
                                     class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
@@ -278,7 +305,7 @@ require_once 'includes/header.php';
                                             class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </a>
-                                        <a href="?action=delete&id=<?php echo $s['id']; ?>"
+                                        <a href="?action=delete&id=<?php echo $s['id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>"
                                             onclick="return confirm('Delete this story?')"
                                             class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -311,6 +338,7 @@ require_once 'includes/header.php';
             </h3>
 
             <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <?php if ($action === 'edit' && $story): ?>
                     <input type="hidden" name="story_id" value="<?php echo $story['id']; ?>">
                 <?php endif; ?>
@@ -323,11 +351,24 @@ require_once 'includes/header.php';
                             value="<?php echo htmlspecialchars($story['title'] ?? ''); ?>" placeholder="Story title">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold mb-2 text-white/80">Tag *</label>
-                        <input type="text" name="tag" required
-                            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
-                            value="<?php echo htmlspecialchars($story['tag'] ?? ''); ?>" placeholder="Tips, Guide, News">
+                        <label class="block text-sm font-semibold mb-2 text-white/80">Category</label>
+                        <select name="category_id"
+                            class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
+                            <option value="">Select a category</option>
+                            <?php foreach ($categories as $cat): ?>
+                                <option value="<?php echo $cat['id']; ?>" <?php echo ($story && isset($story['category_id']) && $story['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($cat['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Tag *</label>
+                    <input type="text" name="tag" required
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($story['tag'] ?? ''); ?>" placeholder="Tips, Guide, News">
                 </div>
 
                 <div>

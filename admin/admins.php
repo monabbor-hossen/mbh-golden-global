@@ -10,11 +10,6 @@ require_once 'includes/auth.php';
 requireAdmin();
 require_once 'includes/flash.php';
 
-// Generate CSRF token if not exists
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
 // Read any flash message from a previous redirect (PRG pattern)
 [$message, $message_type] = flash_get();
 
@@ -24,6 +19,7 @@ $admin  = null;
 
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
+    verify_csrf_token($_GET['csrf_token'] ?? '');
     try {
         if ((int)$_GET['id'] === (int)$_SESSION['admin_id']) {
             flash_set('You cannot delete your own account.', 'error');
@@ -219,7 +215,7 @@ require_once 'includes/header.php';
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
                                                     </a>
                                                     <?php if ((int)$adm['id'] !== (int)$_SESSION['admin_id']): ?>
-                                                        <a href="?action=delete&id=<?php echo $adm['id']; ?>" onclick="return confirm('Delete this user? This cannot be undone.')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
+                                                        <a href="?action=delete&id=<?php echo $adm['id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>" onclick="return confirm('Delete this user? This cannot be undone.')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
                                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                         </a>
                                                     <?php endif; ?>

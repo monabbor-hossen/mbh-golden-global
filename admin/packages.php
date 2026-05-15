@@ -15,21 +15,12 @@ require_once 'includes/flash.php';
 
 // Initialize variables
 $packages = [];
-$categories = [];
 $action = $_GET['action'] ?? 'list';
 $package = null;
 
-try {
-    // Fetch all categories
-    $stmt = $pdo->prepare("SELECT id, name FROM categories ORDER BY name");
-    $stmt->execute();
-    $categories = $stmt->fetchAll();
-} catch (PDOException $e) {
-    error_log('Categories fetch error: ' . $e->getMessage());
-}
-
 // Handle delete — PRG: always redirect after mutation
 if ($action === 'delete' && isset($_GET['id'])) {
+    verify_csrf_token($_GET['csrf_token'] ?? '');
     try {
         // Fetch package to delete associated images
         $stmt_fetch = $pdo->prepare("SELECT description, image_url FROM packages WHERE id = :id");
@@ -60,12 +51,12 @@ if ($action === 'delete' && isset($_GET['id'])) {
 
 // Handle edit form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
+    verify_csrf_token($_POST['csrf_token'] ?? '');
     try {
         $id = $_POST['package_id'];
-        $category_id = $_POST['category_id'] !== '' ? $_POST['category_id'] : null;
         $title = trim($_POST['title']);
         $location = trim($_POST['location']);
-        $description = trim($_POST['description']);
+        $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $existing_image_url = trim($_POST['existing_image_url'] ?? '');
         $image_url = $existing_image_url;
@@ -99,14 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
 
                 $stmt = $pdo->prepare("
                     UPDATE packages 
-                    SET category_id = :category_id, title = :title, location = :location, 
+                    SET title = :title, location = :location, 
                         description = :description, price = :price, image_url = :image_url, 
                         tag = :tag, is_active = :is_active 
                     WHERE id = :id
                 ");
 
                 $stmt->execute([
-                    ':category_id' => $category_id,
                     ':title' => $title,
                     ':location' => $location,
                     ':description' => $description,
@@ -132,11 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
 
 // Handle new package form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
+    verify_csrf_token($_POST['csrf_token'] ?? '');
     try {
-        $category_id = $_POST['category_id'] !== '' ? $_POST['category_id'] : null;
         $title = trim($_POST['title']);
         $location = trim($_POST['location']);
-        $description = trim($_POST['description']);
+        $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $image_url = '';
         $tag = $_POST['tag'] !== '' ? trim($_POST['tag']) : null;
@@ -164,12 +154,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
                 $message_type = 'error';
             } else {
                 $stmt = $pdo->prepare("
-                    INSERT INTO packages (category_id, title, location, description, price, image_url, tag, is_active, created_at) 
-                    VALUES (:category_id, :title, :location, :description, :price, :image_url, :tag, :is_active, NOW())
+                    INSERT INTO packages (title, location, description, price, image_url, tag, is_active, created_at) 
+                    VALUES (:title, :location, :description, :price, :image_url, :tag, :is_active, NOW())
                 ");
 
                 $stmt->execute([
-                    ':category_id' => $category_id,
                     ':title' => $title,
                     ':location' => $location,
                     ':description' => $description,
@@ -213,10 +202,9 @@ if ($action === 'edit' && isset($_GET['id'])) {
 if ($action === 'list') {
     try {
         $stmt = $pdo->prepare("
-            SELECT p.*, c.name as category_name 
-            FROM packages p 
-            LEFT JOIN categories c ON p.category_id = c.id 
-            ORDER BY p.created_at DESC
+            SELECT * 
+            FROM packages 
+            ORDER BY created_at DESC
         ");
         $stmt->execute();
         $packages = $stmt->fetchAll();
@@ -262,9 +250,6 @@ require_once 'includes/header.php';
                                 Location</th>
                             <th
                                 class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
-                                Category</th>
-                            <th
-                                class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
                                 Price</th>
                             <th
                                 class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">
@@ -286,10 +271,6 @@ require_once 'includes/header.php';
                                     <?php echo htmlspecialchars($pkg['location']); ?>
                                 </td>
                                 <td
-                                    class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
-                                    <?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?>
-                                </td>
-                                <td
                                     class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-semibold text-brand-cyan">
                                     SAR <?php echo number_format($pkg['price'], 0); ?></td>
                                 <td
@@ -309,7 +290,7 @@ require_once 'includes/header.php';
                                             class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </a>
-                                        <a href="?action=delete&id=<?php echo $pkg['id']; ?>"
+                                        <a href="?action=delete&id=<?php echo $pkg['id']; ?>&csrf_token=<?php echo $_SESSION['csrf_token']; ?>"
                                             onclick="return confirm('Delete this package?')"
                                             class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -342,6 +323,7 @@ require_once 'includes/header.php';
             </h3>
 
             <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <?php if ($action === 'edit' && $package): ?>
                     <input type="hidden" name="package_id" value="<?php echo $package['id']; ?>">
                 <?php endif; ?>
@@ -361,20 +343,6 @@ require_once 'includes/header.php';
                     <input type="text" name="location" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
                         value="<?php echo htmlspecialchars($package['location'] ?? ''); ?>" placeholder="e.g., Switzerland">
-                </div>
-
-                <!-- Category -->
-                <div>
-                    <label class="block text-sm font-semibold mb-2 text-white/80">Category</label>
-                    <select name="category_id"
-                        class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
-                        <option value="">Select a category</option>
-                        <?php foreach ($categories as $cat): ?>
-                            <option value="<?php echo $cat['id']; ?>" <?php echo ($package && $package['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($cat['name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
                 </div>
 
                 <!-- Description -->

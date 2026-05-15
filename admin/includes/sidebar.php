@@ -34,6 +34,10 @@ function get_icon_class($page, $current_page) {
             <i data-lucide="package" class="<?php echo get_icon_class('packages.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Packages</span>
         </a>
+        <a href="categories.php" class="<?php echo get_nav_class('categories.php', $current_page); ?>">
+            <i data-lucide="folder-tree" class="<?php echo get_icon_class('categories.php', $current_page); ?>"></i>
+            <span class="font-medium text-sm">Categories</span>
+        </a>
         <a href="stories.php" class="<?php echo get_nav_class('stories.php', $current_page); ?>">
             <i data-lucide="pen-tool" class="<?php echo get_icon_class('stories.php', $current_page); ?>"></i>
             <span class="font-medium text-sm">Stories</span>

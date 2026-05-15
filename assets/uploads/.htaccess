@@ -1,0 +1,15 @@
+# ─── MBH Golden Global: Upload Directory Hardening ───────────────
+# Deny execution of all server-side scripts. Files here must ONLY
+# be served as static binary downloads — never executed by PHP/CGI.
+
+<FilesMatch "\.(php|php4|php5|php7|php8|phtml|pl|py|jsp|asp|htm|html|shtml|sh|cgi)$">
+    Require all denied
+</FilesMatch>
+
+# Disable CGI execution
+Options -ExecCGI
+
+# Prevent MIME-type sniffing (extra safety for older browsers)
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
