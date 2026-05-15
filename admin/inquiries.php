@@ -162,14 +162,14 @@ require_once 'includes/header.php';
                                 
                                 <div>
                                     <label class="block text-sm font-semibold mb-2 text-white/80">Status</label>
-                                    <select name="status" class="w-full px-4 py-3 bg-[#002b48] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
+                                    <select name="status" class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
                                         <option value="unread" <?php echo $inquiry['status'] === 'unread' ? 'selected' : ''; ?>>Unread</option>
                                         <option value="read" <?php echo $inquiry['status'] === 'read' ? 'selected' : ''; ?>>Read</option>
                                         <option value="replied" <?php echo $inquiry['status'] === 'replied' ? 'selected' : ''; ?>>Replied</option>
                                     </select>
                                 </div>
 
-                                <button type="submit" class="w-full px-4 py-3 bg-gradient-to-r from-brand-cyan to-[#00aaff] text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs mt-4">
+                                <button type="submit" class="w-full px-4 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs mt-4">
                                     Update Status
                                 </button>
                             </form>

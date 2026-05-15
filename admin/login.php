@@ -138,25 +138,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Admin Area | MBH Golden Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="/mbh-golden-global/assets/css/admin.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['var(--font-sans)'],
+                        serif: ['var(--font-serif)'],
                     },
                     colors: {
                         brand: {
-                            navy: '#003355',
-                            cyan: '#0082CA',
-                            sand: '#F4F7F9',
+                            navy: 'var(--color-primary)',
+                            cyan: 'var(--color-secondary)',
+                            bg: 'var(--color-bg)',
+                            sand: 'var(--color-sand)',
+                            cyanLight: 'var(--color-cyan-light)',
                         }
                     },
                     animation: {
@@ -262,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 <button 
                     type="submit" 
                     <?php echo $isLockedOut ? 'disabled' : ''; ?>
-                    class="w-full py-4 bg-gradient-to-b from-[#00a2ff] to-[#0082CA] border border-[#00aaff] text-white font-bold tracking-[0.15em] uppercase text-xs rounded-xl transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale
+                    class="w-full py-4 bg-gradient-to-b from-brand-cyanLight to-brand-cyan border border-brand-cyanLight text-white font-bold tracking-[0.15em] uppercase text-xs rounded-xl transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale
                            <?php echo $isLockedOut ? '' : 'hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none'; ?>"
                 >
                     <?php echo $isLockedOut ? 'System Locked' : 'Authenticate'; ?>
@@ -284,27 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
         </div>
     </div>
 
-    <script>
-    
-        lucide.createIcons();
-
-        // Password Visibility Toggle Logic
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('adminPassword');
-        const iconShow = document.getElementById('iconShow');
-        const iconHide = document.getElementById('iconHide');
-
-        if (togglePassword && passwordInput) {
-            togglePassword.addEventListener('click', function () {
-                // Toggle the input type between password and text
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                
-                // Swap the icons
-                iconShow.classList.toggle('hidden');
-                iconHide.classList.toggle('hidden');
-            });
-        }
-    </script>
+    <!-- Consolidated Admin JS (password eye toggle, Lucide init) -->
+    <script src="/mbh-golden-global/assets/js/admin.js" defer></script>
 </body>
 </html>

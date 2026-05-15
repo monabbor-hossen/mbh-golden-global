@@ -240,7 +240,7 @@ require_once 'includes/header.php';
 
             <!-- Create/Edit Form -->
             <?php else: ?>
-                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-[#001a2d]/80 backdrop-blur-sm"><div class="w-full max-w-2xl bg-[#001a2d]/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm"><div class="w-full max-w-2xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                     <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New User' : 'Edit User'; ?></h3>
 
                     <form method="POST" class="space-y-6">
@@ -265,7 +265,7 @@ require_once 'includes/header.php';
                         <!-- Role -->
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Role *</label>
-                            <select name="role" class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-1 focus:ring-cyan-500 [&>option]:bg-[#003355] transition-all">
+                            <select name="role" class="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-1 focus:ring-cyan-500 [&>option]:bg-brand-navy transition-all">
                                 <option value="staff" <?php echo ($action === 'edit' && $admin && $admin['role'] === 'staff') ? 'selected' : ''; ?>>Staff (Limited Access)</option>
                                 <option value="admin" <?php echo ($action === 'edit' && $admin && $admin['role'] === 'admin') ? 'selected' : ''; ?>>Administrator (Full Access)</option>
                             </select>
@@ -314,7 +314,7 @@ require_once 'includes/header.php';
 
                         <!-- Buttons -->
                         <div class="flex gap-4 pt-4 border-t border-white/10">
-                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-[#00aaff] text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
+                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
                                 <?php echo $action === 'create' ? 'Create User' : 'Save Changes'; ?>
                             </button>
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>

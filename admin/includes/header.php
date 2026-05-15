@@ -38,82 +38,49 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
         rel="stylesheet">
     <!-- Quill Rich Text Editor CSS (JS loaded in footer.php) -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <!-- Admin Stylesheet — design tokens, Quill overrides, etc. -->
+    <link href="/mbh-golden-global/assets/css/admin.css" rel="stylesheet">
 
-    <!-- Tailwind Config: Brand Tokens + Animations -->
+    <!-- Tailwind Config: Brand Tokens + Animations (uses CSS vars from admin.css) -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['var(--font-sans)'],
+                        serif: ['var(--font-serif)'],
                     },
                     colors: {
                         brand: {
-                            navy: '#003355',
-                            cyan: '#0082CA',
-                            sand: '#F4F7F9',
+                            navy: 'var(--color-primary)',
+                            cyan: 'var(--color-secondary)',
+                            bg: 'var(--color-bg)',
+                            sand: 'var(--color-sand)',
+                            cyanLight: 'var(--color-cyan-light)',
                         }
                     },
                     animation: {
                         'float': 'floatOrb 12s infinite ease-in-out alternate',
                         'float-delayed': 'floatOrb 15s infinite ease-in-out alternate-reverse',
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
                         floatOrb: {
                             '0%': { transform: 'translateY(0) scale(1)' },
                             '100%': { transform: 'translateY(-20px) scale(1.05)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
             }
         }
     </script>
-
-    <!-- Global Admin Styles (Quill overrides + misc fixes) -->
-    <style>
-        /* ── Quill Toolbar ─────────────────────────────────── */
-        .ql-toolbar.ql-snow {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-color: rgba(255, 255, 255, 0.4);
-            border-radius: 0.75rem 0.75rem 0 0;
-            display: flex;
-            flex-wrap: wrap;
-            /* responsive: wrap toolbar buttons on mobile */
-        }
-
-        .ql-container.ql-snow {
-            border-color: rgba(255, 255, 255, 0.4);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-        }
-
-        /* ── Quill Image Floating ──────────────────────────── */
-        .ql-editor img {
-            display: inline-block;
-        }
-
-        .ql-editor img[style*="float: left"],
-        .ql-editor .ql-align-left {
-            float: left !important;
-            margin: 0.5rem 1.5rem 1rem 0 !important;
-        }
-
-        .ql-editor img[style*="float: right"],
-        .ql-editor .ql-align-right {
-            float: right !important;
-            margin: 0.5rem 0 1rem 1.5rem !important;
-        }
-
-        .ql-editor::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-    </style>
 </head>
 
-<body class="bg-[#003355] text-white min-h-screen overflow-x-hidden flex flex-col">
+<body class="bg-brand-navy text-white min-h-screen overflow-x-hidden flex flex-col">
 
     <!-- ── Ambient Background Orbs ──────────────────────── -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -134,7 +101,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
 
         <!-- Mobile-only Top Bar -->
         <div
-            class="md:hidden sticky top-0 z-30 w-full flex items-center justify-between p-4 bg-[#001a2d]/90 backdrop-blur-2xl border-b border-white/10">
+            class="md:hidden sticky top-0 z-30 w-full flex items-center justify-between p-4 bg-brand-bg/90 backdrop-blur-2xl border-b border-white/10">
             <span class="text-lg font-serif font-bold text-white">
                 <img src="../assets/img/logo.png" alt="MBH"
                     class="h-12 object-contain mx-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] mb-2">
@@ -167,5 +134,5 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
             <?php endif; ?>
             <?php
             // NOTE: </main>, </div>, </body>, </html> are closed by footer.php
-//       (or by the page itself for pages that don't use footer.php).
+            //       (or by the page itself for pages that don't use footer.php).
             ?>

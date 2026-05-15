@@ -1,0 +1,100 @@
+/* ═══════════════════════════════════════════════════════════
+   MBH Golden Global — Admin Panel Stylesheet
+   All admin-specific custom CSS lives here.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Design Tokens ────────────────────────────────────────── */
+:root {
+    /* Colors */
+    --color-primary:    #003355;
+    --color-secondary:  #0082CA;
+    --color-cyan-light:  #00aaff;
+    --color-bg:         #001a2d;
+    --color-bg-dark:     #005a8d;
+    --color-text:       #ffffff;
+    --color-text-muted: rgba(255, 255, 255, 0.7);
+    --color-sand:       #F4F7F9;
+
+    /* Typography */
+    --font-sans:  'Inter', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+
+    /* Glassmorphism */
+    --glass-bg:     rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur:   24px;
+}
+
+
+/* ── Quill WYSIWYG Editor ─────────────────────────────────── */
+
+/* Toolbar — glassmorphic look + responsive wrap */
+.ql-toolbar.ql-snow {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.4);
+    border-radius: 0.75rem 0.75rem 0 0;
+    display: flex;
+    flex-wrap: wrap; /* prevent toolbar overflow on mobile */
+}
+
+/* Container */
+.ql-container.ql-snow {
+    border-color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+}
+
+/* Image float support — keeps floats intact on reload */
+.ql-editor img {
+    display: inline-block;
+}
+
+.ql-editor img[style*="float: left"],
+.ql-editor .ql-align-left {
+    float: left !important;
+    margin: 0.5rem 1.5rem 1rem 0 !important;
+}
+
+.ql-editor img[style*="float: right"],
+.ql-editor .ql-align-right {
+    float: right !important;
+    margin: 0.5rem 0 1rem 1.5rem !important;
+}
+
+/* Clearfix so the editor height stretches correctly */
+.ql-editor::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/* ── WYSIWYG Prose (Frontend Rendering) ───────────────────── */
+
+.wysiwyg-content img {
+    display: inline-block;
+}
+
+.wysiwyg-content img[style*="float: left"] {
+    float: left !important;
+    margin: 0.5rem 1.5rem 1rem 0 !important;
+}
+
+.wysiwyg-content img[style*="float: right"] {
+    float: right !important;
+    margin: 0.5rem 0 1rem 1.5rem !important;
+}
+
+.wysiwyg-content::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/* ── Login Page — Extra Animations ────────────────────────── */
+
+@keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}

@@ -296,7 +296,7 @@ require_once 'includes/header.php';
 
             <!-- Create/Edit Form -->
             <?php else: ?>
-                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-[#001a2d]/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-[#001a2d]/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="fixed inset-0 p-4 flex items-center justify-center z-50 bg-brand-bg/80 backdrop-blur-sm"><div class="w-full max-w-3xl bg-brand-bg/95 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                     <h3 class="text-2xl font-serif text-white mb-6"><?php echo $action === 'create' ? 'Create New Package' : 'Edit Package'; ?></h3>
 
                     <form method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -319,7 +319,7 @@ require_once 'includes/header.php';
                         <!-- Category -->
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Category</label>
-                            <select name="category_id" class="w-full px-4 py-3 bg-[#002b48] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
+                            <select name="category_id" class="w-full px-4 py-3 bg-brand-navy border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all appearance-none">
                                 <option value="">Select a category</option>
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?php echo $cat['id']; ?>" <?php echo ($package && $package['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
@@ -332,7 +332,7 @@ require_once 'includes/header.php';
                         <!-- Description -->
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-white/80">Description *</label>
-                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-[#003355] rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
+                            <div id="quill-editor" class="bg-white/90 border border-white/40 text-brand-navy rounded-b-xl backdrop-blur-2xl w-full min-h-[250px] md:min-h-[300px] overflow-hidden"></div>
                             <input type="hidden" name="description" id="content-input" value="<?php echo htmlspecialchars($package['description'] ?? ''); ?>">
                         </div>
 
@@ -369,7 +369,7 @@ require_once 'includes/header.php';
 
                         <!-- Buttons -->
                         <div class="flex gap-4 pt-4 border-t border-white/10">
-                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-[#00aaff] text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
+                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-brand-cyan to-brand-cyanLight text-white rounded-xl hover:shadow-[0_0_20px_rgba(0,130,202,0.4)] transition-all font-bold tracking-wide uppercase text-xs">
                                 <?php echo $action === 'create' ? 'Create Package' : 'Save Changes'; ?>
                             </button>
                             <a href="?action=list" class="px-8 py-3 bg-white/5 text-white/80 border border-white/10 rounded-xl hover:bg-white/10 transition-all font-bold tracking-wide uppercase text-xs">Cancel</a>
