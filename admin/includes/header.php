@@ -118,17 +118,9 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
             <!-- ── Universal Page Header Bar ─────────────────── -->
             <?php if (!empty($page_heading)): ?>
                 <header
-                    class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 justify-between items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-                    <div class="flex items-center gap-4 flex-wrap">
-                        <h2 class="text-2xl md:text-3xl font-serif text-white"><?php echo $page_heading; ?></h2>
-                        <?php if (!empty($page_actions))
-                            echo $page_actions; ?>
-                    </div>
-                    <a href="logout.php"
-                        class="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/50 text-white/80 hover:text-red-400 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] rounded-xl transition-all font-medium text-sm whitespace-nowrap">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                        Logout
-                    </a>
+                    class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 flex flex-wrap gap-4 items-center mb-6 md:mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                    <h2 class="text-2xl md:text-3xl font-serif text-white"><?php echo $page_heading; ?></h2>
+                    <?php if (!empty($page_actions)) echo $page_actions; ?>
                 </header>
             <?php endif; ?>
             <?php

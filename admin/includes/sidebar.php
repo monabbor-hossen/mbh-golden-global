@@ -53,4 +53,12 @@ function get_icon_class($page, $current_page) {
         </a>
         <?php endif; ?>
     </nav>
+
+    <!-- Pinned Logout Footer -->
+    <div class="p-4 border-t border-white/10">
+        <a href="logout.php" class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all group">
+            <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+            <span class="font-medium text-sm">Logout</span>
+        </a>
+    </div>
 </aside>
