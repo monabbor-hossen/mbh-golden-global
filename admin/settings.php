@@ -7,6 +7,7 @@
 
 require_once '../includes/db.php';
 require_once 'includes/auth.php';
+requireAdmin();
 require_once 'includes/flash.php';
 
 // Read any flash message from a previous redirect (PRG pattern)
@@ -141,7 +142,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i data-lucide="mail" class="w-5 h-5"></i>
                     <span class="font-medium text-sm">Inquiries</span>
                 </a>
-                <a href="admins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
+                <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin'): ?>
+<a href="admins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 hover:translate-x-2 transition-all">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span class="font-medium text-sm">Admins</span>
                 </a>
@@ -149,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i data-lucide="settings" class="w-5 h-5 text-brand-cyan"></i>
                     <span class="font-medium text-sm">Settings</span>
                 </a>
+            <?php endif; ?>
             </nav>
         </aside>
 

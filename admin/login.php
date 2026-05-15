@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
             $_SESSION['last_attempt_time'] = time();
         } else {
             // Fetch admin from database
-            $stmt = $pdo->prepare("SELECT id, name, email, password_hash FROM admins WHERE email = :email LIMIT 1");
+            $stmt = $pdo->prepare("SELECT id, name, email, password_hash, role FROM admins WHERE email = :email LIMIT 1");
             $stmt->execute([':email' => $email]);
             $admin = $stmt->fetch();
 
@@ -98,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 $_SESSION['admin_id'] = $admin['id'];
                 $_SESSION['admin_email'] = $admin['email'];
                 $_SESSION['admin_name'] = $admin['name'];
+                $_SESSION['admin_role'] = $admin['role'];
                 $_SESSION['last_activity'] = time();
                 
                 // Reset failed attempts on success

@@ -42,4 +42,14 @@ $_SESSION['last_activity'] = time();
 $adminId = $_SESSION['admin_id'];
 $adminEmail = $_SESSION['admin_email'];
 $adminName = $_SESSION['admin_name'];
+
+function requireAdmin() {
+    if (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'admin') {
+        // Redirect staff back to dashboard if they try to access restricted pages
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        header('Location: ' . $protocol . '://' . $host . '/mbh-golden-global/admin/index.php');
+        exit;
+    }
+}
 ?>
