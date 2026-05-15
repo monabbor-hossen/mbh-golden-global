@@ -18,15 +18,32 @@ require_once 'includes/header.php';
 
         <section class="py-24 bg-brand-sand min-h-screen relative z-10">
             <div class="max-w-[90rem] mx-auto px-6 sm:px-8 lg:px-12">
+                
+                <!-- Filter by Category -->
+                <div class="mb-12 flex flex-wrap gap-4 items-center justify-center">
+                    <a href="stories.php" class="px-6 py-2 rounded-full border border-brand-cyan bg-brand-cyan text-white font-bold text-xs uppercase tracking-wider hover:shadow-lg transition-all">All Stories</a>
+                    <?php
+                    try {
+                        $catsStmt = $pdo->query("SELECT name, slug FROM categories ORDER BY name ASC");
+                        while ($cat = $catsStmt->fetch()) {
+                            echo "<a href='category.php?slug=" . htmlspecialchars($cat['slug']) . "' class='px-6 py-2 rounded-full border border-gray-300 bg-white text-brand-navy font-bold text-xs uppercase tracking-wider hover:border-brand-cyan hover:text-brand-cyan transition-all'>" . htmlspecialchars($cat['name']) . "</a>";
+                        }
+                    } catch (PDOException $e) {
+                        // silently fail for category filters
+                    }
+                    ?>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 perspective-[2000px]">
                     <?php
                     try {
-                        // Fetch all published stories from database
+                        // Fetch all published stories from database with category info
                         $storiesStmt = $pdo->prepare("
-                            SELECT id, title, slug, excerpt, image_url, tag, published_date 
+                            SELECT stories.*, categories.name AS category_name, categories.slug AS category_slug 
                             FROM stories 
-                            WHERE is_published = TRUE 
-                            ORDER BY published_date DESC
+                            LEFT JOIN categories ON stories.category_id = categories.id 
+                            WHERE stories.is_published = TRUE 
+                            ORDER BY stories.published_date DESC
                         ");
                         $storiesStmt->execute();
                         $stories = $storiesStmt->fetchAll();
@@ -45,8 +62,9 @@ require_once 'includes/header.php';
                                         <div class='absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase'>" . htmlspecialchars($story['tag']) . "</div>
                                     </div>
                                     <div class='px-4 inner-3d'>
-                                        <div class='flex items-center mb-4'>
+                                        <div class='flex items-center mb-4 gap-2'>
                                             <span class='text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white'>" . $publishedDate->format('M d, Y') . "</span>
+                                            " . (!empty($story['category_name']) ? "<a href='category.php?slug=" . htmlspecialchars($story['category_slug']) . "' class='text-brand-cyan text-[10px] font-bold uppercase tracking-[0.15em] bg-brand-cyan/10 px-3 py-1.5 rounded-lg border border-brand-cyan/20 hover:bg-brand-cyan hover:text-white transition-colors z-10 relative'>" . htmlspecialchars($story['category_name']) . "</a>" : "") . "
                                         </div>
                                         <h3 class='text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug'>" . htmlspecialchars($story['title']) . "</h3>
                                         <p class='text-gray-500 font-medium leading-relaxed mb-6 text-sm'>" . htmlspecialchars($story['excerpt']) . "</p>

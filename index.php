@@ -55,8 +55,8 @@ require_once 'includes/header.php';
                 <div class="flex overflow-x-auto gap-6 pb-12 no-scrollbar fade-up delay-100 px-4 -mx-4 perspective-[1000px]">
                     <?php
                     try {
-                        // Fetch all categories from database
-                        $categoriesStmt = $pdo->prepare("SELECT id, name, slug FROM categories ORDER BY id ASC");
+                        // Fetch 6 categories from database
+                        $categoriesStmt = $pdo->prepare("SELECT id, name, slug, image FROM categories ORDER BY name ASC LIMIT 6");
                         $categoriesStmt->execute();
                         $categories = $categoriesStmt->fetchAll();
 
@@ -64,13 +64,14 @@ require_once 'includes/header.php';
                             echo "<p class='text-brand-navy'>No categories available.</p>";
                         } else {
                             foreach ($categories as $category) {
+                                $img = !empty($category['image']) ? 'assets/uploads/categories/' . $category['image'] : 'assets/img/bg1.avif';
                                 echo "
-                                <div class='min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer'>
+                                <a href='category.php?slug=" . htmlspecialchars($category['slug']) . "' class='min-w-[140px] md:min-w-[180px] flex flex-col items-center gap-5 group cursor-pointer'>
                                     <div class='w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden relative border-[4px] border-white bg-white shadow-3d-puck group-hover:shadow-3d-puck-hover group-hover:-translate-y-1 transition-all duration-300'>
-                                        <img src='https://images.unsplash.com/photo-1512632578888-169bbbc64f33?auto=format&fit=crop&w=400&q=80' class='w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105'>
+                                        <img src='" . htmlspecialchars($img) . "' class='w-full h-full object-cover transition-transform duration-[1.5s] ease-apple opacity-90 group-hover:opacity-100 group-hover:scale-105'>
                                     </div>
                                     <span class='text-xs font-bold tracking-[0.2em] uppercase text-brand-navy group-hover:text-brand-cyan transition-colors'>" . htmlspecialchars($category['name']) . "</span>
-                                </div>
+                                </a>
                                 ";
                             }
                         }
