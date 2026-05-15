@@ -91,6 +91,14 @@
     clear: both;
 }
 
+/* ── Data Tables ─────────────────────────────────────────── */
+
+/* Remove the bottom border on the last row so it doesn't
+   double-up against the glass card's own border-radius. */
+.overflow-x-auto tr:last-child td {
+    border-bottom: none;
+}
+
 
 /* ── Login Page — Extra Animations ────────────────────────── */
 

@@ -223,32 +223,32 @@ require_once 'includes/header.php';
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($stories)): ?>
-                        <div class="overflow-x-auto rounded-xl">
-                            <table class="w-full text-left border-collapse min-w-[800px]">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Title</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Tag</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Date</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Title</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Tag</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Date</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Status</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($stories as $s): ?>
-                                        <tr class="hover:bg-white/5 transition-colors group">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?></td>
-                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none whitespace-nowrap"><span class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo date('M d, Y', strtotime($s['published_date'])); ?></td>
-                                            <td class="py-4 px-6 border-b border-white/5 group-last:border-none whitespace-nowrap">
-                                                <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold <?php echo $s['is_published'] ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)]' : 'bg-white/10 border border-white/20 text-white/50'; ?>"><?php echo $s['is_published'] ? 'Published' : 'Draft'; ?></span>
+                                        <tr class="hover:bg-white/5 transition-colors">
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium"><?php echo htmlspecialchars(substr($s['title'], 0, 40)); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><span class="px-2 py-1 bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 rounded text-xs"><?php echo htmlspecialchars($s['tag']); ?></span></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo date('M d, Y', strtotime($s['published_date'])); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
+                                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold <?php echo $s['is_published'] ? 'bg-green-500/20 text-green-300 border border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.2)]' : 'bg-white/10 border border-white/20 text-white/50'; ?>"><?php echo $s['is_published'] ? 'Published' : 'Draft'; ?></span>
                                             </td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
-                                                    <a href="?action=edit&id=<?php echo $s['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
+                                                    <a href="?action=edit&id=<?php echo $s['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
                                                     </a>
-                                                    <a href="?action=delete&id=<?php echo $s['id']; ?>" onclick="return confirm('Delete this story?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-block">
+                                                    <a href="?action=delete&id=<?php echo $s['id']; ?>" onclick="return confirm('Delete this story?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
                                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                     </a>
                                                 </div>

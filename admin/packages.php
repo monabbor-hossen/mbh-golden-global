@@ -244,38 +244,38 @@ require_once 'includes/header.php';
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($packages)): ?>
-                        <div class="overflow-x-auto rounded-xl">
-                            <table class="w-full text-left border-collapse min-w-[800px]">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Title</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Location</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Category</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Price</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Status</th>
-                                        <th class="border-b border-white/10 py-4 px-6 text-white/50 text-xs tracking-wider uppercase font-semibold whitespace-nowrap">Action</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Title</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Location</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Category</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Price</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Status</th>
+                                        <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($packages as $pkg): ?>
-                                        <tr class="hover:bg-white/5 transition-colors group">
-                                            <td class="py-4 px-6 font-medium text-white/90 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['title']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['location']); ?></td>
-                                            <td class="py-4 px-6 text-sm text-white/70 border-b border-white/5 group-last:border-none whitespace-nowrap"><?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?></td>
-                                            <td class="py-4 px-6 font-semibold text-brand-cyan border-b border-white/5 group-last:border-none whitespace-nowrap">SAR <?php echo number_format($pkg['price'], 0); ?></td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
+                                        <tr class="hover:bg-white/5 transition-colors">
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-medium"><?php echo htmlspecialchars($pkg['title']); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo htmlspecialchars($pkg['location']); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap"><?php echo htmlspecialchars($pkg['category_name'] ?? '-'); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap font-semibold text-brand-cyan">SAR <?php echo number_format($pkg['price'], 0); ?></td>
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                                 <?php if ($pkg['is_active']): ?>
-                                                    <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Active</span>
+                                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/20 border border-green-500/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">Active</span>
                                                 <?php else: ?>
-                                                    <span class="px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-white/10 border border-white/20 text-white/50">Inactive</span>
+                                                    <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-white/10 border border-white/20 text-white/50">Inactive</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="py-4 px-6 text-sm border-b border-white/5 group-last:border-none whitespace-nowrap">
+                                            <td class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/5 text-sm text-white/80 whitespace-nowrap">
                                                 <div class="flex items-center gap-3">
-                                                    <a href="?action=edit&id=<?php echo $pkg['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-block">
+                                                    <a href="?action=edit&id=<?php echo $pkg['id']; ?>" class="text-brand-cyan hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg inline-flex items-center justify-center">
                                                         <i data-lucide="edit" class="w-4 h-4"></i>
                                                     </a>
-                                                    <a href="?action=delete&id=<?php echo $pkg['id']; ?>" onclick="return confirm('Delete this package?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-block">
+                                                    <a href="?action=delete&id=<?php echo $pkg['id']; ?>" onclick="return confirm('Delete this package?')" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500/20 rounded-lg inline-flex items-center justify-center">
                                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                     </a>
                                                 </div>
