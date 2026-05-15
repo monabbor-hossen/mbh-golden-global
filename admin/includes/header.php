@@ -80,7 +80,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
     </script>
 </head>
 
-<body class="bg-brand-navy text-white min-h-screen overflow-x-hidden flex flex-col">
+<body class="bg-brand-bg text-white min-h-screen overflow-x-hidden flex flex-col md:flex-row selection:bg-brand-cyan selection:text-white">
 
     <!-- ── Ambient Background Orbs ──────────────────────── -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -101,7 +101,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
 
         <!-- Mobile-only Top Bar -->
         <div
-            class="md:hidden sticky top-0 z-30 w-full flex items-center justify-between p-4 bg-brand-bg/90 backdrop-blur-2xl border-b border-white/10">
+            class="md:hidden fixed top-0 left-0 right-0 z-40 bg-brand-bg/90 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/10 flex justify-between items-center p-4 shadow-lg shadow-black/20">
             <span class="text-lg font-serif font-bold text-white">
                 <img src="../assets/img/logo.png" alt="MBH"
                     class="h-12 object-contain mx-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] mb-2">
@@ -114,7 +114,7 @@ $page_description = $page_description ?? 'MBH Golden Global Admin Command Center
 
         <!-- Main Content Wrapper (opened here, closed in footer.php) -->
         <main
-            class="flex-1 w-full md:pl-80 p-4 sm:p-6 md:py-8 md:pr-8 min-h-screen flex flex-col relative z-10 transition-all duration-300">
+            class="flex-1 w-full pt-[5.5rem] pb-12 px-4 sm:px-6 md:pt-8 md:pb-8 md:pl-[21rem] md:pr-8 min-h-screen relative z-10 transition-all duration-300">
 
             <!-- ── Universal Page Header Bar ─────────────────── -->
             <?php if (!empty($page_heading)): ?>

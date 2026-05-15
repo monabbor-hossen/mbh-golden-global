@@ -13,7 +13,7 @@ function get_icon_class($page, $current_page) {
     return "w-5 h-5";
 }
 ?>
-<div id="sidebar-overlay" class="fixed inset-0 bg-brand-bg/80 backdrop-blur-sm z-40 hidden transition-opacity md:hidden"></div>
+<div id="sidebar-overlay" class="fixed inset-0 bg-brand-bg/80 backdrop-blur-sm z-50 hidden transition-opacity md:hidden"></div>
 
 <aside id="mobile-sidebar" class="fixed z-50 w-64 inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out md:top-6 md:left-6 md:bottom-6 md:rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_30px_rgba(0,130,202,0.15)] flex flex-col">
     <!-- Logo -->
