@@ -139,8 +139,8 @@ require_once 'includes/header.php';
                 </div>
 
                 <?php if (!empty($recentInquiries)): ?>
-                    <div class="overflow-x-auto w-full">
-                        <table class="w-full text-left border-collapse">
+                    <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
+                        <table class="w-full min-w-max text-left border-collapse">
                             <thead>
                                 <tr>
                                     <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Name</th>

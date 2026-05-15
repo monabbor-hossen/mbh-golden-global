@@ -184,8 +184,8 @@ require_once 'includes/header.php';
             <?php if ($action === 'list'): ?>
                 <div class="bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10 flex-1">
                     <?php if (!empty($admins)): ?>
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full text-left border-collapse">
+                        <div class="w-full overflow-x-auto overflow-y-hidden rounded-xl border border-white/10">
+                            <table class="w-full min-w-max text-left border-collapse">
                                 <thead>
                                     <tr>
                                         <th class="py-4 px-4 first:pl-6 last:pr-6 border-b border-white/10 text-xs font-semibold text-white/50 uppercase tracking-wider whitespace-nowrap">Name</th>
