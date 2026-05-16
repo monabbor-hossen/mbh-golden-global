@@ -1,4 +1,15 @@
 <?php
+$suggestedStories = [];
+try {
+    if (isset($pdo)) {
+        $suggestedStmt = $pdo->prepare("SELECT title, slug, image_url, published_date FROM stories WHERE is_published = 1 ORDER BY published_date DESC LIMIT 3");
+        $suggestedStmt->execute();
+        $suggestedStories = $suggestedStmt->fetchAll();
+    }
+} catch (PDOException $e) {
+    error_log('Suggested stories fetch error: ' . $e->getMessage());
+}
+
 $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
 $pages = ['index', 'about', 'destinations', 'stories', 'contact'];
 $pageTitles = [
@@ -341,6 +352,25 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
                     <i class="fas fa-search"></i>
                 </button>
             </form>
+            
+            <?php if (!empty($suggestedStories)): ?>
+                <div class="w-full max-w-4xl mt-16 text-left">
+                    <h3 class="text-brand-cyan text-sm tracking-[0.2em] uppercase mb-6">Suggested Reading</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <?php foreach ($suggestedStories as $story): ?>
+                            <a href="story.php?slug=<?= htmlspecialchars($story['slug']) ?>" class="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 block">
+                                <div class="relative h-32 w-full">
+                                    <img src="<?= htmlspecialchars($story['image_url']) ?>" alt="<?= htmlspecialchars($story['title']) ?>" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-brand-navy/60 group-hover:bg-brand-navy/40 transition-colors duration-300"></div>
+                                </div>
+                                <div class="absolute inset-0 p-5 flex items-end">
+                                    <h4 class="text-white font-serif text-lg leading-snug drop-shadow-md"><?= htmlspecialchars($story['title']) ?></h4>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
