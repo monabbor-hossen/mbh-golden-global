@@ -272,7 +272,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             <div class="flex items-center gap-6">
                 <div
                     class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
-                    <button class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i
+                    <button onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none'); document.getElementById('search-input').focus();" class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i
                             class="fas fa-search w-6 h-6"></i></button>
                     <a href="destinations.php"
                         class="btn-primary !py-3 !px-8 hidden xl:inline-flex text-xs !shadow-none !translate-y-0 border-none">Book
@@ -290,12 +290,15 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
         class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
-        <img src="./assets/img/logo.png"
-            class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]" alt="">
-
+        <a href="/">
+            <img src="./assets/img/logo.png"
+                class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]"
+                alt="">
+        </a>
         <div class="flex justify-between items-center p-6 border-b border-gray-100">
-            <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
-                onerror="this.style.display='none';">
+            <a href="/">
+                <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
+                    onerror="this.style.display='none';"></a>
             <button
                 onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');"
                 class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
@@ -320,6 +323,24 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
                 <p class="text-brand-navy text-lg tracking-wide font-bold"><?php echo htmlspecialchars($phone1); ?></p>
                 <p class="text-gray-500 text-xs tracking-wide"><?php echo htmlspecialchars($email1); ?></p>
             </div>
+        </div>
+    </div>
+
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[70] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
+        <div class="flex justify-end p-6 md:p-8">
+            <button onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none');" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
+                <i class="fas fa-times w-5 h-5"></i>
+            </button>
+        </div>
+        <div class="flex flex-col items-center justify-center h-full px-6 md:px-12 -mt-20">
+            <h2 class="text-3xl md:text-5xl font-serif text-brand-navy mb-12 text-center text-3d-light">What are you looking for?</h2>
+            <form action="search.php" method="GET" class="w-full max-w-4xl relative">
+                <input type="text" name="q" id="search-input" placeholder="Search destinations, stories..." class="w-full bg-transparent border-b-2 border-gray-200 text-2xl md:text-4xl font-sans font-medium text-brand-navy placeholder-gray-300 focus:outline-none focus:border-brand-cyan pb-4 transition-colors" required>
+                <button type="submit" class="absolute right-0 top-0 bottom-4 flex items-center text-gray-400 hover:text-brand-cyan transition-colors text-2xl">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
         </div>
     </div>
 
