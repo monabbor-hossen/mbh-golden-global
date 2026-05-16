@@ -23,7 +23,7 @@ $packageId = (int)$rawId;
 // ─── 2. Secure PDO query ──────────────────────────────────────────────────────
 try {
     $stmt = $pdo->prepare("
-        SELECT id, title, location, description, price, image_url, tag 
+        SELECT id, title, location, duration, description, price, image_url, tag 
         FROM   packages
         WHERE  id = :id
           AND  is_active = 1
@@ -50,8 +50,7 @@ $safeImageUrl  = htmlspecialchars($package['image_url']);
 $safePrice     = number_format($package['price'], 0);
 $bodyContent   = $package['description']; // WYSIWYG HTML — rendered directly, NOT escaped
 
-// Note: Duration and Group Size are not in the DB schema, providing placeholder static data for the UI
-$safeDuration  = "7 Days, 6 Nights"; 
+// Note: Group Size is not in the DB schema, providing placeholder static data for the UI
 $safeGroupSize = "Up to 12 People"; 
 
 // ─── 4. Dynamic <title> — respected by header.php via null-coalescing ─────────
@@ -127,15 +126,17 @@ require_once 'includes/header.php';
                             </div>
                             
                             <!-- Duration -->
+                            <?php if (!empty($package['duration'])): ?>
                             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 hover:bg-white/10 transition-colors">
                                 <div class="w-12 h-12 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex flex-shrink-0 items-center justify-center">
                                     <i class="fas fa-clock w-6 h-6 text-brand-cyan"></i>
                                 </div>
                                 <div>
                                     <span class="block text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">Duration</span>
-                                    <span class="block text-white font-medium text-sm"><?= $safeDuration ?></span>
+                                    <span class="block text-white font-medium text-sm"><?= htmlspecialchars($package['duration']) ?></span>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             
                             <!-- Group Size -->
                             <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 hover:bg-white/10 transition-colors">
@@ -169,6 +170,12 @@ require_once 'includes/header.php';
                                     <span class="text-2xl font-medium text-brand-cyan mb-1">SAR</span>
                                     <span class="text-5xl font-bold font-serif"><?= $safePrice ?></span>
                                 </div>
+                                <?php if (!empty($package['duration'])): ?>
+                                <div class="mt-4 inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-medium">
+                                    <i class="fas fa-clock w-4 h-4 text-brand-cyan"></i>
+                                    <?= htmlspecialchars($package['duration']) ?>
+                                </div>
+                                <?php endif; ?>
                                 <span class="block text-white/40 text-xs mt-2">*Price per person, taxes included.</span>
                             </div>
 

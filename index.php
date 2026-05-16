@@ -129,7 +129,7 @@ require_once 'includes/header.php';
                                         </div>
                                     </div>
                                     <div class='px-3 pb-2 flex justify-between items-center inner-3d'>
-                                        <p class='text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium'>" . htmlspecialchars(substr($pkg['description'], 0, 60)) . "...</p>
+                                        <p class='text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium'>" . htmlspecialchars(mb_strimwidth(strip_tags($pkg['description']), 0, 100, '...')) . "</p>
                                         <div class='bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100'>
                                             <span class='block text-[9px] uppercase text-gray-400 font-bold mb-1'>From</span>
                                             <span class='font-black text-lg text-brand-navy'>SAR " . number_format($pkg['price'], 0) . "</span>
@@ -165,7 +165,7 @@ require_once 'includes/header.php';
                             FROM stories 
                             WHERE is_published = TRUE 
                             ORDER BY published_date DESC 
-                            LIMIT 3
+                            LIMIT 6
                         ");
                         $storiesStmt->execute();
                         $stories = $storiesStmt->fetchAll();
@@ -191,7 +191,7 @@ require_once 'includes/header.php';
                                         <a href='single-post.php?id=" . (int)$story['id'] . "'>
                                             <h3 class='text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug'>" . htmlspecialchars($story['title']) . "</h3>
                                         </a>
-                                        <p class='text-gray-500 font-medium leading-relaxed mb-6 text-sm'>" . htmlspecialchars($story['excerpt']) . "</p>
+                                        <p class='text-gray-500 font-medium leading-relaxed mb-6 text-sm'>" . htmlspecialchars(mb_strimwidth(strip_tags($story['excerpt']), 0, 120, '...')) . "</p>
                                         <a href='single-post.php?id=" . (int)$story['id'] . "' class='btn-outline w-full !py-3 !rounded-xl text-[10px]'>Read Story</a>
                                     </div>
                                 </article>

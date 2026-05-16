@@ -52,7 +52,7 @@ require_once 'includes/header.php';
                                         </div>
                                     </div>
                                     <div class='px-3 pb-2 flex justify-between items-center inner-3d'>
-                                        <p class='text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium'>" . htmlspecialchars(substr($pkg['description'], 0, 60)) . "...</p>
+                                        <p class='text-gray-600 text-xs leading-relaxed max-w-[55%] font-medium'>" . htmlspecialchars(mb_strimwidth(strip_tags($pkg['description']), 0, 100, '...')) . "</p>
                                         <div class='bg-brand-sand px-5 py-3 rounded-2xl border border-white'>
                                             <span class='block text-[9px] uppercase text-gray-400 font-bold mb-1'>From</span>
                                             <span class='font-black text-lg text-brand-navy'>SAR " . number_format($pkg['price'], 0) . "</span>
