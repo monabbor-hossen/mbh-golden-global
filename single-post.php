@@ -10,26 +10,24 @@
 
 require_once 'includes/db.php';
 
-// ─── 1. Validate ?id= ─────────────────────────────────────────────────────────
-$rawId = $_GET['id'] ?? null;
+// ─── 1. Validate ?slug= ───────────────────────────────────────────────────────
+$slug = $_GET['slug'] ?? null;
 
-if ($rawId === null || !ctype_digit((string)$rawId) || (int)$rawId <= 0) {
+if (empty($slug)) {
     header('Location: 404.php');
     exit;
 }
 
-$storyId = (int)$rawId;
-
 // ─── 2. Secure PDO query ──────────────────────────────────────────────────────
 try {
     $stmt = $pdo->prepare("
-        SELECT id, title, tag, excerpt, content, image_url, published_date
+        SELECT id, title, slug, tag, excerpt, meta_description, content, image_url, published_date
         FROM   stories
-        WHERE  id = :id
+        WHERE  slug = :slug
           AND  is_published = 1
         LIMIT  1
     ");
-    $stmt->execute([':id' => $storyId]);
+    $stmt->execute([':slug' => $slug]);
     $story = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log('Single story fetch error: ' . $e->getMessage());
@@ -57,6 +55,8 @@ $readingMins = max(1, (int) ceil($wordCount / 200));
 
 // ─── 4. Dynamic <title> — respected by header.php via null-coalescing ─────────
 $pageTitle = $story['title'] . ' | MBH Golden Global';
+$meta_description = !empty($story['meta_description']) ? $story['meta_description'] : mb_strimwidth(strip_tags($story['excerpt']), 0, 160, '...');
+$meta_image = $story['image_url'];
 
 require_once 'includes/header.php';
 ?>
@@ -443,4 +443,20 @@ require_once 'includes/header.php';
     }
 
 
+</script>
+
+<!-- Schema.org JSON-LD for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "<?= htmlspecialchars($story['title']) ?>",
+  "image": "<?= htmlspecialchars($story['image_url']) ?>",
+  "description": "<?= htmlspecialchars($meta_description) ?>",
+  "datePublished": "<?= $story['published_date'] ?>",
+  "author": {
+    "@type": "Organization",
+    "name": "MBH Golden Global"
+  }
+}
 </script>

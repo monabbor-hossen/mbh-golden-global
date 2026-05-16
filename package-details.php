@@ -10,26 +10,24 @@
 
 require_once 'includes/db.php';
 
-// ─── 1. Validate ?id= ─────────────────────────────────────────────────────────
-$rawId = $_GET['id'] ?? null;
+// ─── 1. Validate ?slug= ───────────────────────────────────────────────────────
+$slug = $_GET['slug'] ?? null;
 
-if ($rawId === null || !ctype_digit((string)$rawId) || (int)$rawId <= 0) {
+if (empty($slug)) {
     header('Location: 404.php');
     exit;
 }
 
-$packageId = (int)$rawId;
-
 // ─── 2. Secure PDO query ──────────────────────────────────────────────────────
 try {
     $stmt = $pdo->prepare("
-        SELECT id, title, location, duration, description, price, image_url, tag 
+        SELECT id, title, slug, meta_description, location, duration, description, price, image_url, tag 
         FROM   packages
-        WHERE  id = :id
+        WHERE  slug = :slug
           AND  is_active = 1
         LIMIT  1
     ");
-    $stmt->execute([':id' => $packageId]);
+    $stmt->execute([':slug' => $slug]);
     $package = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log('Package fetch error: ' . $e->getMessage());
@@ -41,6 +39,8 @@ if (!$package) {
     header('Location: 404.php');
     exit;
 }
+
+$packageId = $package['id'];
 
 // ─── 3. Prepare display data ──────────────────────────────────────────────────
 $safeTitle     = htmlspecialchars($package['title']);
@@ -55,6 +55,8 @@ $safeGroupSize = "Up to 12 People";
 
 // ─── 4. Dynamic <title> — respected by header.php via null-coalescing ─────────
 $pageTitle = $package['title'] . ' | MBH Golden Global';
+$meta_description = !empty($package['meta_description']) ? $package['meta_description'] : mb_strimwidth(strip_tags($package['description']), 0, 160, '...');
+$meta_image = $package['image_url'];
 
 require_once 'includes/header.php';
 ?>
@@ -67,7 +69,7 @@ require_once 'includes/header.php';
         <section class="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
             <!-- Cover image as background -->
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] ease-out scale-105" 
-                 style="background-image: url('<?= $safeImageUrl ?>');" id="hero-img"></div>
+                 style="background-image: url('<?= $safeImageUrl ?>');" id="hero-img" alt="<?= $safeTitle ?>" title="<?= $safeTitle ?>"></div>
 
             <!-- Layered gradient overlay to melt into navy body -->
             <div class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-transparent"></div>
@@ -307,4 +309,21 @@ require_once 'includes/header.php';
     }
 
 
+</script>
+
+<!-- Schema.org JSON-LD for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "<?= htmlspecialchars($package['title']) ?>",
+  "image": "<?= htmlspecialchars($package['image_url']) ?>",
+  "description": "<?= htmlspecialchars($meta_description) ?>",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "SAR",
+    "price": "<?= $package['price'] ?>",
+    "availability": "https://schema.org/InStock"
+  }
+}
 </script>

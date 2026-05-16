@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
         $tag = trim($_POST['tag']);
         $title = trim($_POST['title']);
         $slug = strtolower(str_replace(' ', '-', $title));
+        $meta_description = mb_strimwidth(trim($_POST['meta_description'] ?? ''), 0, 160);
         $excerpt = trim($_POST['excerpt']);
         $content = sanitize_wysiwyg_html(trim($_POST['content']));
         $published_date = $_POST['published_date'];
@@ -97,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
 
             $stmt = $pdo->prepare("
                 UPDATE stories 
-                SET category_id = :category_id, tag = :tag, title = :title, slug = :slug, excerpt = :excerpt, 
+                SET category_id = :category_id, tag = :tag, title = :title, slug = :slug, meta_description = :meta_description, excerpt = :excerpt, 
                     content = :content, image_url = :image_url, published_date = :published_date, 
                     is_published = :is_published 
                 WHERE id = :id
@@ -108,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['story_id'])) {
                 ':tag' => $tag,
                 ':title' => $title,
                 ':slug' => $slug,
+                ':meta_description' => $meta_description,
                 ':excerpt' => $excerpt,
                 ':content' => $content,
                 ':image_url' => $image_url,
@@ -136,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
         $tag = trim($_POST['tag']);
         $title = trim($_POST['title']);
         $slug = strtolower(str_replace(' ', '-', $title));
+        $meta_description = mb_strimwidth(trim($_POST['meta_description'] ?? ''), 0, 160);
         $excerpt = trim($_POST['excerpt']);
         $content = sanitize_wysiwyg_html(trim($_POST['content']));
         $published_date = $_POST['published_date'];
@@ -163,8 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
             }
         } elseif (isset($upload_result) && $upload_result['success']) {
             $stmt = $pdo->prepare("
-                INSERT INTO stories (category_id, tag, title, slug, excerpt, content, image_url, published_date, is_published, created_at) 
-                VALUES (:category_id, :tag, :title, :slug, :excerpt, :content, :image_url, :published_date, :is_published, NOW())
+                INSERT INTO stories (category_id, tag, title, slug, meta_description, excerpt, content, image_url, published_date, is_published, created_at) 
+                VALUES (:category_id, :tag, :title, :slug, :meta_description, :excerpt, :content, :image_url, :published_date, :is_published, NOW())
             ");
 
             $stmt->execute([
@@ -172,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['story_id'])) {
                 ':tag' => $tag,
                 ':title' => $title,
                 ':slug' => $slug,
+                ':meta_description' => $meta_description,
                 ':excerpt' => $excerpt,
                 ':content' => $content,
                 ':image_url' => $image_url,
@@ -373,6 +377,13 @@ require_once 'includes/header.php';
                     <input type="text" name="tag" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
                         value="<?php echo htmlspecialchars($story['tag'] ?? ''); ?>" placeholder="Tips, Guide, News">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Meta Description (SEO)</label>
+                    <textarea name="meta_description" maxlength="160" rows="2"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        placeholder="Brief summary for search engines (max 160 characters)..."><?php echo htmlspecialchars($story['meta_description'] ?? ''); ?></textarea>
                 </div>
 
                 <div>

@@ -236,6 +236,18 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             }
         }
     </style>
+
+    <!-- Dynamic SEO & Open Graph Tags -->
+    <meta name="description" content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle); ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($meta_image ?? 'assets/img/logo.png'); ?>">
+    <?php
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $current_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    ?>
+    <meta property="og:url" content="<?= htmlspecialchars($current_url); ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($current_url); ?>">
 </head>
 
 <body class="text-brand-navy relative" data-page="<?php echo $currentPage === 'index' ? 'home' : $currentPage; ?>">

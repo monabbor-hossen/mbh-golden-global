@@ -16,6 +16,10 @@
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
+    # Clean SEO Routing
+    RewriteRule ^tour/([a-zA-Z0-9-]+)/?$ package-details.php?slug=$1 [L,QSA]
+    RewriteRule ^story/([a-zA-Z0-9-]+)/?$ single-post.php?slug=$1 [L,QSA]
+
     # 3. Clean PHP URLs (e.g., /about -> about.php)
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*)$ $1.php [L]

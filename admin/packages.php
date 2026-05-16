@@ -55,8 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
     try {
         $id = $_POST['package_id'];
         $title = trim($_POST['title']);
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title), '-'));
         $location = trim($_POST['location']);
         $duration = trim($_POST['duration'] ?? '');
+        $meta_description = mb_strimwidth(trim($_POST['meta_description'] ?? ''), 0, 160);
         $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $existing_image_url = trim($_POST['existing_image_url'] ?? '');
@@ -91,16 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
 
                 $stmt = $pdo->prepare("
                     UPDATE packages 
-                    SET title = :title, location = :location, duration = :duration, 
-                        description = :description, price = :price, image_url = :image_url, 
+                    SET title = :title, slug = :slug, location = :location, duration = :duration, 
+                        meta_description = :meta_description, description = :description, price = :price, image_url = :image_url, 
                         tag = :tag, is_active = :is_active 
                     WHERE id = :id
                 ");
 
                 $stmt->execute([
                     ':title' => $title,
+                    ':slug' => $slug,
                     ':location' => $location,
                     ':duration' => $duration,
+                    ':meta_description' => $meta_description,
                     ':description' => $description,
                     ':price' => $price,
                     ':image_url' => $image_url,
@@ -127,8 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
     verify_csrf_token($_POST['csrf_token'] ?? '');
     try {
         $title = trim($_POST['title']);
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title), '-'));
         $location = trim($_POST['location']);
         $duration = trim($_POST['duration'] ?? '');
+        $meta_description = mb_strimwidth(trim($_POST['meta_description'] ?? ''), 0, 160);
         $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $image_url = '';
@@ -157,14 +163,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
                 $message_type = 'error';
             } else {
                 $stmt = $pdo->prepare("
-                    INSERT INTO packages (title, location, duration, description, price, image_url, tag, is_active, created_at) 
-                    VALUES (:title, :location, :duration, :description, :price, :image_url, :tag, :is_active, NOW())
+                    INSERT INTO packages (title, slug, location, duration, meta_description, description, price, image_url, tag, is_active, created_at) 
+                    VALUES (:title, :slug, :location, :duration, :meta_description, :description, :price, :image_url, :tag, :is_active, NOW())
                 ");
 
                 $stmt->execute([
                     ':title' => $title,
+                    ':slug' => $slug,
                     ':location' => $location,
                     ':duration' => $duration,
+                    ':meta_description' => $meta_description,
                     ':description' => $description,
                     ':price' => $price,
                     ':image_url' => $image_url,
@@ -359,6 +367,14 @@ require_once 'includes/header.php';
                     <input type="text" name="duration"
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
                         value="<?php echo htmlspecialchars($package['duration'] ?? ''); ?>" placeholder="e.g., 5 Days / 4 Nights">
+                </div>
+
+                <!-- Meta Description -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Meta Description (SEO)</label>
+                    <textarea name="meta_description" maxlength="160" rows="2"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        placeholder="Brief summary for search engines (max 160 characters)..."><?php echo htmlspecialchars($package['meta_description'] ?? ''); ?></textarea>
                 </div>
 
                 <!-- Description -->
