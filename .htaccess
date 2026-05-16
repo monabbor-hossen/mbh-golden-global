@@ -1,30 +1,22 @@
 <IfModule mod_rewrite.c>
     Options -Indexes -MultiViews
     RewriteEngine On
-    
-    # Keeps XAMPP from leaking local paths
     RewriteBase /mbh-golden-global/
-    
-    # Set the default file for directories
-    DirectoryIndex index.php login.php
 
-    # 1. ADMIN DIRECTORY GATEWAY (This is the line you were missing!)
-    RewriteRule ^admin/?$ admin/login.php [L,QSA]
+    # 1. Clean URL Routing for SEO
+    RewriteRule ^tour/([a-zA-Z0-9-]+)/?$ package-details.php?slug=$1 [L,QSA]
+    RewriteRule ^story/([a-zA-Z0-9-]+)/?$ single-post.php?slug=$1 [L,QSA]
 
-    # 2. Handle existing files and folders
+    # 2. Skip rewrite if the file/directory actually exists
     RewriteCond %{REQUEST_FILENAME} -d [OR]
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # Clean SEO Routing
-    RewriteRule ^tour/([a-zA-Z0-9-]+)/?$ package-details.php?slug=$1 [L,QSA]
-    RewriteRule ^story/([a-zA-Z0-9-]+)/?$ single-post.php?slug=$1 [L,QSA]
-
-    # 3. Clean PHP URLs (e.g., /about -> about.php)
+    # 3. Handle standard .php removal
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.*)$ $1.php [L]
 
-    # 4. 404 Fallback
+    # 4. Custom 404 Error
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ 404.php [L]

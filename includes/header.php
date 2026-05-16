@@ -44,6 +44,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
 
 <head>
     <meta charset="UTF-8">
+    <base href="/mbh-golden-global/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <!-- Tailwind CSS CDN -->
@@ -278,16 +279,16 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
 
             <!-- Desktop Menu -->
             <div class="hidden lg:flex space-x-10 items-center">
-                <a href="index.php"
+                <a href="index"
                     class="nav-link nav-text text-white<?php echo $currentPage === 'index' ? ' active-link' : ''; ?>">Home</a>
-                <a href="about.php"
+                <a href="about"
                     class="nav-link nav-text text-white<?php echo $currentPage === 'about' ? ' active-link' : ''; ?>">About
                     Us</a>
-                <a href="destinations.php"
+                <a href="destinations"
                     class="nav-link nav-text text-white<?php echo $currentPage === 'destinations' ? ' active-link' : ''; ?>">Destinations</a>
-                <a href="stories.php"
+                <a href="stories"
                     class="nav-link nav-text text-white<?php echo $currentPage === 'stories' ? ' active-link' : ''; ?>">Stories</a>
-                <a href="contact.php"
+                <a href="contact"
                     class="nav-link nav-text text-white<?php echo $currentPage === 'contact' ? ' active-link' : ''; ?>">Contact</a>
             </div>
 
@@ -315,13 +316,13 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
         class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
-        <a href="index.php">
+        <a href="index">
             <img src="./assets/img/logo.png"
                 class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]"
                 alt="">
         </a>
         <div class="flex justify-between items-center p-6 border-b border-gray-100">
-            <a href="index.php">
+            <a href="index">
                 <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
                     onerror="this.style.display='none';"></a>
             <button
@@ -331,16 +332,16 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             </button>
         </div>
         <div class="flex flex-col gap-6 px-8 py-12 overflow-y-auto h-full justify-center">
-            <a href="index.php"
+            <a href="index"
                 class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Home.</a>
-            <a href="about.php"
+            <a href="about"
                 class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">About
                 Us.</a>
-            <a href="destinations.php"
+            <a href="destinations"
                 class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Destinations.</a>
-            <a href="stories.php"
+            <a href="stories"
                 class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Stories.</a>
-            <a href="contact.php"
+            <a href="contact"
                 class="text-3xl md:text-4xl font-serif text-brand-navy text-left hover:text-brand-cyan transition-colors text-3d-light">Contact.</a>
 
             <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col gap-2">
@@ -379,7 +380,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
                     <h3 class="text-brand-cyan text-sm tracking-[0.2em] uppercase mb-6">Suggested Reading</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <?php foreach ($suggestedStories as $story): ?>
-                            <a href="story.php?slug=<?= htmlspecialchars($story['slug']) ?>"
+                            <a href="story/<?= htmlspecialchars($story['slug']) ?>"
                                 class="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 block">
                                 <div class="relative h-32 w-full">
                                     <img src="<?= htmlspecialchars($story['image_url']) ?>"

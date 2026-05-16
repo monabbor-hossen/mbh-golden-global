@@ -13,7 +13,7 @@ if (!empty($q)) {
 
         // Search Packages
         $pkgStmt = $pdo->prepare("
-            SELECT id, title, location, duration, description, price, image_url 
+            SELECT id, title, slug, location, duration, description, price, image_url 
             FROM packages 
             WHERE is_active = 1 
             AND (title LIKE :q1 OR location LIKE :q2 OR description LIKE :q3)
@@ -28,7 +28,7 @@ if (!empty($q)) {
 
         // Search Stories
         $storyStmt = $pdo->prepare("
-            SELECT id, title, excerpt, image_url, tag, published_date 
+            SELECT id, title, slug, excerpt, image_url, tag, published_date 
             FROM stories 
             WHERE is_published = 1 
             AND (title LIKE :q1 OR excerpt LIKE :q2 OR content LIKE :q3)
@@ -101,7 +101,7 @@ if (!empty($q)) {
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 perspective-[1000px]">
                             <?php foreach ($packages as $pkg): ?>
-                                <a href="package-details.php?id=<?php echo (int) $pkg['id']; ?>"
+                                <a href="tour/<?php echo htmlspecialchars($pkg['slug']); ?>"
                                     class="block group cursor-pointer fade-up card-premium rounded-[2rem] p-4 bg-brand-sand border border-gray-100 hover:border-brand-cyan transition-colors">
                                     <div class="relative h-[25rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d">
                                         <img src="<?php echo htmlspecialchars($pkg['image_url']); ?>"
@@ -146,7 +146,7 @@ if (!empty($q)) {
                                 ?>
                                 <article
                                     class="group cursor-pointer fade-up card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500">
-                                    <a href="single-post.php?id=<?php echo (int) $story['id']; ?>"
+                                    <a href="story/<?php echo htmlspecialchars($story['slug']); ?>"
                                         class="block relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d group-hover:opacity-90">
                                         <img src="<?php echo htmlspecialchars($story['image_url']); ?>"
                                             class="w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105">
@@ -159,14 +159,14 @@ if (!empty($q)) {
                                             <span
                                                 class="text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white"><?php echo $publishedDate->format('M d, Y'); ?></span>
                                         </div>
-                                        <a href="single-post.php?id=<?php echo (int) $story['id']; ?>" class="block mb-4">
+                                        <a href="story/<?php echo htmlspecialchars($story['slug']); ?>" class="block mb-4">
                                             <h3
                                                 class="text-2xl font-serif text-brand-navy font-bold group-hover:text-brand-cyan transition-colors leading-snug">
                                                 <?php echo htmlspecialchars($story['title']); ?></h3>
                                         </a>
                                         <p class="text-gray-500 font-medium leading-relaxed mb-6 text-sm">
                                             <?php echo htmlspecialchars(mb_substr($story['excerpt'], 0, 100)); ?>...</p>
-                                        <a href="single-post.php?id=<?php echo (int) $story['id']; ?>"
+                                        <a href="story/<?php echo htmlspecialchars($story['slug']); ?>"
                                             class="btn-outline w-full !py-3 !rounded-xl text-[10px]">Read Story</a>
                                     </div>
                                 </article>

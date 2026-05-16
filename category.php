@@ -73,7 +73,7 @@ require_once 'includes/header.php';
                             $publishedDate = new DateTime($story['published_date']);
                             echo "
                             <article class='group cursor-pointer fade-up {$delayClass} card-premium bg-white rounded-[2rem] p-5 border border-gray-100 hover:border-brand-cyan transition-colors duration-500'>
-                                <a href='single-post.php?id=" . (int)$story['id'] . "' class='block relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d group-hover:opacity-90'>
+                                <a href='story/" . htmlspecialchars($story['slug']) . "' class='block relative h-64 rounded-[1.5rem] overflow-hidden mb-8 shadow-sm inner-3d group-hover:opacity-90'>
                                     <img src='" . htmlspecialchars($story['image_url']) . "' class='w-full h-full object-cover transition-transform duration-[1.5s] ease-apple group-hover:scale-105'>
                                     <div class='absolute top-4 left-4 bg-brand-cyan text-white px-4 py-2 rounded-xl font-bold text-[9px] tracking-[0.2em] uppercase'>" . htmlspecialchars($story['tag']) . "</div>
                                 </a>
@@ -81,11 +81,11 @@ require_once 'includes/header.php';
                                     <div class='flex items-center mb-4'>
                                         <span class='text-gray-400 text-xs font-bold uppercase tracking-[0.15em] bg-brand-sand px-3 py-1.5 rounded-lg border border-white'>" . $publishedDate->format('M d, Y') . "</span>
                                     </div>
-                                    <a href='single-post.php?id=" . (int)$story['id'] . "'>
+                                    <a href='story/" . htmlspecialchars($story['slug']) . "'>
                                         <h3 class='text-2xl font-serif text-brand-navy mb-4 font-bold group-hover:text-brand-cyan transition-colors leading-snug'>" . htmlspecialchars($story['title']) . "</h3>
                                     </a>
                                     <p class='text-gray-500 font-medium leading-relaxed mb-6 text-sm'>" . htmlspecialchars($story['excerpt']) . "</p>
-                                    <a href='single-post.php?id=" . (int)$story['id'] . "' class='btn-outline w-full !py-3 !rounded-xl text-[10px]'>Read Story →</a>
+                                    <a href='story/" . htmlspecialchars($story['slug']) . "' class='btn-outline w-full !py-3 !rounded-xl text-[10px]'>Read Story →</a>
                                 </div>
                             </article>
                             ";

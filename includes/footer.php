@@ -59,13 +59,12 @@ if (!empty($settings['social_links'])) {
                 <h4 class="text-brand-cyan text-[10px] font-black tracking-[0.2em] uppercase mb-8 text-3d-light">
                     Discover</h4>
                 <ul class="space-y-4 font-bold text-sm">
-                    <li><a href="index.php" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Home</a>
+                    <li><a href="index" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Home</a>
                     </li>
-                    <li><a href="about.php" class="hover:text-brand-cyan hover:translate-x-1 transition-all">About
-                            Us</a></li>
-                    <li><a href="destinations.php"
+                    <li><a href="about" class="hover:text-brand-cyan hover:translate-x-1 transition-all">About Us</a></li>
+                    <li><a href="destinations"
                             class="hover:text-brand-cyan hover:translate-x-1 transition-all">Destinations</a></li>
-                    <li><a href="stories.php" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Travel
+                    <li><a href="stories" class="hover:text-brand-cyan hover:translate-x-1 transition-all">Travel
                             Stories</a></li>
                 </ul>
             </div>
