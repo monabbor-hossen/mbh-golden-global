@@ -20,6 +20,52 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+// ── REMEMBER ME COOKIE CHECK ──────────────────────────────────────
+if (!isset($_SESSION['admin_id']) && isset($_COOKIE['remember_me'])) {
+    $cookie_parts = explode(':', $_COOKIE['remember_me']);
+    if (count($cookie_parts) === 2) {
+        list($cookie_admin_id, $cookie_token) = $cookie_parts;
+        
+        // Connect to database to verify token
+        require_once __DIR__ . '/../../includes/db.php';
+        
+        $stmt = $pdo->prepare("SELECT id, name, email, role, remember_token FROM admins WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $cookie_admin_id]);
+        $admin = $stmt->fetch();
+        
+        if ($admin && !empty($admin['remember_token'])) {
+            $token_hash = hash('sha256', $cookie_token);
+            if (hash_equals($admin['remember_token'], $token_hash)) {
+                // Token matches, log them in
+                session_regenerate_id(true);
+                $_SESSION['admin_id'] = $admin['id'];
+                $_SESSION['admin_email'] = $admin['email'];
+                $_SESSION['admin_name'] = $admin['name'];
+                $_SESSION['admin_role'] = $admin['role'];
+                $_SESSION['last_activity'] = time();
+            } else {
+                // Tampered or expired token
+                setcookie('remember_me', '', [
+                    'expires' => time() - 3600,
+                    'path' => '/',
+                    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                    'httponly' => true,
+                    'samesite' => 'Strict'
+                ]);
+            }
+        } else {
+            // Invalid user or no token set
+            setcookie('remember_me', '', [
+                'expires' => time() - 3600,
+                'path' => '/',
+                'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                'httponly' => true,
+                'samesite' => 'Strict'
+            ]);
+        }
+    }
+}
+
 // Check if user is logged in
 if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_email'])) {
     // Destroy any partial session data

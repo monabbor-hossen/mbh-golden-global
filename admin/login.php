@@ -104,6 +104,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                 // Reset failed attempts on success
                 $_SESSION['login_attempts'] = 0;
 
+                // Remember Me Feature
+                if (isset($_POST['remember_me'])) {
+                    $token = bin2hex(random_bytes(32));
+                    $token_hash = hash('sha256', $token);
+                    
+                    $updateStmt = $pdo->prepare("UPDATE admins SET remember_token = :token WHERE id = :id");
+                    $updateStmt->execute([
+                        ':token' => $token_hash,
+                        ':id' => $admin['id']
+                    ]);
+                    
+                    $cookie_value = $admin['id'] . ':' . $token;
+                    setcookie(
+                        'remember_me',
+                        $cookie_value,
+                        [
+                            'expires' => time() + (86400 * 30),
+                            'path' => '/',
+                            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                            'httponly' => true,
+                            'samesite' => 'Strict'
+                        ]
+                    );
+                }
+
                 // Build full URL for redirect (supports both relative and absolute paths)
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
@@ -258,6 +283,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLockedOut) {
                         <span id="iconHide" class="hidden"><i class="fas fa-eye-slash w-5 h-5"></i></span>
                     </button>
                     <?php endif; ?>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="relative flex items-center">
+                        <input type="checkbox" name="remember_me" id="rememberMe" 
+                               <?php echo $isLockedOut ? 'disabled' : ''; ?>
+                               class="peer appearance-none w-5 h-5 border border-white/10 rounded bg-white/5 checked:bg-brand-cyan checked:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                        <i class="fas fa-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+                    </div>
+                    <label for="rememberMe" class="text-sm text-white/80 font-medium cursor-pointer <?php echo $isLockedOut ? 'opacity-50 cursor-not-allowed' : ''; ?>">Remember me for 30 days</label>
                 </div>
 
                 <button 

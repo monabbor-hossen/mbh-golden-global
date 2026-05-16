@@ -229,7 +229,7 @@ require_once 'includes/header.php';
 ?>
 
 <!-- Messages -->
-<?php if ($message): ?>
+<?php if ($message && $action === 'list'): ?>
     <div
         class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
         <?php echo htmlspecialchars($message); ?>
@@ -323,6 +323,12 @@ require_once 'includes/header.php';
             <h3 class="text-2xl font-serif text-white mb-6">
                 <?php echo $action === 'create' ? 'Create New Package' : 'Edit Package'; ?>
             </h3>
+
+            <?php if ($message && $action !== 'list'): ?>
+                <div class="mb-6 p-4 rounded-xl backdrop-blur-xl <?php echo $message_type === 'success' ? 'bg-green-500/20 border border-green-500/50 text-green-200' : 'bg-red-500/20 border border-red-500/50 text-red-200'; ?> shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
 
             <form method="POST" enctype="multipart/form-data" class="space-y-6">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">

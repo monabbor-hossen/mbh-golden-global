@@ -10,6 +10,24 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Check if user is logged in to clear remember token
+if (isset($_SESSION['admin_id'])) {
+    require_once '../includes/db.php';
+    $stmt = $pdo->prepare("UPDATE admins SET remember_token = NULL WHERE id = :id");
+    $stmt->execute([':id' => $_SESSION['admin_id']]);
+}
+
+// Clear remember_me cookie
+if (isset($_COOKIE['remember_me'])) {
+    setcookie('remember_me', '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+}
+
 // Destroy all session data
 session_destroy();
 
