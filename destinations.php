@@ -24,7 +24,7 @@ require_once 'includes/header.php';
                     try {
                         // Fetch all active packages from database
                         $packagesStmt = $pdo->prepare("
-                            SELECT id, title, location, description, price, image_url, tag 
+                            SELECT id, title, location, duration, description, price, image_url, tag 
                             FROM packages 
                             WHERE is_active = TRUE 
                             ORDER BY created_at DESC
@@ -43,9 +43,12 @@ require_once 'includes/header.php';
                                     <div class='relative h-[24rem] rounded-[1.5rem] overflow-hidden mb-6 shadow-sm inner-3d'>
                                         <img src='" . htmlspecialchars($pkg['image_url']) . "' class='w-full h-full object-cover transition-transform duration-[2s] ease-apple group-hover:scale-105'>
                                         <div class='absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent opacity-90'></div>
-                                        <div class='absolute bottom-6 left-6 right-6 inner-3d'>
-                                            <span class='bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase mb-3 inline-block px-4 py-2 rounded-full'>" . htmlspecialchars($pkg['location']) . "</span>
-                                            <h3 class='text-3xl font-serif text-white mb-1'>" . htmlspecialchars($pkg['title']) . "</h3>
+                                        <div class='absolute bottom-6 left-6 right-6 inner-3d flex flex-col items-start'>
+                                            <div class='flex flex-wrap items-center gap-2 mb-3'>
+                                                <span class='bg-brand-cyan/90 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold tracking-[0.2em] uppercase inline-block px-4 py-2 rounded-full'>" . htmlspecialchars($pkg['location']) . "</span>
+                                                " . (!empty($pkg['duration']) ? "<span class='bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-[10px] font-medium tracking-wider flex items-center gap-1.5 px-3 py-1.5 rounded-full'><i class='far fa-clock w-3 h-3 text-white/80'></i> " . htmlspecialchars($pkg['duration']) . "</span>" : "") . "
+                                            </div>
+                                            <h3 class='text-3xl font-serif text-white mb-1 w-full'>" . htmlspecialchars($pkg['title']) . "</h3>
                                         </div>
                                     </div>
                                     <div class='px-3 pb-2 flex justify-between items-center inner-3d'>

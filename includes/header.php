@@ -254,7 +254,7 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
         <div class="max-w-[90rem] mx-auto w-full flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center cursor-pointer group">
-                <a href="/">
+                <a href="index.php">
                     <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global"
                         class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
@@ -283,7 +283,9 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
             <div class="flex items-center gap-6">
                 <div
                     class="hidden md:flex items-center gap-6 border-l border-white/20 pl-6 nav-divider transition-colors duration-300">
-                    <button onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none'); document.getElementById('search-input').focus();" class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i
+                    <button
+                        onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none'); document.getElementById('search-input').focus();"
+                        class="nav-text text-white hover:text-brand-cyan transition-transform hover:scale-105"><i
                             class="fas fa-search w-6 h-6"></i></button>
                     <a href="destinations.php"
                         class="btn-primary !py-3 !px-8 hidden xl:inline-flex text-xs !shadow-none !translate-y-0 border-none">Book
@@ -301,13 +303,13 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu"
         class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
-        <a href="/">
+        <a href="index.php">
             <img src="./assets/img/logo.png"
                 class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]"
                 alt="">
         </a>
         <div class="flex justify-between items-center p-6 border-b border-gray-100">
-            <a href="/">
+            <a href="index.php">
                 <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
                     onerror="this.style.display='none';"></a>
             <button
@@ -338,33 +340,46 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     </div>
 
     <!-- Search Overlay -->
-    <div id="search-overlay" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[70] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
+    <div id="search-overlay"
+        class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[70] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
         <div class="flex justify-end p-6 md:p-8">
-            <button onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none');" class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
+            <button
+                onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none');"
+                class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
                 <i class="fas fa-times w-5 h-5"></i>
             </button>
         </div>
         <div class="flex flex-col items-center justify-center h-full px-6 md:px-12 -mt-20">
-            <h2 class="text-3xl md:text-5xl font-serif text-brand-navy mb-12 text-center text-3d-light">What are you looking for?</h2>
+            <h2 class="text-3xl md:text-5xl font-serif text-brand-navy mb-12 text-center text-3d-light">What are you
+                looking for?</h2>
             <form action="search.php" method="GET" class="w-full max-w-4xl relative">
-                <input type="text" name="q" id="search-input" placeholder="Search destinations, stories..." class="w-full bg-transparent border-b-2 border-gray-200 text-2xl md:text-4xl font-sans font-medium text-brand-navy placeholder-gray-300 focus:outline-none focus:border-brand-cyan pb-4 transition-colors" required>
-                <button type="submit" class="absolute right-0 top-0 bottom-4 flex items-center text-gray-400 hover:text-brand-cyan transition-colors text-2xl">
+                <input type="text" name="q" id="search-input" placeholder="Search destinations, stories..."
+                    class="w-full bg-transparent border-b-2 border-gray-200 text-2xl md:text-4xl font-sans font-medium text-brand-navy placeholder-gray-300 focus:outline-none focus:border-brand-cyan pb-4 transition-colors"
+                    required>
+                <button type="submit"
+                    class="absolute right-0 top-0 bottom-4 flex items-center text-gray-400 hover:text-brand-cyan transition-colors text-2xl">
                     <i class="fas fa-search"></i>
                 </button>
             </form>
-            
+
             <?php if (!empty($suggestedStories)): ?>
                 <div class="w-full max-w-4xl mt-16 text-left">
                     <h3 class="text-brand-cyan text-sm tracking-[0.2em] uppercase mb-6">Suggested Reading</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <?php foreach ($suggestedStories as $story): ?>
-                            <a href="story.php?slug=<?= htmlspecialchars($story['slug']) ?>" class="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 block">
+                            <a href="story.php?slug=<?= htmlspecialchars($story['slug']) ?>"
+                                class="group relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 block">
                                 <div class="relative h-32 w-full">
-                                    <img src="<?= htmlspecialchars($story['image_url']) ?>" alt="<?= htmlspecialchars($story['title']) ?>" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-brand-navy/60 group-hover:bg-brand-navy/40 transition-colors duration-300"></div>
+                                    <img src="<?= htmlspecialchars($story['image_url']) ?>"
+                                        alt="<?= htmlspecialchars($story['title']) ?>" class="w-full h-full object-cover">
+                                    <div
+                                        class="absolute inset-0 bg-brand-navy/60 group-hover:bg-brand-navy/40 transition-colors duration-300">
+                                    </div>
                                 </div>
                                 <div class="absolute inset-0 p-5 flex items-end">
-                                    <h4 class="text-white font-serif text-lg leading-snug drop-shadow-md"><?= htmlspecialchars($story['title']) ?></h4>
+                                    <h4 class="text-white font-serif text-lg leading-snug drop-shadow-md">
+                                        <?= htmlspecialchars($story['title']) ?>
+                                    </h4>
                                 </div>
                             </a>
                         <?php endforeach; ?>

@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
         $id = $_POST['package_id'];
         $title = trim($_POST['title']);
         $location = trim($_POST['location']);
+        $duration = trim($_POST['duration'] ?? '');
         $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $existing_image_url = trim($_POST['existing_image_url'] ?? '');
@@ -90,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
 
                 $stmt = $pdo->prepare("
                     UPDATE packages 
-                    SET title = :title, location = :location, 
+                    SET title = :title, location = :location, duration = :duration, 
                         description = :description, price = :price, image_url = :image_url, 
                         tag = :tag, is_active = :is_active 
                     WHERE id = :id
@@ -99,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
                 $stmt->execute([
                     ':title' => $title,
                     ':location' => $location,
+                    ':duration' => $duration,
                     ':description' => $description,
                     ':price' => $price,
                     ':image_url' => $image_url,
@@ -126,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
     try {
         $title = trim($_POST['title']);
         $location = trim($_POST['location']);
+        $duration = trim($_POST['duration'] ?? '');
         $description = sanitize_wysiwyg_html(trim($_POST['description']));
         $price = (float) $_POST['price'];
         $image_url = '';
@@ -154,13 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['package_id'])) {
                 $message_type = 'error';
             } else {
                 $stmt = $pdo->prepare("
-                    INSERT INTO packages (title, location, description, price, image_url, tag, is_active, created_at) 
-                    VALUES (:title, :location, :description, :price, :image_url, :tag, :is_active, NOW())
+                    INSERT INTO packages (title, location, duration, description, price, image_url, tag, is_active, created_at) 
+                    VALUES (:title, :location, :duration, :description, :price, :image_url, :tag, :is_active, NOW())
                 ");
 
                 $stmt->execute([
                     ':title' => $title,
                     ':location' => $location,
+                    ':duration' => $duration,
                     ':description' => $description,
                     ':price' => $price,
                     ':image_url' => $image_url,
@@ -341,6 +345,14 @@ require_once 'includes/header.php';
                     <input type="text" name="location" required
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
                         value="<?php echo htmlspecialchars($package['location'] ?? ''); ?>" placeholder="e.g., Switzerland">
+                </div>
+
+                <!-- Duration -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-white/80">Duration (Optional)</label>
+                    <input type="text" name="duration"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-cyan focus:bg-white/10 focus:ring-1 focus:ring-brand-cyan transition-all placeholder-white/30"
+                        value="<?php echo htmlspecialchars($package['duration'] ?? ''); ?>" placeholder="e.g., 5 Days / 4 Nights">
                 </div>
 
                 <!-- Description -->

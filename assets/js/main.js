@@ -66,7 +66,7 @@ function updateNavbar() {
             // Home page at top: Dark background, needs White text & logo
             navTexts.forEach(el => {
                 el.classList.remove('text-brand-navy');
-                el.classList.add('text-white');
+                el.classList.add('text-white', 'text-shadow-lg');
             });
             if (navDivider) navDivider.classList.replace('border-gray-200', 'border-white/20');
             if (navLogo) navLogo.classList.add('brightness-0', 'invert');
