@@ -243,10 +243,11 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
         <div class="max-w-[90rem] mx-auto w-full flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center cursor-pointer group">
-                <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global"
-                    class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-
+                <a href="/">
+                    <img id="nav-logo" src="./assets/img/logo.png" alt="MBH Golden Global"
+                        class="h-16 md:h-20 object-contain transition-all duration-500 ease-apple group-hover:scale-105 brightness-0 invert"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                </a>
                 <div class="hidden font-serif font-bold text-2xl tracking-wide logo-text text-white text-3d-light">
                     <span class="text-brand-cyan">MBH</span> GLOBAL
                 </div>
