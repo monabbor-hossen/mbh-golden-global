@@ -239,9 +239,11 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     </style>
 
     <!-- Dynamic SEO & Open Graph Tags -->
-    <meta name="description" content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
+    <meta name="description"
+        content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle); ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
+    <meta property="og:description"
+        content="<?= htmlspecialchars($meta_description ?? 'MBH Golden Global - Premium Luxury Travel Agency'); ?>">
     <meta property="og:image" content="<?= htmlspecialchars($meta_image ?? 'assets/img/logo.png'); ?>">
     <?php
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
@@ -321,11 +323,11 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
                 class="absolute -right-20 top-1/2 -translate-y-1/2 w-[150%] opacity-5 pointer-events-none z-[-1]"
                 alt="">
         </a>
-        <div class="flex justify-between items-center p-6 border-b border-gray-100">
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 relative z-50">
             <a href="index">
                 <img src="./assets/img/logo.png" alt="MBH Golden Global" class="h-20 object-contain"
                     onerror="this.style.display='none';"></a>
-            <button
+            <button type="button"
                 onclick="document.getElementById('mobile-menu').classList.toggle('opacity-0'); document.getElementById('mobile-menu').classList.toggle('pointer-events-none');"
                 class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
                 <i class="fas fa-times w-5 h-5"></i>
@@ -355,8 +357,8 @@ $address = $siteSettings['address'] ?? 'Buraydah, Al-Qassim, Saudi Arabia.';
     <!-- Search Overlay -->
     <div id="search-overlay"
         class="fixed inset-0 bg-white/95 backdrop-blur-xl z-[70] flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-apple">
-        <div class="flex justify-end p-6 md:p-8">
-            <button
+        <div class="flex justify-end p-6 md:p-8 relative z-50">
+            <button type="button"
                 onclick="document.getElementById('search-overlay').classList.toggle('opacity-0'); document.getElementById('search-overlay').classList.toggle('pointer-events-none');"
                 class="p-2 text-brand-navy bg-brand-sand hover:bg-brand-cyan hover:text-white transition-colors rounded-full shadow-inner border border-white">
                 <i class="fas fa-times w-5 h-5"></i>
